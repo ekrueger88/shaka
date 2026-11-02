@@ -21,6 +21,9 @@ from working is a major version.
 
 ### Fixed
 
+- Keep validation and review results valid when Shaka updates during a task, unless the
+  update changes the code that runs or checks them. Rewording a description for the same
+  commit now keeps results it already shows as verified instead of refusing or showing UNKNOWN.
 - Say **Adequate, with gaps the reviewer judged acceptable** on a checkpoint, in place of
   **Adequate with accepted gaps**, which read as if the maintainer had accepted them.
   Published checkpoints still parse.
