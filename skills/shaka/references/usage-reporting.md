@@ -47,6 +47,26 @@ there is no PR. **Native** figures come from the host's records. **Estimated** f
 rate card to those records. `UNKNOWN` means the records do not establish a value;
 it never means zero.
 
+## Save usage on the PR
+
+Append native response records to the PR when work may change hands. A later owner
+recovers them from GitHub without the earlier machine's transcripts.
+
+```text
+shaka usage publish OWNER/REPO NUMBER --commit SHA --contribution implementation --event commit --all-turns
+shaka usage collect OWNER/REPO NUMBER
+```
+
+`publish` takes the source options of `usage`; keep the task's `--since-time` or `--turn`
+selection on every publication. After a failure, rerun it. Collection ignores comments from
+accounts without write access, so `publish` fails for one. A comment `collect` names as unreadable
+stops every read until its owner repairs or deletes it.
+
+Only the task owner puts `collect` output in the description `usage` object. Other contributors
+publish and leave the description alone. On a conflict `collect` names the response: inspect
+the comments holding it rather than choosing a total. Keep a legacy report until its source
+is published.
+
 ## Select the work being reported
 
 The helper supports Codex, Claude Code, Cursor, OpenCode, and Pi. It normally
@@ -112,7 +132,7 @@ per configuration. Configured and routed models remain distinct.
 | Codex | Input includes cache reads; cached input must not be added again. Cache writes have their own field. | Reasoning is part of output. Routed model is unknown. |
 | Claude Code | Input excludes cache reads and writes; all three are separate amounts. | Reasoning is part of output. Configured model and native total are unknown. |
 | Cursor | Input includes cache reads and writes; rows show the subsets. | Reasoning, native total, and parent-chat subagent usage are unknown or absent. |
-| OpenCode | Input excludes cache reads and writes. | Native total sums input, output, reasoning, cache reads, and cache writes. |
+| OpenCode | Input excludes cache reads and writes. | Native total sums input, output, reasoning, cache reads, and cache writes; OpenCode 2 omits it, so it is unknown. |
 | Pi | Input excludes cache reads and writes. | Native total is copied. Reasoning, when recorded, is part of output. |
 
 Reports are **PARTIAL** while sources omit active work, reviewers, subagents, or
@@ -199,17 +219,22 @@ description unchanged.
 ## What the OpenCode reader includes
 
 Name a session with `--host opencode --session ses_ID`; find it with
-`opencode session list`. The reader also accepts `OPENCODE_SESSION_ID` from a
-wrapper or plugin, or saved exports through repeated `--file` options.
+`opencode session list`. The reader also accepts `OPENCODE_SESSION_ID`, which
+OpenCode 2 sets in the tool environment, or saved exports through repeated `--file` options.
 
-The reader runs `opencode export` and keeps per-message metadata, never message
-parts containing transcript text. OpenCode 1.18.31 truncates piped JSON, so export
-is redirected to a temporary file before parsing.
+The reader runs `opencode export`, or `opencode api get /api/experimental/session/ID/export`
+when `opencode --version` reports 2 or later, because OpenCode 2 removed `export`. It keeps
+per-message metadata, never message parts or content containing transcript text.
+Both commands truncate piped JSON, so output is redirected to a temporary file before parsing.
 
-A turn is a user message. Assistant messages join it through `parentID`. The
+A turn is a user message. Assistant messages join it through `parentID`; an
+OpenCode 2 export has none, so each joins the nearest earlier user message. An
+OpenCode 2 compaction that reports tokens counts as a response; a response that
+ended in error without tokens does not. The
 default selects the latest user turn; `--all-turns` includes responses with
 identified turns. Rows use the export's provider, session model as configured
-model, response model as routed model, and response variant as effort.
+model, response model as routed model, and response variant as effort. OpenCode 2
+exports report no version, so the source version is unknown.
 
 A 49-response session from 1.18.31 matched an independent aggregate for response
 count, all five token categories, total, interval, and version. Missing configured
@@ -219,7 +244,7 @@ models and unreadable records stay unknown.
 
 `PI_SESSION_FILE` must point to a v3 session whose nonempty header ID matches
 `PI_SESSION_ID`. Missing, ephemeral, older, malformed, or mismatched evidence
-produces `UNKNOWN`. Saved evidence can use `--host pi --file PATH`; legacy sessions
+produces `UNKNOWN`. Saved evidence can use `--host pi --file PATH`; earlier sessions
 need reopening or export with current Pi.
 
 The reader validates entry IDs and parent links, then walks from the active leaf
@@ -320,8 +345,8 @@ Keep the coverage note visible; do not replace unknown reviewer usage with zero.
 
 Check task coverage before publishing. Sources can contain unrelated work even
 when a launcher began with a single task. Select relevant turns rather than using
-`--all-turns` in that case. The reader prints aggregate metadata only and does not
-modify sessions. It does not publish to GitHub. The Cursor stop hook can update a
+`--all-turns` in that case. The report prints aggregate metadata only and does not
+modify sessions; only `usage publish` writes to GitHub. The Cursor stop hook can update a
 description this conversation already published, as the Cursor section describes.
 
 Never publish raw sessions, prompts, tool output, source paths, or turn/response

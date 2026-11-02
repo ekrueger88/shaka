@@ -48,8 +48,8 @@ For example, a Codex row with 100,000 input tokens and 80,000 cached input
 tokens has 20,000 uncached input tokens. A Claude row with 20,000 input tokens
 and 80,000 cached input tokens describes the same input quantities.
 Do not add a Codex row's cached input to its input again.
-OpenCode's native total includes input, output, reasoning, and cache tokens;
-Cursor's native total is unreported.
+OpenCode's native total includes input, output, reasoning, and cache tokens,
+but OpenCode 2 does not report one; Cursor's native total is unreported.
 
 ## How estimates are priced
 
@@ -73,6 +73,16 @@ Shaka leaves unsupported models or incomplete billing categories unpriced.
 A partially priced report keeps the known estimate with a `+` marker and a
 reason for the missing amount. The PR's original pricing references apply to
 its recorded estimate; current provider prices may differ.
+
+## Keep usage when work changes hands
+
+Usage saved as comments on the PR survives a change of model or coding tool. A new owner
+reads those comments instead of the earlier machine's records, and each response counts
+once even if two agents saved it. Comments from accounts without write access are ignored.
+
+Ask the agent:
+
+> Save this task's usage on the PR before handing it over.
 
 ## Read the limitations beside the numbers
 

@@ -85,7 +85,7 @@ reference for your agent. Open one when you want the detail.
 - [Start from Linear](linear.md) — open a Linear issue in Codex with its details filled in.
 - [Install Shaka manually](manual-installation.md) — review and run the installer yourself.
 - [Fork Shaka and make it yours](fork-and-hack.md) — install your fork and send a change back.
-- [Update Shaka](migration.md) — update your installation, or upgrade a repository's configuration layout.
+- [Update Shaka](migration.md) — update your installation.
 
 ### Understand and extend
 

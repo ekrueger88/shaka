@@ -70,16 +70,20 @@ module Shaka
                    'rebase it onto the default branch.'
     end
 
-    # This check belongs to Shaka's own PRs, not to projects that use Shaka.
-    def required?(github) = !changed_renderers(github).empty?
+    # This check belongs to Shaka's own PRs, not to projects that use Shaka. A preview shows only the head files it
+    # loads, so a file it keeps installed or cannot load owes none on its own.
+    def required?(github) = (changed_renderers(github) - INSTALLED).any? { |path| previewable?(path) }
 
-    # A description marker cannot attest to another artifact's rendering. Fail closed
-    # until that renderer has a reviewed preview and artifact-specific evidence check.
-    # Returns the changed files the preview keeps installed, so a handoff can say they were not previewed.
+    # The changed files a preview, owed or not, leaves unseen, so a handoff can name them.
+    def kept_installed(github) = changed_renderers(github) & INSTALLED
+
+    def no_preview(github) = changed_renderers(github).reject { |path| previewable?(path) }
+
+    # A description marker cannot attest to another artifact's rendering, so a change with nothing to load is refused.
+    # Beside a file it loads, the preview runs: handoff owes it, and names the others so the marker claims only this.
     def verify_supported!(github)
-      changed = changed_renderers(github)
-      unsupported = changed.reject { |path| previewable?(path) }
-      return changed & INSTALLED if unsupported.empty?
+      unsupported = no_preview(github)
+      return if unsupported.empty? || required?(github)
 
       raise Error, "Rendering preview does not yet load: #{unsupported.join(', ')}. " \
                    "It previews only the Ruby files directly in #{DIRECTORY}."
@@ -147,7 +151,7 @@ module Shaka
       $VERBOSE = previous
     end
 
-    private_class_method :git, :sources, :installed_files, :head_files, :load_renderers,
-                         :load_renderer, :changed_renderers, :previewable?, :rendering_path?
+    private_class_method :git, :sources, :installed_files, :head_files, :load_renderers, :load_renderer,
+                         :changed_renderers, :previewable?, :rendering_path?, :verify_supported!
   end
 end

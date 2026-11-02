@@ -10,7 +10,8 @@ changed, what was proven, and where to look closely.
 
 [Try it on a small fix](#get-started) ·
 [Watch the 52-second demo](https://www.youtube.com/watch?v=T6Fstx2fGJI) ·
-[Read a real Shaka PR](https://github.com/shakacode/shaka/pull/667)
+[Read a real Shaka PR](https://github.com/shakacode/shaka/pull/667) ·
+[See the guides and more examples](https://shaka.shakacode.com/)
 
 ![You give a task. The agent builds, verifies, and reviews. You review one clear PR with a walkthrough, check and review results, and the decisions left for you.](docs/img/task-to-pr.svg)
 
@@ -26,7 +27,7 @@ We hit this wall too. We're [ShakaCode](https://www.shakacode.com), the team beh
 React on Rails and Shakapacker, and we build with coding agents every day. Shaka is how
 we get past it. We build Shaka with Shaka, so its PRs are public for you to judge: across
 147 of them, the second-AI review found
-[102 defects](docs/articles/review-process-study.md) before that code was pushed.
+[102 defects](https://shaka.shakacode.com/docs/articles/review-process-study) before that code was pushed.
 
 ## What changes when you use it
 
@@ -39,28 +40,28 @@ we get past it. We build Shaka with Shaka, so its PRs are public for you to judg
 - **You stop directing the process.** Describe the outcome once. You don't have to remind
   the agent to test, review, or explain itself.
 - **You decide what merges.** By default, the agent hands the finished PR back to you.
-  If you [let it merge](docs/working-with-shaka.md#choose-a-merge-policy), it still returns
+  If you [let it merge](https://shaka.shakacode.com/docs/working-with-shaka#choose-a-merge-policy), it still returns
   large or risky changes.
 - **Strangers can't steer your agent.** On public repositories, Shaka keeps comments from
-  untrusted authors [away from the agent](docs/workflow.md#trust-model).
+  untrusted authors [away from the agent](https://shaka.shakacode.com/docs/workflow#trust-model).
 
 ### Why not just tell my agent to test and review?
 
 You can, and it helps. Shaka adds three things a one-off prompt doesn't: a reviewer with no
 stake in the code, the same steps on every task, and, when your agent does the merging, a
-check that stops it if no posted review covers that commit. [What is enforced](docs/workflow.md#what-is-enforced)
+check that stops it if no posted review covers that commit. [What is enforced](https://shaka.shakacode.com/docs/workflow#what-is-enforced)
 separates what code checks from what still relies on the agent.
 
 ## What it works with
 
 | | |
 | --- | --- |
-| **Coding agents** | Claude Code, Codex, Cursor, OpenCode, and Pi ([details](docs/coding-agents.md)) |
+| **Coding agents** | Claude Code, Codex, Cursor, OpenCode, and Pi ([details](https://shaka.shakacode.com/docs/coding-agents)) |
 | **AI models** | Whatever your agent runs. Shaka doesn't change your model or permissions. |
 | **Second reviewer** | Claude, Codex, Grok, or DeepSeek when one is set up. Otherwise, a fresh session of your own model. |
 | **Cost** | Shaka is free ([MIT](LICENSE)). You pay only your own AI usage, and each PR reports it. In our repository, one review run takes under a minute at the median and costs about $0.09 to $0.25. |
 | **You need** | A GitHub repository, Git 2.41 or later, an authenticated [GitHub CLI](https://cli.github.com/), and Ruby 3.4 or later. Shaka uses Ruby itself; your project can be in any language. `/shaka doctor` tells you what's missing. |
-| **Your code** | Installing changes none of your repositories. Your change goes to another AI provider only after you agree, and Shaka [shows you what it sends](docs/coding-agents.md#give-consent-once) when it asks. |
+| **Your code** | Installing changes none of your repositories. Your change goes to another AI provider only after you agree, and Shaka [shows you what it sends](https://shaka.shakacode.com/docs/coding-agents#give-consent-once) when it asks. |
 
 <a id="get-started"></a>
 <a id="requirements"></a>
@@ -74,7 +75,7 @@ separates what code checks from what still relies on the agent.
    Install Shaka from https://github.com/shakacode/shaka.
    ```
 
-   Prefer to read it first? [Install it by hand](docs/manual-installation.md).
+   Prefer to read it first? [Install it by hand](https://shaka.shakacode.com/docs/manual-installation).
 
 2. In a project you know, give it something small you can check:
 
@@ -88,7 +89,7 @@ separates what code checks from what still relies on the agent.
 3. Read the PR and decide. You'll see what changed, what was proven, and where to look
    closely. If you don't like it, close it. Nothing goes in until you merge.
 
-New to pull requests? [Shaka in pictures](docs/shaka-in-pictures.md) walks you through a
+New to pull requests? [Shaka in pictures](https://shaka.shakacode.com/docs/shaka-in-pictures) walks you through a
 practice task.
 
 ## All you need to remember
