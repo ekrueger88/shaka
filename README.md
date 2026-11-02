@@ -49,7 +49,7 @@ we get past it. We build Shaka with Shaka, so its PRs are public for you to judg
 
 You can, and it helps. Shaka adds three things a one-off prompt doesn't: a reviewer with no
 stake in the code, the same steps on every task, and, when your agent does the merging, a
-check that stops it if no posted review covers that commit. [What is enforced](https://shaka.shakacode.com/docs/workflow#what-is-enforced)
+check that stops it if a required review isn't posted for that commit. [What is enforced](https://shaka.shakacode.com/docs/workflow#what-is-enforced)
 separates what code checks from what still relies on the agent.
 
 ## What it works with
@@ -58,7 +58,7 @@ separates what code checks from what still relies on the agent.
 | --- | --- |
 | **Coding agents** | Claude Code, Codex, Cursor, OpenCode, and Pi ([details](https://shaka.shakacode.com/docs/coding-agents)) |
 | **AI models** | Whatever your agent runs. Shaka doesn't change your model or permissions. |
-| **Second reviewer** | Claude, Codex, Grok, or DeepSeek when one is set up. Otherwise, a fresh session of your own model. |
+| **Second reviewer** | Claude, Codex, Grok, or DeepSeek when one is set up. Otherwise, a fresh session of your own model. Cloud agents may need one set up. |
 | **Cost** | Shaka is free ([MIT](LICENSE)). You pay only your own AI usage, and each PR reports it. In our repository, one review run takes under a minute at the median and costs about $0.09 to $0.25. |
 | **You need** | A GitHub repository, Git 2.41 or later, an authenticated [GitHub CLI](https://cli.github.com/), and Ruby 3.4 or later. Shaka uses Ruby itself; your project can be in any language. `/shaka doctor` tells you what's missing. |
 | **Your code** | Installing changes none of your repositories. Your change goes to another AI provider only after you agree, and Shaka [shows you what it sends](https://shaka.shakacode.com/docs/coding-agents#give-consent-once) when it asks. |
@@ -87,7 +87,7 @@ separates what code checks from what still relies on the agent.
    just for you or share them with your team.
 
 3. Read the PR and decide. You'll see what changed, what was proven, and where to look
-   closely. If you don't like it, close it. Nothing goes in until you merge.
+   closely. If you don't like it, close it. By default, nothing goes in until you merge.
 
 New to pull requests? [Shaka in pictures](https://shaka.shakacode.com/docs/shaka-in-pictures) walks you through a
 practice task.
