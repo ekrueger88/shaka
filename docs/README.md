@@ -11,7 +11,7 @@ you to decide.
 ## Why use Shaka
 
 - **Review faster.** Each PR says why the change exists, how it was checked, and
-  how closely to read the code.
+  which files a person should read, or that the description is enough.
 - **See the proof and the cost.** Each check links to its result, unproven claims
   stay visible, and the PR shows available usage and cost. UI changes add
   before-and-after screenshots.

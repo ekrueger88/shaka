@@ -31,8 +31,8 @@ we get past it. We build Shaka with Shaka, so its PRs are public for you to judg
 
 ## What changes when you use it
 
-- **You know where to look.** Each PR says why the change exists and rates, from 1 to 5,
-  how closely to read the code. A typo gets a glance. A risky change gets every line.
+- **You know where to look.** Each PR says why the change exists and which files a person
+  should read, or that the description is enough.
 - **You see proof instead of a claim.** Each check links to its result, and anything
   unproven says so. UI changes come with before-and-after screenshots.
 - **A second AI checks the work before you do.** The reviewer never saw the chat that
