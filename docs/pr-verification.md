@@ -75,7 +75,8 @@ and the change with a verdict: improvement, wash, regression, or ambiguous. When
 something could not be captured or measured, the PR says so.
 
 A check that also fails on the base branch can leave the PR a blocked draft until the
-repair lands or you tell the agent you accept that failure for this task.
+repair lands or you tell the agent you accept that failure for this task. Accepting it
+does not waive security or trust failures, required checks, or branch protection.
 
 Spend your own review time on decisions that need your knowledge. An agent can check a
 billing calculation; someone who knows the contract has to decide whether it is the
@@ -123,7 +124,7 @@ concern or a new question comes up, it recommends **Merge after maintainer decis
 and asks you under **Decisions to make**. A recommendation becomes a **Recorded
 decision** once you accept it or the agent acts under authority you already gave.
 
-Unresolved concerns hold the merge even when checks pass. To accept one after a
+Unresolved concerns hold the agent's merge even when checks pass. To accept one after a
 **Proceed**, tell the agent, for example: "I accept the unknown-frequency concern;
 merge as is." It lists your decision under **Concerns recorded as accepted by the
 maintainer**. Shaka checks that each concern has a decision, not who made it, so read
@@ -156,12 +157,15 @@ merge that commit, for example "Merge the commit in your handoff," or merge it y
 on GitHub. Saying "Go" at the start does not grant this. An **Approve** review also
 counts when it comes from a login you named to the agent as a merge approver for this
 task. When the repository requires a GitHub approval, an eligible reviewer still has to
-approve there; a chat instruction does not count for it.
+approve there; a chat instruction does not count for it. The agent cannot set
+`awaiting-merge-approval` while the local review has open findings or no published
+review covers the commit.
 
 Under **Auto**, the agent merges eligible work itself. Every check on the commit has to
 pass, not only the required ones, and the agent hands the PR back to you when one fails.
 A check that has not started when the agent merges is not seen, so make a check required
-if it must always gate the merge. PRs it merged carry the `auto-merged` label.
+if it must always gate the merge. PRs it merged carry the `auto-merged` label, except
+one added to a merge queue or one GitHub refused to label; the agent's report says so.
 
 If GitHub needs the branch updated, the agent rebases and checks the new commit; your
 approval carries forward only when the behavior is unchanged. Both modes keep
