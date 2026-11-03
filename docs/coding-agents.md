@@ -18,11 +18,9 @@ installation steps for its environment. To run them yourself, follow
 On macOS, [start a task from Linear](linear.md) with an optional adapter that
 opens Codex CLI with the selected issue and repository.
 
-The opt-in [DeepSeek reviewer](settings.md#reviewlocal_review_agents) runs through
-Shaka's Ruby OpenRouter API adapter. It does not require native DeepSeek support in
-Codex, Claude Code or Cursor, and does not change the coding host's model.
-It needs Ruby, outbound HTTPS and `OPENROUTER_API_KEY` in the process that
-runs Shaka.
+The opt-in [DeepSeek reviewer](settings.md#reviewlocal_review_agents) works with
+any of these agents and does not change your agent's model. It needs outbound
+HTTPS and an `OPENROUTER_API_KEY` where Shaka runs.
 
 To support another coding agent, [contribute](../CONTRIBUTING.md) installation
 instructions, a demonstrated task, and known limitations. Keep environment-specific
@@ -38,24 +36,19 @@ open the fresh chat Shaka otherwise uses as a fallback reviewer.
 The DeepSeek reviewer is the one option that needs only outbound HTTPS. Add it to
 your reviewer list and give the cloud agent an `OPENROUTER_API_KEY` secret; your
 local environment variables don't reach a cloud machine. Try one review there
-before relying on it, since Shaka's tests don't run in your cloud environment.
+before relying on it.
 
-Without a reviewer, Shaka's review command reports after one attempt that no
-reviewer can start, and the agent stops the review. Finish it from a local
-session (use `$shaka` in Codex):
+Claude Code on the web can block GitHub's GraphQL API, which Shaka needs to read
+a pull request. Doctor reports the blocked API, and Shaka's pull request
+commands fail there.
+
+Without a reviewer, the agent reports that no reviewer could start and stops the
+review. To finish the review or the pull request, use a local session (use
+`$shaka` in Codex):
 
 ```text
 /shaka https://github.com/OWNER/REPO/pull/123
 ```
-
-A [one-session trial](https://github.com/shakacode/shaka/issues/277#issuecomment-6541487155)
-of Claude Code on the web found GitHub's GraphQL API blocked. Shaka uses that API to
-read a pull request's state, so `shaka pr` failed. Doctor reads repository access over
-REST there and reports the blocked API as a failed GitHub GraphQL check. The
-cloud session's `claude` CLI came signed in, and a Claude review completed there
-after the session installed Shaka and Ruby 3.4, because its Ruby was older. For a
-change Claude wrote, that's a same-provider review. To finish the pull request, use
-the prompt above in a local session.
 
 ## Give consent once
 
@@ -95,15 +88,13 @@ can slip through. Give your agent its own limited keys rather than admin ones. I
 a key is pushed or sent to a reviewer, replace it with a new one, because deleting
 it from the file leaves it in Git history and with whoever received it.
 
-Before implementation, Shaka checks for covering consent and asks only when it
-is missing. It doesn't ask about the reviewer from your coding agent's own
-provider, such as the Codex reviewer in Codex or the Claude reviewer in Claude
-Code, when that reviewer uses the same account and route: your agent already
-sends that provider the review packet. It then runs a tiny reviewer access check,
-enabled by
-[`review.startup_check`](settings.md#reviewstartup_check). Standing consent is
-reused without another question. In Codex, Auto-review still decides each
-actual command.
+Shaka asks only when no statement covers the review. It doesn't ask about a
+reviewer from your coding agent's own provider on the same account, such as the
+Codex reviewer in Codex, because your agent already sends that provider your
+code. Before implementation, Shaka also sends each reviewer a tiny access check
+that contains no code but may use quota;
+[`review.startup_check`](settings.md#reviewstartup_check) turns it off. In Codex,
+Auto-review still decides each command.
 
 ## Approve private-code reviews in Codex
 
@@ -176,8 +167,7 @@ ask for consent each time.
    Doctor reads the settings in that checkout. It marks Claude `configured`
    when they list it, otherwise `optional`, and shows whether the `claude` CLI is on your `PATH`. It
    does not check the sign-in.
-   On your next task, Shaka quotes your statement instead of asking. It then
-   sends Claude a tiny access check that contains no code but may use quota.
+   On your next task, Shaka quotes your statement instead of asking.
 
 Write a new statement before reviews send more than the old one covers. That
 includes a new provider or relay service such as OpenRouter, a repository the
