@@ -1,7 +1,7 @@
 # Start here
 
-Install Shaka, then give it a small fix in a project you know. You don't need to
-read anything else first.
+Install Shaka, then give it something small to fix. You don't need to read anything
+else first.
 
 Use `/shaka` in Claude Code, Cursor, or OpenCode and `$shaka` in Codex
 ([other agents](coding-agents.md)).
@@ -16,9 +16,7 @@ Ask your coding agent:
 Install Shaka from https://github.com/shakacode/shaka.
 ```
 
-You need Ruby 3.4 or later, Git 2.41 or later, an authenticated
-[GitHub CLI](https://cli.github.com/), and a coding agent that can load skills and
-run commands. To run the commands yourself, follow [manual installation](manual-installation.md).
+Prefer to install it manually? Follow [manual installation](manual-installation.md).
 
 Check the install:
 
@@ -26,8 +24,7 @@ Check the install:
 /shaka doctor
 ```
 
-It checks Ruby, Git, and GitHub access. If it reports a problem, tell your agent to
-fix it. If the Shaka skill doesn't appear, start a new chat and try again.
+It tells you if anything is missing. If it reports a problem, tell your agent to fix it. If the Shaka skill doesn't appear, start a new chat and try again.
 
 <a id="2-choose-private-trial-or-team-setup"></a>
 <a id="2-choose-individual-trial-or-team-setup"></a>

@@ -11,7 +11,7 @@ you to decide.
 ## Why use Shaka
 
 - **Review faster.** Each PR says why the change exists, how it was checked, and
-  which files a person should read, or that the description is enough.
+  which files you should read, if any.
 - **See the proof and the cost.** Each check links to its result, unproven claims
   stay visible, and the PR shows available usage and cost. UI changes add
   before-and-after screenshots.
@@ -19,12 +19,11 @@ you to decide.
   push, so you repeat fewer CI runs.
 - **Spend less time directing the process.** Describe the outcome, and Shaka
   supplies the steps.
-- **Keep control of merging.** You merge by default, or
-  [let the agent merge](working-with-shaka.md#choose-a-merge-policy) after
-  required checks and approvals.
-- **Reduce prompt-injection exposure.** On public repositories, Shaka keeps comments
-  from untrusted authors away from the agent. [Review safety](workflow.md#trust-model)
-  explains the boundary.
+- **Stay in charge of merging.** By default, you merge. Even if you
+  [let the agent merge](working-with-shaka.md#choose-a-merge-policy), large or risky
+  changes still come back to you.
+- **Less prompt-injection risk.** On public repositories, Shaka
+  [ignores comments from untrusted authors](workflow.md#trust-model).
 - **Use one workflow across projects.** Each repository
   [keeps its own](configure-repository.md#use-shaka-across-projects) checks,
   reviewers, and merge policy.
@@ -51,7 +50,7 @@ See [what a PR answers](pr-verification.md#answers-for-your-next-decision).
 
 | Say | What happens |
 | --- | --- |
-| `/shaka <task or issue link>` | Delivers the task as a PR. |
+| `/shaka <task or issue link>` | Does the task and opens a PR. |
 | `/shaka doctor` | Checks your setup. If it reports a problem, tell your agent to fix it. |
 | `/shaka settings` | Explains this repository's settings. Ask it to change one. |
 | Anything else | Ask your agent how to get Shaka to do it. |
