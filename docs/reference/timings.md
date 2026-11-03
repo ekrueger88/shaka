@@ -60,7 +60,7 @@ its report for findings. **Not completed** describes execution, not a favorable
 or unfavorable verdict.
 
 Failed or incomplete steps have table rows with exit codes. If the chart cannot
-render, the table lists all retained steps. A step overlaps its timeline
+render, the table lists up to 30 retained steps. A step overlaps its timeline
 stretch; adding both would count the same time twice.
 
 Each description update keeps steps published by earlier sessions or machines.

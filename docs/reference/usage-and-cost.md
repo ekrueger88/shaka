@@ -23,9 +23,10 @@ Explain which work this PR's costs cover, what is missing, and whether reports o
 | Cache writes | Input stored in the prompt cache for reuse. |
 
 Rows group implementation, review, integration, and shared planning. `×5` means
-five reports share a row. Empty columns are omitted. `—` means unreported, and
-`+` marks an estimate missing some usage or prices. Counts are rounded; `45.3M`
-means about 45.3 million tokens.
+five reports share a row. Empty columns are omitted. `—` means unreported.
+`+` marks a lower-bound estimate when usage or prices are missing, or when
+earlier reports appear below and are excluded from the total. Counts are rounded;
+`45.3M` means about 45.3 million tokens.
 
 The total adds cost and credit estimates, not tokens, because hosts count tokens
 differently. Reports can overlap and count a response twice. A `+` marker does
@@ -50,9 +51,9 @@ Do not add a Codex row's cached input to its input again.
 
 ## How estimates are priced
 
-Each report keeps the rate card, verification date, and source links used when
-it was measured. Carrying a report to a later revision preserves its estimate;
-current prices may differ.
+Rate-card estimates name their verification date and source links. Carrying a
+report to a later revision preserves its pricing note and estimate; current
+prices may differ.
 
 OpenAI rows distinguish Codex plan credits from API-equivalent USD. Cursor uses
 on-demand list prices. Anthropic prices uncached input, cache reads, and cache
