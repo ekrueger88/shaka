@@ -79,18 +79,13 @@ such as a ready time no update recorded before the merge. Neither means zero.
 | Between checkpoints | The PR opens, or a wait ends | The next wait starts, the PR merges or closes, or this update |
 | Waiting on a person | The agent asks for your answer, your merge approval, or a manual resume | The agent resumes, or the PR merges or closes |
 
-The task start comes from the agent, or otherwise from the earliest implementation
-usage report that covers the whole task, and is retained across description
-updates. Shaka uses it to include planning and implementation before the first commit. The
-**Before first recorded validation** interval shows the elapsed wall-clock time
+The task start lets the timeline include planning and implementation before the
+first commit. The **Before first recorded validation** interval shows the time
 from that start to the earliest recorded validation run, including a focused test.
-It overlaps the stretches and is not added to the totals again. Missing start or
-validation records are reported as unavailable.
-If a validation timestamp predates the reported start, the interval is unavailable
-and description publication continues.
+It overlaps the stretches and is not added to the totals again. It reads
+unavailable when either record is missing.
 
-Shaka reads PR opening, closing, commit and label times from GitHub every time it updates the description. A
-wait is the time one of the attention labels stayed on the PR:
+A wait is the time one of the attention labels stayed on the PR:
 `awaiting-answer`, `awaiting-merge-approval`, or `awaiting-resume`. The agent
 adds a label when it stops for you and removes it when work resumes.
 
@@ -104,10 +99,9 @@ adds a label when it stops for you and removes it when work resumes.
 - Without a recorded task start, the timeline starts at the first commit and
   excludes earlier work. A rebase can move that date; when it falls after the PR
   opened, the first row is omitted.
-- Ruby checks the task start's timestamp and order, but does not verify when work
-  actually began. A start read from a usage report is the agent's first response in
-  that report, moments after the request. A task that moved to a new chat before
-  its PR opened shows only the new chat's time.
+- The task start is when the agent began working, moments after your request.
+  A task that moved to a new chat before its PR opened shows only the new chat's
+  time.
 - The ready time appears once a description update or a watch sees the gate green,
   so it can be missing until the description next updates. It stays missing when
   the configured CI review did not run, such as a review skipped for a small change.
@@ -144,11 +138,9 @@ For example:
 If the bars cannot be drawn, the section lists every step in this table instead, and
 the rest of the description still publishes.
 
-The steps come from Shaka's timing log on the machine that ran them. A step
-belongs to the PR when it reviewed one of the PR's commits, or, for a validation
-run, when it tested exactly the files a commit holds. Each description update keeps
-the steps earlier updates published, so steps from another session or machine
-stay listed.
+Each machine records the steps it runs, and its next description update adds
+them. Steps an earlier update published stay listed, so steps from another
+session or machine remain.
 
 Limits:
 
@@ -158,15 +150,11 @@ Limits:
   fix, is not listed.
 - A rebase replaces the PR's commits. Steps logged against the old commits stay
   listed only if an update published them before the rebase.
-- Only the PR's latest 100 commits are matched.
 - On a PR from a fork, whose author can edit its description, earlier updates'
   steps are not kept. Only steps logged on the machine making the update appear.
 - The description keeps the latest 50 steps, and the bars and totals cover only
   those. The table shows the latest 30 of its rows. The section notes either cut.
 - A step logged on a machine that never updated the description afterward is
   missing, so treat the totals as what was recorded, not the whole task.
-- The earliest recorded validation time survives the step retention limit once
-  published. If older steps were already dropped before that time was saved,
-  the interval stays unavailable.
 
 [Usage and cost](usage-and-cost.md) explains the section beside it.
