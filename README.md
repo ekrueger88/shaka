@@ -11,7 +11,7 @@ builds, verifies, and reviews. You get a pull request (PR) you can judge quickly
 [Read a real Shaka PR](https://github.com/shakacode/shaka/pull/667) ·
 [See the guides and more examples](https://shaka.shakacode.com/)
 
-![You give a task. The agent builds, verifies, and reviews. You review one clear PR with a walkthrough, check and review results, and the decisions left for you.](docs/img/task-to-pr.svg)
+![You give a task. The agent builds, verifies, and reviews. You review one clear PR with a walkthrough, check and review results, and the decisions you still need to make.](docs/img/task-to-pr.svg)
 
 <a id="why-use-it"></a>
 

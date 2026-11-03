@@ -5,7 +5,7 @@
 You give a task. The agent builds, verifies, and reviews. You get a pull request
 (PR) you can judge quickly.
 
-![You give a task. The agent builds, verifies, and reviews. You review one clear PR with a walkthrough, check and review results, and the decisions left for you.](img/task-to-pr.svg)
+![You give a task. The agent builds, verifies, and reviews. You review one clear PR with a walkthrough, check and review results, and the decisions you still need to make.](img/task-to-pr.svg)
 
 ## Why use Shaka
 
