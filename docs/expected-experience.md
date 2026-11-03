@@ -65,7 +65,7 @@ A settings block describes the run; it does not prove tests or review happened.
 | Validation fails | The agent fixes the problem and reruns the affected checks. The PR stays unverified until they complete. |
 | The commit changes after tests or review | The agent reruns whatever the earlier results no longer cover. |
 | Validation or review settings change | Earlier results may no longer count. Editing your validate script, for example, reruns both validation and review. |
-| Shaka updates during a task | Earlier results still count unless the update changes how Shaka runs or checks them, or is a new Shaka version. |
+| Shaka updates during a task | Earlier validation and review still count unless the update changes the Shaka code that runs them or checks their results. A new Shaka version, or a change to how review comments are displayed, also means a rerun. |
 | The description is reworded for the same commit | Verified results stay, marked as not rechecked, except in a pull request from a fork, whose author can edit the description. |
 | A result is missing, a reviewer is unavailable, or CI is still running | The PR shows the gap. Missing or stale evidence cannot satisfy a required gate. |
 | An optional reviewer is pending | The PR says so and follows your [waiting choice](settings.md#reviewci_review_wait); required gates still apply. |

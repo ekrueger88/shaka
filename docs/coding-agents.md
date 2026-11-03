@@ -89,10 +89,10 @@ a key is pushed or sent to a reviewer, replace it with a new one, because deleti
 it from the file leaves it in Git history and with whoever received it.
 
 Shaka asks only when no statement covers the review. It doesn't ask about a
-reviewer from your coding agent's own provider on the same account, such as the
-Codex reviewer in Codex, because your agent already sends that provider your
-code. Before implementation, Shaka also sends each reviewer a tiny access check
-that contains no code but may use quota;
+reviewer that reaches your coding agent's own provider through the same account
+and route, such as the Codex reviewer in Codex, because your agent already sends
+that provider your code. Before implementation, Shaka also sends each reviewer
+a tiny access check that contains no code but may use quota;
 [`review.startup_check`](settings.md#reviewstartup_check) turns it off. In Codex,
 Auto-review still decides each command.
 
