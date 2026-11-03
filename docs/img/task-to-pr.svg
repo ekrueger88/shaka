@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 432" width="360" role="img" aria-labelledby="t d">
 <title id="t">From task to pull request</title>
-<desc id="d">You give a task. The agent builds, verifies, and reviews, repeating tests and review, with screenshots for UI changes. You review one clear pull request with a walkthrough, check and review results, and the decisions left for you, then decide what happens next.</desc>
+<desc id="d">You give a task. The agent builds, verifies, and reviews, repeating tests and review, with screenshots for UI changes. You review one clear pull request with a walkthrough, check and review results, and the decisions you still need to make, then decide what happens next.</desc>
 <style>
 .bg{fill:#fff;stroke:#d9e0e7}
 text{font-family:ui-sans-serif,-apple-system,"Segoe UI",Helvetica,Arial,sans-serif;fill:#0f1724}

@@ -51,7 +51,7 @@ history. Shaka handles both.
 
 ## What Shaka does while you wait
 
-![You give a task. The agent builds, verifies, and reviews. You review one clear PR with a walkthrough, check and review results, and the decisions left for you.](img/task-to-pr.svg)
+![You give a task. The agent builds, verifies, and reviews. You review one clear PR with a walkthrough, check and review results, and the decisions you still need to make.](img/task-to-pr.svg)
 
 You give the task as a sentence or as a GitHub issue, a to-do note on GitHub.
 Then the agent does the gray box:
