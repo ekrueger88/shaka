@@ -72,12 +72,13 @@ A small diagram can show how several callers reach a check:
 ```text
 RefundsController#create ──┐
 RefundRetryJob#perform ────┴── Refunds.issue
-                               ├── RefundPolicy.check
-                               └── PaymentGateway.refund
+                               ├── RefundPolicy.check      refuses a second refund for the same order (new)
+                               └── PaymentGateway.refund   reached only after the policy passes
 ```
 
-A change confined to one condition usually needs only a sentence. A diagram
-explains the change; tests and observed results establish whether it works.
+For a change confined to one condition, a sentence is enough: `RefundPolicy.check`
+now rejects refunds larger than the original charge. The call order is unchanged.
+A diagram explains the change; tests and observed results establish whether it works.
 
 <a id="what-a-rollback-undoes"></a>
 <a id="reconsider-the-finished-result"></a>
@@ -92,7 +93,13 @@ concerns. A **Merge** recommendation is advice, not permission to merge.
 Substantive concerns need a fix, evidence disproving them, or your explicit
 acceptance. Green tests alone do not settle them.
 
-The checkpoint also supplies the squash commit message and its verification gaps.
+After a **Proceed** verdict, you can accept a concern explicitly: "I accept the
+unknown-frequency concern; merge as is." Check that the recorded acceptance
+matches your decision. Acceptance does not override **Simplify/reframe** or
+**Do not merge**; those need revision or reassessment.
+
+Under Auto, **Inadequate** or **Cannot judge** verification stops the agent's
+merge until you approve that commit. The checkpoint supplies the squash message.
 
 ## Approval and attention labels
 
@@ -100,6 +107,13 @@ By default, you merge on GitHub or approve the agent's merge. An initial "Go"
 does not grant that approval. Auto authorizes eligible merges; large or risky
 changes still need your decision. Required GitHub approvals apply in both modes.
 See [merge choices](working-with-shaka.md#choose-a-merge-policy).
+
+A GitHub **Approve** also grants Ask authority when you named that login as a
+merge approver for this task. A required GitHub review must still come from an
+eligible reviewer; approval in chat cannot replace it.
+
+Find automatic merges with `is:merged label:auto-merged`. Queue submissions and
+merges whose label failed are exceptions; the agent reports them.
 
 [Attention labels](working-with-shaka.md#find-prs-waiting-on-you) identify PRs
 that need an answer, merge approval, or a resumed chat. The handoff names who
@@ -111,7 +125,9 @@ checks later feedback and how to continue.
 ## Return points
 
 To [revise earlier guidance](working-with-shaka.md#revise-earlier-guidance-and-try-again),
-ask for a return point. Recovery covers only preserved work.
+ask for a return point. Each label, such as **C1 — Initial request** or
+**C2 — Revised direction**, pairs your guidance with a code revision and the
+work state preserved for recovery. Recovery covers only preserved work.
 After corrections, look for evidence covering the new commit. A draft blocked
 by a base failure should name the failed check, comparison, and next action.
 
@@ -124,9 +140,11 @@ explicitly skipped.
 
 ### Merge queues
 
-A queue takes no custom message. The checkpoint names the queue's message
-setting. Shaka refuses a queue configured to copy the whole PR description into
-history; choose **Default message** or **Pull request title** instead.
+A queue takes no custom message. Before adding a PR, check the message setting
+named in its checkpoint. **Pull request title and description** copies the whole
+description into history, including WIP Details. The agent refuses to submit to
+that queue; GitHub does not prevent you from doing it yourself. Choose
+**Default message** or **Pull request title** instead.
 
 <a id="see-which-skills-contributed"></a>
 <a id="see-what-people-said"></a>
