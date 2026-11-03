@@ -305,9 +305,10 @@ report's last line names the commit and the reviewer:
 REVIEWED <commit> BY <provider>/<family> EFFORT <effort> FINDINGS <count>
 ```
 
-Any reviewer counts, including the implementation model in a fresh session. The
-line records what the reviewer reported; it does not prove a reviewer ran or that
-its findings were fixed.
+`merge` counts only comments from the GitHub account running the merge, and only
+when that line ends the comment. Any reviewer counts, including the
+implementation model in a fresh session. The line records what the reviewer
+reported; it does not prove a reviewer ran or that its findings were fixed.
 
 A review of an earlier commit still counts in two cases:
 
@@ -956,7 +957,7 @@ Keep the default prompt's response format in your copy. Shaka treats the PR open
 as text to assess, not as instructions to follow.
 
 If the selected reviewer cannot run, the coding agent checks the opening itself
-with the same instructions. Shaka keeps your model choice for the next check.
+with the same instructions. Shaka does not switch to another model.
 
 ## `prose_limits`
 
