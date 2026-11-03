@@ -1,13 +1,15 @@
 # Understanding usage and cost reports
 
-Use a PR's **Usage and cost** section to see the reported model work and its
-estimated cost. Read the coverage note before comparing totals: a report may
-cover part of a session, omit tools, or lack attribution to individual commits.
+Expand **Shaka metrics → Usage and cost** for the reported model work and its
+estimated cost. Read the coverage note before comparing totals. Missing values
+mean unknown, not zero; dollar estimates are not an invoice.
 
-The model line at the top of the description ends with that USD total. This
-section keeps the full table and does not repeat the total in its title. A missing total says `UNKNOWN`, which is not zero.
+```text
+Explain which work this PR's costs cover, what is missing, and whether reports overlap.
+```
 
 ## What the columns mean
+
 
 | Column | Meaning |
 | --- | --- |
@@ -20,20 +22,17 @@ section keeps the full table and does not repeat the total in its title. A missi
 | Reasoning | Tokens reported as reasoning. This can be a subset of output; do not add it again. |
 | Cache writes | Input stored in the prompt cache for reuse. |
 
-Implementation rows come first, then review, integration, and shared planning,
-each sorted alphabetically by report name.
+Rows group implementation, review, integration, and shared planning. `×5` means
+five reports share a row. Empty columns are omitted. `—` means unreported, and
+`+` marks an estimate missing some usage or prices. Counts are rounded; `45.3M`
+means about 45.3 million tokens.
 
-A column with no measured value is omitted. `—` means unreported, never zero.
-`+` marks a minimum when some usage or cost is unreported. Token counts are
-rounded for readability: `45.3M` means about 45.3 million tokens. The stored
-records retain the original counts.
-
-The total row adds cost and credit estimates. It leaves token totals blank
-because hosts count tokens differently. Two retained reports can overlap, so a
-sum can count the same response twice; a minimum marker does not guarantee
-that the reports are disjoint.
+The total adds cost and credit estimates, not tokens, because hosts count tokens
+differently. Reports can overlap and count a response twice. A `+` marker does
+not establish that reports are disjoint.
 
 ## Compare host counters carefully
+
 
 | Host | Input accounting | Output accounting |
 | --- | --- | --- |
@@ -48,33 +47,26 @@ For example, a Codex row with 100,000 input tokens and 80,000 cached input
 tokens has 20,000 uncached input tokens. A Claude row with 20,000 input tokens
 and 80,000 cached input tokens describes the same input quantities.
 Do not add a Codex row's cached input to its input again.
-OpenCode's native total includes input, output, reasoning, and cache tokens,
-but OpenCode 2 does not report one; Cursor's native total is unreported.
 
 ## How estimates are priced
 
-Each report uses the rate card available when it was measured. Carrying it to
-a later PR revision preserves that estimate; it does not apply newer prices.
-The PR retains its rate-card origin, verification date, and source links so
-older estimates can be interpreted after prices change.
+Each report keeps the rate card, verification date, and source links used when
+it was measured. Carrying a report to a later revision preserves its estimate;
+current prices may differ.
 
-OpenAI reports distinguish standard Codex plan credits from API-equivalent USD
-estimates. Cursor estimates use its on-demand list prices. Anthropic estimates
-charge uncached input, cache reads, and cache writes separately. A one-hour
-cache write costs more than a five-minute write. Supported Opus fast-mode
-responses use their published fast-mode rates. Standard-speed responses use
-standard rates. Fast-mode responses without a published rate remain unpriced. Pi uses its recorded nominal USD instead of repricing it.
-OpenRouter uses the response's reported account charge in USD credits instead of
-direct DeepSeek list prices. Missing counters or cost remain UNKNOWN. A paid
-incomplete response can still contribute reported cost without establishing a
-completed review; a timeout without response metadata has unknown per-call cost.
+OpenAI rows distinguish Codex plan credits from API-equivalent USD. Cursor uses
+on-demand list prices. Anthropic prices uncached input, cache reads, and cache
+writes separately; cache duration and fast mode can affect the rate. Pi keeps
+its recorded nominal cost. OpenRouter uses the response's reported account
+charge rather than direct DeepSeek list prices.
 
-Shaka leaves unsupported models or incomplete billing categories unpriced.
-A partially priced report keeps the known estimate with a `+` marker and a
-reason for the missing amount. The PR's original pricing references apply to
-its recorded estimate; current provider prices may differ.
+Unsupported models or incomplete billing categories stay unpriced. A partial
+estimate shows the known amount, a `+`, and the reason. An incomplete review may
+still cost money; a timeout without response metadata has unknown per-call cost.
+Cost does not establish that review completed.
 
 ## Keep usage when work changes hands
+
 
 Usage saved as comments on the PR survives a change of model or coding tool. A new owner
 reads those comments instead of the earlier machine's records, and each response counts
@@ -96,11 +88,4 @@ is unavailable” permits a task estimate, but does not establish each commit's
 cost. Historical reviews retain the commit they reviewed; they do not become
 reviews of the latest revision.
 
-Ask the agent:
-
-> Explain which work this PR's usage covers, what is missing, and whether any
-> reports overlap before comparing its total with another PR.
-
-[PR verification](../pr-verification.md) explains how to assess the change and its
-validation evidence. Ask your agent to disclose missing records and shared
-attribution when reporting usage.
+[PR verification](../pr-verification.md) explains how to assess the change and its evidence.
