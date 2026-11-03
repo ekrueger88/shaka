@@ -160,7 +160,8 @@ approve there; a chat instruction does not count for it.
 
 Under **Auto**, the agent merges eligible work itself. Every check on the commit has to
 pass, not only the required ones, and the agent hands the PR back to you when one fails.
-PRs it merged carry the `auto-merged` label.
+A check that has not started when the agent merges is not seen, so make a check required
+if it must always gate the merge. PRs it merged carry the `auto-merged` label.
 
 If GitHub needs the branch updated, the agent rebases and checks the new commit; your
 approval carries forward only when the behavior is unchanged. Both modes keep
