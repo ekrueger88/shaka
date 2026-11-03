@@ -25,8 +25,7 @@ each sorted alphabetically by report name.
 
 A column with no measured value is omitted. `—` means unreported, never zero.
 `+` marks a minimum when some usage or cost is unreported. Token counts are
-rounded for readability: `45.3M` means about 45.3 million tokens. The stored
-records retain the original counts.
+rounded for readability: `45.3M` means about 45.3 million tokens.
 
 The total row adds cost and credit estimates. It leaves token totals blank
 because hosts count tokens differently. Two retained reports can overlap, so a
@@ -65,9 +64,9 @@ cache write costs more than a five-minute write. Supported Opus fast-mode
 responses use their published fast-mode rates. Standard-speed responses use
 standard rates. Fast-mode responses without a published rate remain unpriced. Pi uses its recorded nominal USD instead of repricing it.
 OpenRouter uses the response's reported account charge in USD credits instead of
-direct DeepSeek list prices. Missing counters or cost remain UNKNOWN. A paid
-incomplete response can still contribute reported cost without establishing a
-completed review; a timeout without response metadata has unknown per-call cost.
+direct DeepSeek list prices. Missing counters or cost remain UNKNOWN. A review
+that did not finish can still show a cost, and one that timed out may show its
+cost as UNKNOWN.
 
 Shaka leaves unsupported models or incomplete billing categories unpriced.
 A partially priced report keeps the known estimate with a `+` marker and a
