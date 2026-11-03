@@ -316,8 +316,12 @@ Local review does not waive `one` or `all`. With `review.required: none`, no
 configured review jobs apply. GitHub's required checks and approvals apply in
 every mode. A task can increase the wait, but cannot lower the repository minimum.
 
-Under Ask with `none` or `one`, checks GitHub does not require may still be running or
-failing when Shaka merges. With `all`, every check on the PR must pass first. Auto requires every reported check to pass regardless of this setting.
+Under Ask with `none` or `one`, optional checks may still be running or failing
+when the agent merges. With `all`, every reported check must pass first.
+Auto requires every reported check to pass regardless of this setting; skipped
+and neutral results count as passing. A failed check returns the PR to you under Ask.
+An optional job that has not started is not seen, so make a check required if it
+must always gate merging.
 
 ## `review.local_max_rounds`
 
@@ -919,9 +923,9 @@ execution details, and usage visible. Unreadable repository settings omit it too
 
 **Optional. Default: `true`.**
 
-PR descriptions list the comments people wrote under **Human comments**, so they are
-not lost among agent posts. [See what people said](pr-verification.md#see-what-people-said)
-shows the list and explains each column.
+PR descriptions collect people's feedback under **Human comments**. The
+[PR reading guide](pr-verification.md#see-what-people-said) points to that list
+and explains when it is refreshed.
 
 To leave the list out of this repository's PR descriptions, set:
 

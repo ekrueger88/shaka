@@ -174,9 +174,9 @@ for experiments. A fork PR cannot choose its own review rules. See
 
 ## What is a checkpoint?
 
-It helps the task owner choose what to do next. See the
-[checkpoint guide](pr-verification.md#checkpoint) for its terms,
-how it differs from the code walkthrough, and current report labels.
+A checkpoint assesses whether the change solves the problem and is worth
+maintaining. Use its [recommendation and evidence](pr-verification.md#checkpoint)
+to decide what happens next.
 
 ## Can I hide my checkout path while keeping the chat locator?
 

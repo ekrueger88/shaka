@@ -168,9 +168,8 @@ turn it off, in team or individual settings.
 
 ## Decide what happens next
 
-Shaka recommends what to do next at a
-[checkpoint](pr-verification.md#checkpoint) and records the owner's
-choice for later. See that guide for the terms and current report labels.
+At a [checkpoint](pr-verification.md#checkpoint), read the recommendation,
+reasons, and verification gaps before deciding whether to merge.
 [Checkpoint settings](settings.md#checkpoint) choose who evaluates
 the result, with team or individual setup.
 
