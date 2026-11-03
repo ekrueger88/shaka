@@ -252,8 +252,7 @@ merge:
   hold_labels: [hold, do-not-merge]
 ```
 
-`shaka merge` reads the PR's labels again on its last read of the PR before it submits, so a
-label added while the agent checks the PR still stops it. The agent then names the label and
+A label added while the agent is checking the PR still stops it. The agent then names the label and
 hands the PR back to you. No confirmation in chat gets past a hold; remove the label when the PR
 may merge. Label names match without regard to case.
 
@@ -281,11 +280,9 @@ This controls when configured CI review reports are required. Options:
 - `always`: every PR, including trivial changes. The agent follows this for local
   review too, but `shaka merge` still accepts a waiver reason, described below.
 - `none`: no configured CI review backstop, and neither `shaka merge` nor the
-  `awaiting-merge-approval` label needs a local review. `shaka description` accepts a
-  validation result without a review result, and its settings block says the repository
-  does not require review; when
-  no review ran, the Validation and review line says so too. A review that ran anyway
-  must still match the current commit. Omit `ci_review_jobs` with this setting.
+  `awaiting-merge-approval` label needs a local review. The PR description says the
+  repository does not require review, and says so when no review ran. Omit
+  `ci_review_jobs` with this setting.
 
 Every value, `none` included, keeps a local review before push. Only trivial prose
 and no-op changes may skip it, and not under `always`:
@@ -300,10 +297,6 @@ and no-op changes may skip it, and not under `always`:
 
 ![A local review runs before push, configured CI review jobs report after push, and the merge check requires a posted review covering the merged commit before the agent merges.](img/review-layers.svg)
 
-`shaka review run` verifies the reviewer process completed and returned a report
-for the expected commit. `shaka review check` validates a supplied report but does
-not prove a reviewer process ran.
-
 Before it merges, `shaka merge` checks that the PR has a local review of the
 commit being merged. The agent posts the review report as a PR comment, and the
 report's last line names the commit and the reviewer:
@@ -312,20 +305,17 @@ report's last line names the commit and the reviewer:
 REVIEWED <commit> BY <provider>/<family> EFFORT <effort> FINDINGS <count>
 ```
 
-`merge` counts only comments from the GitHub account running the merge, and only
-when that line ends the comment. Any reviewer counts, including the
-implementation model in a fresh session.
+Any reviewer counts, including the implementation model in a fresh session. The
+line records what the reviewer reported; it does not prove a reviewer ran or that
+its findings were fixed.
 
 A review of an earlier commit still counts in two cases:
 
 - **Updated from the base branch.** Bringing the branch up to date with the base,
   by merge or rebase, keeps the review when there were no conflicts and nothing
-  else changed. `merge` checks this with Git in the local checkout: the head must
-  match, file for file, what merging the reviewed commit with the new base
-  produces. The check runs Git's built-in merge in a temporary repository, so no
-  merge driver or script runs and nothing is written to your repository. If Git
-  is older than 2.41 or those commits are not in the checkout, `merge` asks for a
-  new review or a waiver instead.
+  else changed. `merge` confirms this with Git in your checkout without writing to
+  it. With Git older than 2.41, or without both commits in the checkout, `merge`
+  asks for a new review or a waiver instead.
 - **Ordinary Markdown since.** Every later change is ordinary Markdown. Agent
   instructions are not ordinary Markdown: `AGENTS.md`, `CLAUDE.md`, `GEMINI.md`,
   `SKILL.md`, any other Markdown file whose name starts with `agents`, `claude`,
@@ -337,10 +327,6 @@ When no review applies, `merge` stops before merging. A maintainer can record a
 waiver reason when review was skipped on purpose, a later commit only fixed nits,
 or a CI review covered the commit. The waiver also covers a PR whose
 comments GitHub cannot list. With `review.required: none`, `merge` skips this check.
-
-The merge result shows the review it relied on, or the waiver reason, under
-`review_evidence`. That records what the posted line says. It does not prove a
-reviewer process ran or that its findings were fixed.
 
 When Shaka merges under `auto`, it also stops while the PR's local review reports
 findings needing attention. Neither a waiver nor `review.required: none` changes that,
@@ -378,20 +364,19 @@ Local review does not waive `one` or `all`. With `review.required: none`, no
 configured review jobs apply. GitHub's required checks and approvals apply in
 every mode. A task can increase the wait, but cannot lower the repository minimum.
 
-The agent counts verified reports. The merge helper permits optional pending
-checks (`UNSTABLE`) for `none` and `one`; `all` requires `CLEAN`.
+With `none` or `one`, checks GitHub does not require may still be running or
+failing when Shaka merges. With `all`, every check on the PR must pass first.
 
 ## `review.local_max_rounds`
 
-**Optional. Default: `5`.** A positive integer, validated by `shaka seam check`.
+**Optional. Default: `5`.** A positive integer.
 
-This bounds the commits reviewed in one local review ledger. For example, `3` lets
-an initial review and two follow-up reviews run before the helper refuses another.
+This bounds the commits reviewed in one local review loop, which usually covers one
+pull request. For example, `3` lets
+an initial review and two follow-up reviews run before Shaka refuses another.
 With [`local_review_count`](#reviewlocal_review_count) above 1, all the reviewers of one
 commit together use one of these turns, so `3` with two reviewers allows six reviews
 across three commits.
-The runner reads the setting from the supplied trusted `--settings-ref` (or
-`--criteria-ref`). Without a reference, it uses the default of five.
 
 If the cap leaves an unfixed defect, the agent stops before pushing and tells you.
 You can reassess the task, split it, or choose to push anyway. An authorized push
@@ -464,8 +449,8 @@ Use these provider and family pairs for Shaka's supported local reviewers:
 
 DeepSeek is an optional reviewer alongside your existing reviewers. Add this entry to your trusted
 reviewer list when you want Shaka to send the prompt and diff to OpenRouter and
-its selected upstream provider. Start with low effort; high-effort trials on a
-large diff sometimes consumed the completion budget without returning a report.
+its selected upstream provider. Start with low effort: at high effort on a large
+diff, it can use up its output budget before returning a report.
 
 ```yaml
 - provider: deepseek
@@ -477,10 +462,10 @@ large diff sometimes consumed the completion budget without returning a report.
 Set `OPENROUTER_API_KEY` in the review process environment; keep it out of repository
 files. If you load keys on demand, for example from your keychain, say so in your personal
 agent instructions: agents often start a fresh shell for each command, so the loader must run
-in the same command as the review. No separate reviewer CLI is needed. The adapter supports only this explicit
-[OpenRouter model](https://openrouter.ai/deepseek/deepseek-v4.1-flash); it refuses other
-models and unsupported effort values before sending a request. Omitted effort uses
-the provider default and remains UNKNOWN in Shaka's attestation.
+in the same command as the review. No separate reviewer CLI is needed. Shaka supports only this
+[OpenRouter model](https://openrouter.ai/deepseek/deepseek-v4.1-flash) and the effort
+values in the table. Omitted effort uses the provider default and shows as UNKNOWN on
+the review.
 
 Account settings govern provider routing and data policies. Shaka does not enforce
 a provider allowlist or zero data retention. Before using private code, confirm
@@ -489,10 +474,9 @@ Keep your existing review checks while evaluating this optional reviewer; qualit
 completion and savings remain unproved across workloads.
 
 This reviewer receives the supplied diff and trusted criteria, with no tools or
-filesystem access. It cannot inspect unchanged callers or execute tests. Reports
-retain that coverage limit. Requests use the review timeout, make no automatic
-retry or model substitution, and reject malformed, truncated or unattested output.
-Existing reviewers and merge preferences remain unchanged.
+filesystem access. It cannot inspect unchanged callers or execute tests, and its
+reports say so. Shaka does not retry it or substitute another model. Existing
+reviewers and merge preferences remain unchanged.
 
 OpenRouter's response records token counts and account cost; missing usage stays
 UNKNOWN. See [usage and cost](reference/usage-and-cost.md) for how to interpret
@@ -522,8 +506,8 @@ The same repository settings apply when you work in
 
 Cursor is the coding host. Reviewer entries identify the model provider and
 reviewer CLI, so use `xai` / `grok` for Grok, including when your implementation
-was written in Cursor. Shaka's local review runner supports the three CLIs and the
-OpenRouter API adapter in the table. Cursor supplies the coding host rather than a reviewer CLI.
+was written in Cursor. Local reviews support the reviewers in the table above;
+Cursor is not one of them.
 
 ### Understand a reviewer warning
 
@@ -604,9 +588,8 @@ container.
 **Optional. Default: 1.** How many reviewers from `local_review_agents` read each
 commit before its findings are fixed. To name which providers review instead, use
 [`provider_coverage`](#reviewprovider_coverage); the two cannot both be set. With more than one reviewer, the agent starts
-those reviews concurrently.
-The helper refuses to record findings while a started review is still running.
-The agent combines their findings so a problem two reviewers found is fixed once.
+those reviews concurrently and combines their findings, so a problem two reviewers
+found is fixed once.
 
 Claude implements, and Codex and a fresh Claude session both review:
 
@@ -771,20 +754,14 @@ The PR records the conclusion, reasons, execution settings, and available native
 usage. A failed invocation stays incomplete. “Simplify/reframe”, “Do not merge”, or
 unresolved substantive concerns block readiness and Auto; green technical checks
 and changed settings do not clear them. Earlier executions stay visible on the PR.
-Setting `enabled: false` in the selected configuration opts out and
-requires a visible note. Individual setup applies these choices too. Final
-preparation accepts an individual opt-out only after its note is published on the PR.
+Setting `enabled: false` in the selected configuration opts out, and the PR then
+shows a note saying so. Individual setup applies these choices too.
 
-See [checkpoint terms and current report labels](pr-verification.md#checkpoint).
-The current automated gate concerns pre-merge readiness; these terms do not add
-an approval step or a general outer-loop mechanism.
-
-Ruby validates settings, execution outcome, report shape, and head binding.
-The AI reviewer assesses whether the change solves the problem and is worth
-maintaining. The task owner supplies the original problem and evidence, resolves
-concerns, and establishes merge readiness. Final merge preparation
-requires a report for the current commit with no unresolved concerns, counting a concern
-you [accepted](pr-verification.md#checkpoint) as resolved, or an explicit opt-out.
+Ruby checks the settings, that the checkpoint ran, its report's shape, and that it
+covers the current commit. The AI reviewer judges whether the change solves the
+problem and is worth maintaining. A PR is merge-ready only with a report for the
+current commit and no unresolved concerns, counting a concern you
+[accepted](pr-verification.md#checkpoint) as resolved, or with the opt-out note.
 
 ### Add your own checkpoint questions
 
@@ -835,9 +812,7 @@ project_guidance:
 
 - `pr_evidence`: read before the agent writes the PR description. For example, a
   library can ask for a compatibility run against its oldest supported version, and
-  the agent reports that run in the description's verification. Shaka also shows the
-  guide to the agent each time it publishes the description, so a skipped read still
-  surfaces it.
+  the agent reports that run in the description's verification.
 - `merge_readiness`: read before the [checkpoint](pr-verification.md#checkpoint).
   For example, a data service can require a confirmed backfill plan. The agent lists
   each requirement and its status, and an unmet one blocks the merge-ready claim.
@@ -962,8 +937,8 @@ and `effort: low`, `high`, or `max`. Shaka checks these fixed adapter choices
 when it loads the settings. Grok also needs an explicit model because its CLI
 has no default.
 
-With `enabled: false`, Shaka returns no parsing prompt and launches no opening
-reviewer; the agent still follows your ordinary writing instructions.
+With `enabled: false`, no opening check runs; the agent still follows your
+ordinary writing instructions.
 
 ### Customize the opening check
 
@@ -977,13 +952,11 @@ Leave the setting out to use Shaka's default.
 Shaka reads the file from [the same place as other prompt files](#where-shaka-reads-a-prompt-file).
 
 Prompt files must pass the [review prompt file checks](#reviewreplacement_prompt_file).
-Custom instructions cannot change the JSON fields Shaka expects in the response.
-Shaka treats the PR opening as text to assess, not as instructions to follow.
+Keep the default prompt's response format in your copy. Shaka treats the PR opening
+as text to assess, not as instructions to follow.
 
-If the selected reviewer cannot run, Shaka returns the reason and the prompt for
-the coding agent to apply. It preserves your model choice. A successful result
-is reused while the checked text, instructions, provider, model, and effort stay the
-same.
+If the selected reviewer cannot run, the coding agent checks the opening itself
+with the same instructions. Shaka keeps your model choice for the next check.
 
 ## `prose_limits`
 
@@ -1029,9 +1002,8 @@ example, with individual setup, a local 20-word sentence limit applies to
 both your PR description and walkthrough. A shared team's changed limit takes
 effect after its settings PR merges.
 
-When the agent publishes without a settings reference, Shaka uses its defaults.
-If it cannot read the referenced settings, the description can use the defaults
-and reports why. The walkthrough stops until the settings can be read.
+When Shaka cannot read the settings, a description uses the default limits and
+says why. A walkthrough waits until the settings can be read.
 
 ## Standard command scripts
 
@@ -1289,13 +1261,8 @@ one. If sharing was denied, that denial stays in place. The local locator can st
 be published, or the field can stay `UNKNOWN` when you asked to keep the chat link
 off the PR.
 
-`description` reads the calling session's public machine alias, coding host, and
-Codex thread id. It refuses `UNKNOWN` when that value was available and was not
-withheld. An invalid alias, a machine's own name, and a thread id that is not a
-UUID stay `UNKNOWN`, and the message omits those values. The note records each
-field as available, unavailable, withheld, or invalid, so a later handoff does not
-need the original session. Links from other hosts can have different access rules. Tell
-the agent before it publishes when a chat locator should stay off the PR.
+Links from other hosts can have different access rules. Tell the agent before it
+publishes when a chat locator should stay off the PR.
 
 This setting controls the Workspace field only. It does not remove private
 information elsewhere in a PR, and expandable sections on public PRs are public too.
