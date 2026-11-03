@@ -158,8 +158,9 @@ on GitHub. Saying "Go" at the start does not grant this. An **Approve** review a
 counts when it comes from a login you named to the agent as a merge approver for this
 task. When the repository requires a GitHub approval, an eligible reviewer still has to
 approve there; a chat instruction does not count for it. The agent cannot set
-`awaiting-merge-approval` while the local review has open findings or no published
-review covers the commit.
+`awaiting-merge-approval` while the local review has open findings. It also needs a
+published review of the commit, unless it skipped review on purpose with a stated
+reason or the repository sets `review.required: none`.
 
 Under **Auto**, the agent merges eligible work itself. Every check on the commit has to
 pass, not only the required ones, and the agent hands the PR back to you when one fails.
