@@ -21,7 +21,7 @@ $shaka <task or issue link>
 Set up Shaka just for me. Go.
 ```
 
-Settings stay out of commits. See [individual support and acceptance gaps](expected-experience.md#individual-setup).
+Settings stay out of commits. See [individual setup](expected-experience.md#individual-setup).
 With team settings, local choices do not override them. You can explicitly
 [select a settings PR](settings.md#preview-settings-before-adopting-them) for one task.
 Trying a different Shaka implementation is separate: see [try a Shaka PR](trying-pr-versions.md).

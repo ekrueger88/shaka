@@ -1,9 +1,7 @@
 # Start a Shaka task from Linear
 
-Open a Linear issue in Codex CLI with its prompt, repository, and suggested
-branch already supplied. The optional macOS adapter opens Terminal and starts
-Shaka's existing Codex launcher. You still choose the repository in Linear and
-keep your usual Codex account and model settings.
+Open a Linear issue in Codex CLI with its prompt, repository, and branch supplied.
+The optional macOS adapter opens Terminal with your usual Codex account and model.
 
 Ask your agent:
 
@@ -13,9 +11,7 @@ Use my installed Shaka checkout and preserve any existing Linear configuration.
 ```
 
 You need macOS, the Linear desktop app, a working Codex CLI in a new Terminal
-window, and a [source installation of Shaka](manual-installation.md). This
-adapter uses macOS's system Ruby and Terminal. Shaka's launcher uses the Ruby
-recorded by its installer. Windows, Linux, and other terminal apps are not
+window, and a [source installation of Shaka](manual-installation.md). Windows, Linux, and other terminal apps are not
 covered by this recipe.
 
 ## Configure Linear
@@ -49,7 +45,7 @@ describes how Linear supplies them.
 Select **Work on issue → Custom script**, then choose the issue's local Git
 checkout. macOS may ask permission for Linear to control Terminal; allow it to
 open the session. Codex starts with the installed Shaka workflow and the issue
-context. Shaka uses the suggested tracker branch when claiming the task.
+context. The branch uses Linear's suggested name so Linear can link the PR to the issue.
 
 The issue's contents are passed as data; the adapter does not run commands from
 the issue or change its Linear status. Normal Shaka review and merge choices
