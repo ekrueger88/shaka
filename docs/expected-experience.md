@@ -76,11 +76,12 @@ revision, unfinished work, and next action.
 Before a PR exists, give the new chat the task, checkout, and branch, plus saved
 check results if available. It reruns checks whose results are missing.
 
-Individual settings follow you into new worktrees while the earlier checkout
-still exists. Recovery copies protect captured settings, not feature changes or
+Captured individual settings can seed a new worktree even after the earlier
+worktree is deleted. Keep the earlier checkout available to capture its latest
+edits first. Recovery copies protect captured settings, not feature changes or
 conversations. Uncaptured edits, or deletion of the shared Git directory, cannot
-be recovered from those copies. If team settings arrive, they take precedence
-over your saved individual settings.
+be recovered from those copies. Team settings take precedence over saved
+individual settings.
 
 To revisit earlier guidance, ask for a [return point](pr-verification.md#return-points).
 It can restore only the work state the agent recorded.
