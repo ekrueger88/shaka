@@ -7,7 +7,13 @@ decide. The top of the description is usually enough to decide; everything below
 is evidence to open when something looks off.
 
 You decide one of three things: merge the commit the agent handed you, ask for a
-revision, or answer a question the agent could not settle.
+revision, or answer a question the agent could not settle. Tell the agent in its chat;
+it also reads review comments on the PR from accounts your repository trusts.
+
+Your repository chooses who merges. Under **Ask**, the default, the agent stops with a
+handoff: a chat message naming the verified commit, which waits for your decision.
+Under **Auto**, it merges eligible work itself. The task owner, the person or
+coordinating agent running the task, makes the PR's recommendation.
 
 <a id="read-a-pr-for-your-decision"></a>
 <a id="answers-for-your-merge-decision"></a>
@@ -27,7 +33,7 @@ October 14, 2026. It shows the layout; it does not approve any other commit.
 | Your question | Where to look |
 | --- | --- |
 | What is it for, and what does it leave out? | **Intent**: the problem, the task it came from, the scope, anything deliberately left out, and why the change is safe. A bug fix names its **Root cause**, or says it was not found. |
-| What should I read myself? | **Human review** under Intent, from 1 (the description is enough) to 5 (read the riskiest files closely). **Closer reading** lists files that need more care than the rest. Each repository sets minimums with [`pr_description.human_review_floors`](settings.md#pr_descriptionhuman_review_floors). |
+| What should I read myself? | **Human review** under Intent, from 1 (the description is enough) to 5 (read the riskiest files closely). The agent picks the rating, and **Closer reading** lists files that need more care than the rest. Shaka refuses a rating below the minimum the changed files set; each repository chooses those minimums with [`pr_description.human_review_floors`](settings.md#pr_descriptionhuman_review_floors). |
 | How was it checked? | **Verification**. Its first line, written by Shaka from the recorded results, says whether validation passed and who reviewed this commit. It stays unfolded when something is missing, and a **Setup gaps** line names each configured reviewer that did not finish. Up to three checks follow, then **Not verified** for any claim left unproven. |
 | Why this approach? | The [code walkthrough](#read-the-walkthrough). |
 | What did people say? | [**Human comments**](#see-what-people-said). |
@@ -69,7 +75,7 @@ and the change with a verdict: improvement, wash, regression, or ambiguous. When
 something could not be captured or measured, the PR says so.
 
 A check that also fails on the base branch can leave the PR a blocked draft until the
-repair lands or you accept that failure for this task.
+repair lands or you tell the agent you accept that failure for this task.
 
 Spend your own review time on decisions that need your knowledge. An agent can check a
 billing calculation; someone who knows the contract has to decide whether it is the
@@ -107,8 +113,9 @@ Open **Checkpoint** before acting on a recommendation.
 
 The reviewer concludes **Proceed**, **Simplify/reframe**, or **Do not merge**, and
 rates the verification **Adequate**, **Adequate, with gaps the reviewer judged
-acceptable**, **Inadequate**, or **Cannot judge**. Under Auto, the last two stop the
-agent's merge until you approve that commit.
+acceptable**, **Inadequate**, or **Cannot judge**. Under Ask, the last two are
+information for your decision. Under Auto, they stop the agent's merge until you
+approve that commit.
 
 The owner then recommends **Merge**, **Merge after maintainer decision**, **Revise
 before merge**, **Reconsider approach**, or **Do not merge**. When the agent disputes a
@@ -132,7 +139,8 @@ Repositories tune it with the [checkpoint settings](settings.md#checkpoint).
 
 A return point saves guidance you gave during a task, such as your first request or a
 later change of direction, with the code revision it applies to. The description lists
-them as C1, C2, and so on. To go back to one, see
+them as C1, C2, and so on. When a direction does not work out, you can restart from
+one; see
 [revise earlier guidance and try again](working-with-shaka.md#revise-earlier-guidance-and-try-again).
 
 ## Approval and attention labels
@@ -147,7 +155,8 @@ Under **Ask**, the agent hands you a verified commit and waits. Tell it in chat 
 merge that commit, for example "Merge the commit in your handoff," or merge it yourself
 on GitHub. Saying "Go" at the start does not grant this. An **Approve** review also
 counts when it comes from a login you named to the agent as a merge approver for this
-task. Approval in chat does not satisfy a required GitHub review.
+task. When the repository requires a GitHub approval, an eligible reviewer still has to
+approve there; a chat instruction does not count for it.
 
 Under **Auto**, the agent merges eligible work itself. Every check on the commit has to
 pass, not only the required ones, and the agent hands the PR back to you when one fails.
