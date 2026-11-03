@@ -149,8 +149,9 @@ branch, which is `origin/main` unless you chose another.
 ## Develop Shaka in a separate clone
 
 Keep the installed checkout separate from the clone where you develop Shaka.
-The installer refuses a linked worktree or a clone with other branches or
-worktrees; existing installs warn during verification and update.
+The installer refuses linked worktrees during installation, verification, and
+updates. Extra branches or worktrees stop a new installation; verification and
+updates warn about those instead.
 See [Fork Shaka and make it yours](fork-and-hack.md) for development and contribution.
 
 ### Move Shaka out of a clone you develop in
