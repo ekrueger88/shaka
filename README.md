@@ -3,9 +3,8 @@
 **Know what your AI coding agent really did before you merge it.**
 
 Shaka is a free, open-source skill for Claude Code, Codex, Cursor, OpenCode, and Pi. A skill
-is a set of instructions your coding agent loads. Give your agent a task with `/shaka`, and
-it writes the code, tests it, has a second AI review it, and hands you a pull request that
-shows what changed, what was proven, and where to look.
+is a set of instructions your coding agent loads. You give a task with `/shaka`. The agent
+builds, verifies, and reviews. You get a pull request (PR) you can judge quickly.
 
 [Try it on a small fix](#get-started) ·
 [Watch the 52-second demo](https://www.youtube.com/watch?v=T6Fstx2fGJI) ·
@@ -36,17 +35,21 @@ before that code was pushed.
   findings get fixed before anything is pushed.
 - **You don't have to keep reminding it.** Say what you want once, and it tests, reviews, and
   explains its own work.
-- **You stay in charge of merging.** By default, you merge. Even if you
+- **You merge, not the agent.** By default, the PR waits for you. Even if you
   [let the agent merge](https://shaka.shakacode.com/docs/working-with-shaka#choose-a-merge-policy),
   large or risky changes still come back to you.
-- **Less prompt-injection risk.** On public repositories, Shaka
-  [ignores comments from untrusted authors](https://shaka.shakacode.com/docs/workflow#trust-model).
 
 ### Why not just ask my agent to test and review?
 
 That helps, but Shaka does it the same way on every task, with a reviewer that didn't write the code.
 When the agent merges, Shaka stops it if a required review is missing.
 [See what code enforces](https://shaka.shakacode.com/docs/workflow#what-is-enforced).
+
+### For open-source repositories
+
+On public repositories, Shaka
+[ignores comments from untrusted authors](https://shaka.shakacode.com/docs/workflow#trust-model),
+so a stranger's comment can't slip instructions to your agent.
 
 ## What it works with
 
@@ -95,8 +98,8 @@ walks you through a practice task.
 | `/shaka settings` | Explains this repository's settings. Ask it to change one. |
 | Anything else | Ask your agent how to get Shaka to do it. |
 
-You don't need to read the docs to use Shaka. Your agent reads them for you, and you can
-[browse them](https://shaka.shakacode.com/) anytime.
+**You don't need to read the docs.** The commands above are all you need. Your agent reads
+the docs for you, and you can [browse them](https://shaka.shakacode.com/) anytime.
 
 [Contributing](CONTRIBUTING.md) · [MIT license](LICENSE)
 

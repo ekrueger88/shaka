@@ -2,9 +2,8 @@
 
 **Review the intent and the evidence, not every line.**
 
-Give your coding agent a task. It builds, tests, and gets an independent review.
-You get one PR that says what changed, how it was checked, and what is left for
-you to decide.
+You give a task. The agent builds, verifies, and reviews. You get a pull request
+(PR) you can judge quickly.
 
 ![You give a task. The agent builds, verifies, and reviews. You review one clear PR with a walkthrough, check and review results, and the decisions left for you.](img/task-to-pr.svg)
 
@@ -19,16 +18,19 @@ you to decide.
   push, so you repeat fewer CI runs.
 - **Spend less time directing the process.** Describe the outcome, and Shaka
   supplies the steps.
-- **Stay in charge of merging.** By default, you merge. Even if you
+- **You merge, not the agent.** By default, the PR waits for you. Even if you
   [let the agent merge](working-with-shaka.md#choose-a-merge-policy), large or risky
   changes still come back to you.
-- **Less prompt-injection risk.** On public repositories, Shaka
-  [ignores comments from untrusted authors](workflow.md#trust-model).
 - **Use one workflow across projects.** Each repository
   [keeps its own](configure-repository.md#use-shaka-across-projects) checks,
   reviewers, and merge policy.
 
 See [what a PR answers](pr-verification.md#answers-for-your-next-decision).
+
+### For open-source repositories
+
+On public repositories, Shaka [ignores comments from untrusted authors](workflow.md#trust-model),
+so a stranger's comment can't slip instructions to your agent.
 
 <a id="start-here"></a>
 
@@ -57,12 +59,12 @@ See [what a PR answers](pr-verification.md#answers-for-your-next-decision).
 
 Use `$shaka` in Codex ([other agents](coding-agents.md)).
 
-You don't need to read the rest of these pages to use Shaka. They are mostly
-reference for your agent. Open one when you want the detail.
-
 <a id="configure-and-understand"></a>
 
 ## Reference
+
+**You don't need to read any of these.** The commands above are all you need. Your agent
+reads these pages when it needs them, so open one only when you're curious.
 
 ### Use Shaka
 
