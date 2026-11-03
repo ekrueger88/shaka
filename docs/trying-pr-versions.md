@@ -29,6 +29,9 @@ incompatibility before following the normal configuration procedure.
 
 ## Share what happened
 
+The result PR names the exact Shaka revision tested. Check that record before
+reporting the trial.
+
 After trying the change, ask your agent:
 
 ```text

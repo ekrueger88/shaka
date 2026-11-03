@@ -161,9 +161,11 @@ From your development clone, create the dedicated installation:
 ./bin/install --directory ~/.local/share/shaka/source --take-over
 ```
 
-The old clone keeps its files, branches, and worktrees. If the move fails, the
-installer restores the earlier installation and reports anything it could not
-restore. For a custom skills directory when running from another clone, add
+The old clone keeps its files, branches, and worktrees. Before the new installation
+record is saved, a failed move restores the earlier installation and reports
+anything it could not restore. After a later failure, run `install --status`
+to see which installation is active. For a custom skills directory when running
+from another clone, add
 `--skills-dir DIR`.
 
 After a forced stop such as `kill -9`, no clone may count as installed. Rename

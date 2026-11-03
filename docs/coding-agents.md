@@ -101,16 +101,17 @@ Configure Claude as a local reviewer for this repository.
 Check its sign-in and help me record consent for future reviews.
 ```
 
-The agent proposes a [reviewer setting](settings.md#reviewlocal_review_agents)
-in a settings PR. Team settings take effect after merge. The Claude CLI must be
+For team setup, the agent proposes a [reviewer setting](settings.md#reviewlocal_review_agents)
+in a PR; it takes effect after merge. Individual setup keeps the change local. The Claude CLI must be
 installed and signed in on the machine running Codex; it does not need
 `ANTHROPIC_API_KEY`. Record consent in the user-level file Codex reads, then
 start a fresh chat and run `$shaka doctor`. Doctor checks configuration and CLI
-availability; the task's startup probe checks reviewer access.
+availability. When [startup checks](settings.md#reviewstartup_check) are enabled,
+the task also probes reviewer access. Otherwise, ask the agent to probe it explicitly.
 
 | Problem | Next action |
 | --- | --- |
-| Codex reviews instead of Claude | Ask doctor whether Claude is configured and on `PATH`; check that the settings PR merged. |
+| Codex reviews instead of Claude | Ask doctor whether Claude is configured and on `PATH`; for team setup, check that the settings PR merged. |
 | `Not logged in · Please run /login` | Run `claude`, then `/login`, and retry. |
 | Consent is requested again | Check that the statement covers the provider, repository, and content, and is in the instructions Codex reads. |
 | A tool needs `ANTHROPIC_API_KEY` | Identify that tool; the Claude CLI reviewer uses its own sign-in. |

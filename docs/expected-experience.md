@@ -62,13 +62,15 @@ By default, you merge on GitHub or approve the agent's merge. With Auto, the
 agent merges eligible work after checks and approvals; large or risky changes
 still need your decision. See [merge choices](working-with-shaka.md#choose-a-merge-policy).
 
-When continuing in a fresh chat, state Auto again if you want it. An earlier
-chat's WIP note records its authority but does not grant it to a new chat.
+When continuing the same task, the agent reuses an established merge choice.
+A WIP note alone does not grant authority. If a new chat cannot verify your
+earlier Auto decision, state it again.
 
 ## Resume or change your checkout
 
-Return to the chat that owns the work. If you use a new chat, stop the previous
-owner first, then give the new chat the PR URL. WIP Details identifies the
+Return to the chat that owns the work. Before handing it to a new chat, finish
+or cancel any active automatic follow-up and confirm the previous owner stopped.
+Then give the new chat the PR URL. WIP Details identifies the
 revision, unfinished work, and next action.
 
 Before a PR exists, give the new chat the task, checkout, and branch, plus saved
