@@ -83,7 +83,8 @@ The task start lets the timeline include planning and implementation before the
 first commit. The **Before first recorded validation** interval shows the time
 from that start to the earliest recorded validation run, including a focused test.
 It overlaps the stretches and is not added to the totals again. It reads
-unavailable when either record is missing.
+unavailable when either record is missing, including when the step limit below
+dropped the earliest validation before an update saved its time.
 
 A wait is the time one of the attention labels stayed on the PR:
 `awaiting-answer`, `awaiting-merge-approval`, or `awaiting-resume`. The agent
@@ -99,9 +100,9 @@ adds a label when it stops for you and removes it when work resumes.
 - Without a recorded task start, the timeline starts at the first commit and
   excludes earlier work. A rebase can move that date; when it falls after the PR
   opened, the first row is omitted.
-- The task start is when the agent began working, moments after your request.
-  A task that moved to a new chat before its PR opened shows only the new chat's
-  time.
+- The agent reports the task start, usually moments after your request; Shaka
+  does not verify it. A task that moved to a new chat before its PR opened shows
+  only the new chat's time.
 - The ready time appears once a description update or a watch sees the gate green,
   so it can be missing until the description next updates. It stays missing when
   the configured CI review did not run, such as a review skipped for a small change.
