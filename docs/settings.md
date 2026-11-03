@@ -319,7 +319,8 @@ every mode. A task can increase the wait, but cannot lower the repository minimu
 Under Ask with `none` or `one`, optional checks may still be running or failing
 when the agent merges. With `all`, every reported check must pass first.
 Auto requires every reported check to pass regardless of this setting; skipped
-and neutral results count as passing. A failed check returns the PR to you under Ask.
+and neutral results count as passing. A failed or unfinished optional check stops
+Auto and returns the PR to you for an Ask decision.
 An optional job that has not started is not seen, so make a check required if it
 must always gate merging.
 
