@@ -89,11 +89,7 @@ Replace VERSION with the published version you chose. Shaka keeps that release a
 its recorded commit, even when development continues on `main`. Changing versions
 uses a separate checkout and moves your skill links; the previous helper remains
 available to active chats. Rollback points the links back to the retained version.
-
-The source installer supports release selection. The published name-reservation
-gem predates it; the next approved gem will select its own release for new
-installations. Existing development installs retain their source selection.
-Release pinning refuses older tags that cannot maintain the installation record.
+Shaka refuses to pin a release too old to keep its installation record.
 
 ## Verify and update
 
@@ -151,20 +147,17 @@ needs your decision and shows that state. Running it again changes nothing.
 
 Shaka tells you when an update is available once your installation is three
 commits behind, or when the oldest change you lack is a day old, so a busy
-day on `main` does not interrupt every new chat. Each `update-check` answer is
-saved in `~/.local/share/shaka/update-check.json`. Any later Shaka command reads
-that file, without a network request, and prints one line to standard error at
-most once a day when it says to update, says the checkout moved, or is missing or over a day old.
-A command run from a different Shaka checkout than your skill links point to
-prints one line naming the linked one.
+day on `main` does not interrupt every new chat. Later Shaka commands repeat that
+notice in one line at most once a day, without a network request. They also say
+when the checkout moved or the last check is over a day old. A command run from a
+different Shaka checkout than your skill links point to prints one line naming the
+linked one.
 
 Two more reminders show at most once a day. A command run in a repository with no
 Shaka settings names the missing file and the two setup choices, so a first task
 starts by choosing [individual or team setup](getting-started.md#2-choose-individual-or-team-setup).
-Until `shaka doctor` has run on your machine, a command suggests running it. Doctor
-records each run in `~/.local/share/shaka/doctor-ran`, and the reminder times are
-kept in `~/.local/share/shaka/notices.json`. Set `SHAKA_NOTICES=off` to silence every
-notice; doctor then records nothing.
+Until `shaka doctor` has run on your machine, a command suggests running it. Set
+`SHAKA_NOTICES=off` to silence every notice.
 
 To have each new Claude Code chat start with the saved answer, add `--session-hook`
 to `bin/install --agent claude`. The chat then hears about an update, a moved

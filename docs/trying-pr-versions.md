@@ -13,9 +13,9 @@ on this task: fix the search bug in /path/to/my/project.
 Prepare a pinned trial and give me the prompt for a fresh chat.
 ```
 
-Replace the candidate PR, project, and task. The preparation command copies the
-selected revision outside your project and returns a skill path and startup
-prompt. Paste that prompt into a **new chat** in the project. Your normal Shaka
+Replace the candidate PR, project, and task. The agent copies the selected
+revision outside your project and gives you a startup prompt. Paste that prompt
+into a **new chat** in the project. Your normal Shaka
 installation and existing tasks keep their selected versions.
 
 Each task uses one candidate at one exact revision. If the candidate changes,
@@ -42,12 +42,11 @@ or drop. Review the summary for private details before publishing.
 ```
 
 For private work, authorize a public-safe summary with no project link or private
-context. The reporting command checks each github.com/OWNER/REPO link, rejects
-private or unverifiable repositories, and refuses any other mention of github.com; you and your agent still review prose and other links for confidentiality.
+context. Shaka refuses a report that links a private or unverifiable repository;
+you and your agent still review the prose and other links for confidentiality.
 Ask the agent that prepared the trial to publish your verified, public-safe report.
+You don't need permission to manage labels to report.
 
-Maintainers apply the existing `eval-required` label before asking for volunteers.
-Testers can report without permission to manage labels.
 A few linked examples and keep/revise/drop recommendations can inform adoption.
 They are anecdotes, and the maintainer still decides whether to merge. Neither a
 report nor a vote grants merge authority.
