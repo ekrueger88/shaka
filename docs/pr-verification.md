@@ -93,6 +93,11 @@ it is still open.
 | **Reviewer** maria | Finds the tester terms unclear; suggests template notation | — | **Open** |
 | sam | “you mean chat, not owner.” | “Changed the guide to use chat throughout…” | Resolved |
 
+**Said** quotes a short comment in the person's own words; text without quotation marks
+is the agent's one-line summary. **Status** is GitHub's resolved state for an inline
+thread and the verdict for a review. Any other comment stays open until an agent reply
+links to it.
+
 A comment without the agent's 🤖 line counts as a person's. On a public repository, a
 comment from an account the repository does not trust is listed as **Unverified**,
 because the agent does not read it. Instructions you give in chat are not listed. To
