@@ -21,29 +21,23 @@ Your agent writes code faster than you can check it, then tells you the work is 
 either read every line or merge and hope.
 
 We built Shaka at [ShakaCode](https://www.shakacode.com), where we ship with coding agents every
-day. In our own repository, its second AI caught
-[102 defects across 147 PRs](https://shaka.shakacode.com/docs/articles/review-process-study)
-before that code was pushed.
+day. We can also [help you customize Shaka](https://www.shakacode.com/contact/) to make your
+development team more efficient.
 
 ## What changes when you use it
 
 - **You know where to look.** Each PR says why the change exists and which files you should
   read, if any.
+- **You know what it cost.** Each PR reports the tokens and time the work took.
 - **You see proof, not promises.** Every check links to its result, and anything unproven is
   flagged. UI changes include before-and-after screenshots.
 - **A second AI reviews the work first.** It never saw the chat that wrote the code, and its
   findings get fixed before anything is pushed.
 - **You don't have to keep reminding it.** Say what you want once, and it tests, reviews, and
   explains its own work.
-- **You decide what merges, not the agent.** By default, the PR waits for you
-  to merge or approve it. Even if you [let the agent merge](https://shaka.shakacode.com/docs/working-with-shaka#choose-a-merge-policy),
-  large or risky changes still come back to you.
-
-### Why not just ask my agent to test and review?
-
-That helps, but Shaka does it the same way on every task, with a reviewer that didn't write the code.
-When the agent merges, Shaka stops it if a required review is missing.
-[See what code enforces](https://shaka.shakacode.com/docs/workflow#what-is-enforced).
+- **You decide what merges, not the agent.** By default, you merge each PR or approve it for
+  the agent to merge. With [Auto merge](https://shaka.shakacode.com/docs/working-with-shaka#choose-a-merge-policy),
+  you still decide on large or risky changes.
 
 ### For open-source repositories
 
