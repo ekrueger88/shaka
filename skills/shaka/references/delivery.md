@@ -418,8 +418,17 @@ or accept it; technical confidence does not grant merge consent. Scale detail to
   removes, and place it beside the step it supports. Keep it to about ten
   nodes, label each edge or line with the action, and let the prose carry the
   explanation. A visual explains; the validation results remain the evidence.
-  The public guide shows
-  [a call tree and a change that needs none](https://github.com/shakacode/shaka/blob/main/docs/pr-verification.md#when-a-diagram-helps).
+  For example, when a web request and a retry job both reach a new check:
+
+  ```text
+  RefundsController#create ──┐
+  RefundRetryJob#perform ────┴── Refunds.issue
+                                 ├── RefundPolicy.check      refuses a second refund for the same order (new)
+                                 └── PaymentGateway.refund   reached only after the policy passes
+  ```
+
+  A change that only adds a condition inside `RefundPolicy.check` needs one
+  sentence and no visual, because the order of calls did not change.
 - Report validation as what it proves at this head: the behavior covered, the
   command, and its result. State each count once, and leave results from
   earlier heads to the description's review history.
