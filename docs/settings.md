@@ -271,7 +271,7 @@ agent addresses findings before publication. Use
 ![Local review before push, hosted review after push, and review evidence checked before merge.](img/review-layers.svg)
 
 Except with `none`, the merge check requires a published review covering the
-commit, or a waiver reason recorded by the maintainer. Only review comments
+commit or a waiver reason. The result records which one it used. Only review comments
 posted by the GitHub account doing the merge count. A recorded report does not
 prove that a reviewer ran or its findings were fixed.
 
