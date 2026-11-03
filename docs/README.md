@@ -18,8 +18,8 @@ You give a task. The agent builds, verifies, and reviews. You get a pull request
   push, so you repeat fewer CI runs.
 - **Spend less time directing the process.** Describe the outcome, and Shaka
   supplies the steps.
-- **You merge, not the agent.** By default, the PR waits for you. Even if you
-  [let the agent merge](working-with-shaka.md#choose-a-merge-policy), large or risky
+- **You decide what merges, not the agent.** By default, the PR waits for you
+  to merge or approve it. Even if you [let the agent merge](working-with-shaka.md#choose-a-merge-policy), large or risky
   changes still come back to you.
 - **Use one workflow across projects.** Each repository
   [keeps its own](configure-repository.md#use-shaka-across-projects) checks,

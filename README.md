@@ -35,8 +35,8 @@ before that code was pushed.
   findings get fixed before anything is pushed.
 - **You don't have to keep reminding it.** Say what you want once, and it tests, reviews, and
   explains its own work.
-- **You merge, not the agent.** By default, the PR waits for you. Even if you
-  [let the agent merge](https://shaka.shakacode.com/docs/working-with-shaka#choose-a-merge-policy),
+- **You decide what merges, not the agent.** By default, the PR waits for you
+  to merge or approve it. Even if you [let the agent merge](https://shaka.shakacode.com/docs/working-with-shaka#choose-a-merge-policy),
   large or risky changes still come back to you.
 
 ### Why not just ask my agent to test and review?
@@ -84,7 +84,7 @@ so a stranger's comment can't slip instructions to your agent.
 
    In Codex, use `$shaka`.
 
-3. Read the PR, then merge it or close it. By default, nothing goes in until you merge.
+3. Read the PR, then merge it or close it. By default, nothing goes in without your OK.
 
 New to pull requests? [Shaka in pictures](https://shaka.shakacode.com/docs/shaka-in-pictures)
 walks you through a practice task.
