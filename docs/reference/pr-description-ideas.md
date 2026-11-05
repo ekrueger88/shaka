@@ -3,7 +3,7 @@
 *An AI agent wrote this reference: Claude Code running Claude Opus 5.5, on
 2026-10-31 (UTC). The agent read the public sources and this repository's PRs and
 recounted the numbers. Codex and a fresh Claude session reviewed it before
-publication.*
+publication. Idea 6 was updated on 2026-11-04 (UTC), after Shaka added a readback.*
 
 A Shaka pull request (PR) description has two jobs. It shows what the PR is trying
 to do, and it shows that the verification is adequate for that goal
@@ -192,9 +192,14 @@ production line. pstack is Tan's public skill set in `cursor/plugins`.
 - **Idea:** [`/in-your-own-words`](https://x.com/poteto/status/2110047236369547621)
   has the agent say what it thinks the goal and problem are before it starts.
   Osmani's Agentic Verification recommends the same habit.
-- **In Shaka:** not built. #742 left out this plan-time restatement.
-- **Limit:** Intent is written at publication, after the work. It records a
-  misunderstanding and cannot catch one early.
+- **In Shaka:** #742 left out this plan-time restatement.
+  [#1044](https://github.com/shakacode/shaka/pull/1044) added it on 2026-11-04. Before coding, the agent reads back the
+  outcome, scope, success criteria, and assumptions, and the PR shows that readback as
+  Task as understood.
+- **Limit:** clear tasks go ahead without waiting for an answer, so the readback
+  catches a misread goal only when someone reads it in time.
+  [#1017](https://github.com/shakacode/shaka/issues/1017) proposed waiting up to five
+  minutes.
 
 ## Addy Osmani: what proof a human receives
 
@@ -339,9 +344,9 @@ predates this work.
 
 ## Open items
 
-- [#421](https://github.com/shakacode/shaka/issues/421) stays open. The plan-time
-  restatement (idea 6) and an evaluation of how implementing agents verify are not
-  done.
+- [#421](https://github.com/shakacode/shaka/issues/421) stays open. An evaluation of
+  how implementing agents verify is not done. The plan-time restatement (idea 6)
+  arrived in [#1044](https://github.com/shakacode/shaka/pull/1044) after this window.
 - [#780](https://github.com/shakacode/shaka/issues/780): this repository previews
   Auto at floor 2 and still runs Ask. A planned settings PR would switch
   `merge.preference` to `auto`.

@@ -7,7 +7,8 @@ at `c742dd6` and
 [agent-skills](https://github.com/addyosmani/agent-skills/tree/eb07f19f52c2669f2364897aaa293e2aaddd7b1c)
 at `eb07f19` by reading them. No run has tested the combinations. Usage numbers come from
 the 429 pull requests (PRs) merged here in October 2026. Codex and a fresh Claude session
-reviewed it before publication.*
+reviewed it before publication. Updated on 2026-11-04 (UTC), after Shaka added a readback
+before coding.*
 
 Shaka runs delivery: it takes a task through validation, review, publication, and the
 merge decision. pstack and agent-skills teach engineering technique, and each can also
@@ -25,8 +26,8 @@ is untested, and the reason is how each pack starts a skill.
   pack in none. Shaka's guide says neither has been tried on a full delivery.
 - The strongest proof gets the weakest record. A test suite run is bound to the commit.
   A harness that drives the real app, run outside `validate`, ends up as a sentence.
-- Both packs have the agent restate the goal early. Shaka doesn't yet
-  ([#1017](https://github.com/shakacode/shaka/issues/1017)).
+- Both packs have the agent restate the goal before it starts. Shaka added that step on
+  2026-11-04 ([#1044](https://github.com/shakacode/shaka/pull/1044)).
 - Shaka's own 12,450-word workflow is the largest thing in this comparison.
 
 ## Three different shapes
@@ -115,14 +116,6 @@ rest are instructions the agent follows. No test or enforcement entry covers the
 - **Why it matters:** the cost of carrying both is unknown, and Shaka is the larger half.
 - **Smallest fix:** record it in the trial from gap 2 before changing anything.
 
-### 6. Shaka lacks a step both packs have
-
-- **Today:** Addy's core behaviors have the agent list its assumptions and say "Correct me
-  now or I'll proceed." Tan's `/in-your-own-words` restates the goal. Shaka writes Intent
-  at publication, after the work.
-- **Smallest fix:** [#1017](https://github.com/shakacode/shaka/issues/1017), which caps
-  any wait at five minutes.
-
 ## Fits that already work
 
 - Addy's `CONSTRAINTS.md` can reach Shaka's checkpoint through
@@ -130,6 +123,10 @@ rest are instructions the agent follows. No test or enforcement entry covers the
   requirement's status, and an unmet one blocks its merge-ready claim. Shaka doesn't
   check this itself.
 - Addy's "things I didn't touch" summary maps to Intent's Leaves out.
+- Addy's core behaviors have the agent list its assumptions and say "Correct me now or I'll
+  proceed." Tan's `/in-your-own-words` restates the goal. Since [#1044](https://github.com/shakacode/shaka/pull/1044), Shaka's
+  agent reads back the outcome, scope, success criteria, and assumptions before coding, and
+  the PR shows that readback as Task as understood.
 - pstack's principles are short enough to use inside any phase. Two of them,
   `principle-prove-it-works` and `principle-fix-root-causes`, run 209 and 324 words.
 
