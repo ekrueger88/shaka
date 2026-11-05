@@ -121,7 +121,8 @@ production line. pstack is Tan's public skill set in `cursor/plugins`.
   [opening-a-pr playbook](https://github.com/cursor/plugins/blob/c742dd61706fbacc1b95f1a20b7b988cf096ce6c/pstack/skills/poteto-mode/playbooks/opening-a-pr.md)
   gives a one-minute briefing with an always-present Scope. Each Verification bullet
   is a real run path and its outcome. Other detail goes to linked artifacts.
-- **In Shaka:** Intent holds Why, Safe because, and Scope. Verification holds up to
+- **In Shaka:** Intent holds Why, Safe because, and Scope, plus a review line and
+  optional lines such as Task, Root cause, and Leaves out. Verification holds up to
   three checks. Audit detail is collapsed.
 - **Result:** the visible text now names the problem, the scope, and the safety
   fact. On [#543](https://github.com/shakacode/shaka/pull/543), it named none of

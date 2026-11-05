@@ -5,7 +5,8 @@
 [pstack](https://github.com/cursor/plugins/tree/c742dd61706fbacc1b95f1a20b7b988cf096ce6c/pstack)
 at `c742dd6` and
 [agent-skills](https://github.com/addyosmani/agent-skills/tree/eb07f19f52c2669f2364897aaa293e2aaddd7b1c)
-at `eb07f19` by reading them. No run has tested the combinations. Usage numbers come from
+at `eb07f19` by reading them. Shaka's word count is the workflow `shaka workflow` prints at
+`3b0aca0`, split on whitespace. No run has tested the combinations. Usage numbers come from
 the 429 pull requests (PRs) merged here in October 2026. Codex and a fresh Claude session
 reviewed it before publication. Updated on 2026-11-04 (UTC), after Shaka added a readback
 before coding.*
@@ -28,13 +29,13 @@ is untested, and the reason is how each pack starts a skill.
   A harness that drives the real app, run outside `validate`, ends up as a sentence.
 - Both packs have the agent restate the goal before it starts. Shaka added that step on
   2026-11-04 ([#1044](https://github.com/shakacode/shaka/pull/1044)).
-- Shaka's own 12,450-word workflow is the largest thing in this comparison.
+- Shaka's own 11,780-word workflow is the largest thing in this comparison.
 
 ## Three different shapes
 
 | | pstack | agent-skills | Shaka |
 | --- | --- | --- | --- |
-| Size | 61 skills, 41,962 words | 25 skills, 52,354 words | A 12,450-word workflow, plus references it loads when needed |
+| Size | 61 skills, 41,962 words | 25 skills, 52,354 words | An 11,780-word workflow, plus references it loads when needed |
 | Median skill | 437 words | 2,060 words | n/a |
 | What starts a skill | You name it: 60 of 61 are explicit-only | The host matches its description: 0 of 25 are explicit-only | You invoke it, or the host matches its description |
 | Runs its own delivery | Shipping, Babysit, and Autopilot playbooks | `/build auto` and `/ship` | It is the delivery |
@@ -112,7 +113,7 @@ rest are instructions the agent follows. No test or enforcement entry covers the
 
 - **Today:** `bin/report-instruction-growth` counts Shaka's own files. Five Addy skills that
   match ordinary code changes (git workflow, code review, test-driven development,
-  incremental implementation, and its router) total 10,782 words, close to Shaka's 12,450.
+  incremental implementation, and its router) total 10,782 words, close to Shaka's 11,780.
 - **Why it matters:** the cost of carrying both is unknown, and Shaka is the larger half.
 - **Smallest fix:** record it in the trial from gap 2 before changing anything.
 
