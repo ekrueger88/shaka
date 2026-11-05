@@ -303,8 +303,8 @@ predates this work.
 - **Agree on repeated mistakes:** Tan's `correct` skill and Osmani's Agentic
   Verification both put the fix in the repository: a check, a hook, or shared config.
 - **Agree on checking the writer:** both use a fresh reviewer, ideally another model.
-- **Agree on restating the goal:** both recommend it before coding. Shaka hasn't built
-  it.
+- **Agree on restating the goal:** both recommend it before coding, and
+  [#1044](https://github.com/shakacode/shaka/pull/1044) added it to Shaka on 2026-11-04.
 - **Differ on instruction length:** Tan
   [expects skills to compress](https://x.com/poteto/status/2110496830429839869) into
   short principles. Two pstack principle skills run 209 and 324 words. Three
