@@ -19,12 +19,10 @@ qualification remain evidence requirements; the version number does not establis
   The description retains its tables and pricing notes, with checksummed links to
   accounting comments. A missing or changed archive blocks later updates.
   Older helpers refuse to replace archived descriptions; update Shaka before refreshing one.
-
 - Rate a PR's risk with `shaka risk assess` once you enable `risk_assessment`. It
   prints evidence tied to the exact commits, settings, prompt, and classifier, and a
   shadow decision: whether that rating alone would let Auto merge. Nothing merges
   differently yet.
-
 - Install pstack beside Shaka in Cursor, Claude Code, or Codex, and keep it current,
   with the [pstack guide](docs/pstack.md). The guide also gives a prompt for building
   your own updater for agent skill packs.

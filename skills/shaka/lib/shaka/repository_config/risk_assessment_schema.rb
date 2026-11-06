@@ -38,6 +38,8 @@ module Shaka
         raise Error, "#{KEY}.reviewer must be one of #{EFFORTS.keys.join(', ')}" unless EFFORTS.key?(reviewer)
 
         ReviewSchema.model_name!(@settings['model'], "#{KEY}.model") if @settings.key?('model')
+        raise Error, "#{KEY}.model is required for xai/grok" if reviewer == 'xai/grok' && !@settings['model']
+
         validate_effort(reviewer) if @settings.key?('effort')
       end
 

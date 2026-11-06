@@ -226,7 +226,8 @@ class RiskAssessmentSettingsTest < Minitest::Test
     { { 'auto_max_risk' => 'unknown' } => 'auto_max_risk', { 'command' => 'x' } => 'unknown risk_assessment key',
       { 'reviewer' => 'deepseek/openrouter' } => 'reviewer',
       { 'replacement_prompt_file' => '../outside' } => 'inside the repository',
-      { 'enabled' => 'yes' } => 'enabled' }.each do |settings, message|
+      { 'enabled' => 'yes' } => 'enabled',
+      { 'reviewer' => 'xai/grok' } => 'model is required' }.each do |settings, message|
       error = assert_raises(Shaka::Error) { load(settings) }
       assert_includes error.message, message
     end

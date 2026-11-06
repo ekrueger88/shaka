@@ -40,8 +40,8 @@ module Shaka
       evidence
     end
 
-    # What the rating alone would decide for evidence just built by parse. Incomplete coverage, an
-    # unknown rating, or a rating above tolerance is Ask.
+    # What the rating alone would decide. It validates its own input, then reports incomplete
+    # coverage, an unknown rating, or a rating above tolerance as Ask.
     def decide(evidence, tolerance:)
       validate_tolerance!(tolerance)
       parse(evidence)
