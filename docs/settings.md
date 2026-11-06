@@ -839,6 +839,8 @@ risk_assessment:
   auto_max_risk: medium
 ```
 
+`auto_max_risk` defaults to `low`. The default classifier is `openai/codex` at `low` effort.
+
 With that, ask your agent: `Rate this PR's risk with Shaka.` The result names the
 commits, settings commit, prompt, and classifier it used. A classifier that fails or
 returns unusable output gives no rating, and incomplete coverage means Ask.

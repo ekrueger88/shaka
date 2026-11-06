@@ -31,7 +31,9 @@ module Shaka
       new(root:, source:, available_commands:, sha:, candidate_commands:, &prompt_validator).load
     end
 
-    def self.prompt_files(review:, opening:, guidance: {}) = PromptFiles.list(review:, opening:, guidance:)
+    def self.prompt_files(review:, opening:, guidance: {}, risk: {})
+      PromptFiles.list(review:, opening:, guidance:, risk:)
+    end
 
     def initialize(root:, source: nil, available_commands: nil, sha: nil, candidate_commands: true,
                    &prompt_validator)
@@ -94,7 +96,10 @@ module Shaka
     # The settings exactly as config.yml states them, before any default applies.
     def explicit_settings = @data
 
-    def prompt_files = self.class.prompt_files(review:, opening: opening_check, guidance: project_guidance)
+    def prompt_files
+      self.class.prompt_files(review:, opening: opening_check, guidance: project_guidance,
+                              risk: @data['risk_assessment'])
+    end
 
     def warnings = PromptFiles.warnings(root: @root, sha:, review:)
 

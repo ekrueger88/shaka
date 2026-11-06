@@ -79,7 +79,7 @@ class RiskAssessCommandTest < Minitest::Test
       result, status = assess(root, base, head, bin)
       assert_predicate status, :success?, result.inspect
       assert_provider_evidence(result.fetch('evidence'), head, base)
-      assert_equal %w[ask current high], result['decision'].values_at('decision', 'state', 'rating')
+      assert_equal %w[ask complete high], result['decision'].values_at('decision', 'state', 'rating')
       assert_includes trace(bin).fetch('prompt'), 'A small diff can be high risk'
     end
   end
@@ -101,6 +101,32 @@ class RiskAssessCommandTest < Minitest::Test
       refute_includes instructions, 'Candidate risk instructions'
       assert_equal "#{base}:.agents/risk-prompt.md", result.dig('evidence', 'prompt', 'source')
       assert_equal 'auto_eligible', result.dig('decision', 'decision')
+    end
+  end
+
+  # The trusted settings check refuses a named prompt file the settings commit lacks.
+  def test_a_missing_replacement_prompt_fails_the_settings_check
+    with_risk_repository({ 'enabled' => true,
+                           'replacement_prompt_file' => '.agents/absent.md' }) do |root, base, head, bin|
+      fake_classifier(bin, JUDGMENT)
+      output, status = Open3.capture2e({ 'PATH' => "#{bin}:#{ENV.fetch('PATH')}" }, *COMMAND, 'risk', 'assess',
+                                       '--root', root, '--base', base, '--head', head, '--ref', base)
+      refute_predicate status, :success?
+      assert_includes output, 'risk_assessment.replacement_prompt_file'
+      refute_path_exists File.join(bin, 'trace.json')
+    end
+  end
+
+  def test_a_description_and_fenced_output_are_accepted
+    with_risk_repository({ 'enabled' => true }) do |root, base, head, bin|
+      write_executable(bin, 'codex', <<~RUBY)
+        #!/usr/bin/env ruby
+        File.write(ARGV.fetch(ARGV.index('-o') + 1), "```json\n" + #{JSON.generate(JUDGMENT).dump} + "\n```")
+      RUBY
+      description = File.join(bin, 'description.md')
+      File.write(description, "Widen sign-in\n")
+      result, = assess(root, base, head, bin, '--description-file', description)
+      assert_equal %w[diff source_lookup description], result.dig('evidence', 'coverage', 'inputs')
     end
   end
 

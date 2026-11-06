@@ -119,7 +119,8 @@ module Shaka
 
       # A trusted load checks the files in the commit's tree instead; see TrustedConfigSource.
       def local_prompt_files!(review)
-        RepositoryConfig.prompt_files(review:, opening: opening_check, guidance: project_guidance).each do |label, path|
+        RepositoryConfig.prompt_files(review:, opening: opening_check, guidance: project_guidance,
+                                      risk: @data['risk_assessment']).each do |label, path|
           next if @prompt_validator&.call(label, path)
 
           file = file!(path, label)

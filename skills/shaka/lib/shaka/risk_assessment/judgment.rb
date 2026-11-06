@@ -29,7 +29,8 @@ module Shaka
 
       def default_prompt = File.read(DEFAULT_PROMPT, encoding: 'UTF-8')
 
-      # The digest covers every instruction the classifier received, so a prompt edit makes old evidence stale.
+      # The digest covers the rating instructions and the fixed contract, so editing either changes it.
+      # Shaka's built-in source-context wording is not part of it.
       def prompt_sha256(instructions) = Digest::SHA256.hexdigest("#{instructions}\n#{CONTRACT}")
 
       def read(text)

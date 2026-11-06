@@ -21,8 +21,8 @@ module Shaka
         [review.fetch(key) { Defaults.fetch('review', key) }, review.key?(key)]
       end
 
-      def list(review:, opening:, guidance: {})
-        files = review_files(review) + checkpoint_files(review)
+      def list(review:, opening:, guidance: {}, risk: {})
+        files = review_files(review) + checkpoint_files(review) + risk_files(risk)
         files += [["opening_check.#{KEY}", opening[KEY]]] if opening[KEY]
         files + ProjectGuidanceSchema.prompt_files(guidance)
       end
@@ -38,6 +38,11 @@ module Shaka
       def checkpoint_files(review)
         [KEY, CHECKPOINT::CUSTOM].map { |name| ["checkpoint.#{name}", review.dig(CHECKPOINT::KEY, name)] }
                                  .select { |_, path| path }
+      end
+
+      def risk_files(risk)
+        path = (risk || {})[KEY]
+        path ? [["risk_assessment.#{KEY}", path]] : []
       end
 
       # Each custom instructions setting: its label, the chosen path, whether the settings named it, and its default.

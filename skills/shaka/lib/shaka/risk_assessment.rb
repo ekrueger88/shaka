@@ -22,9 +22,6 @@ module Shaka
     MAX_ITEMS = 20
     FIELDS = %w[schema_version head base policy_ref prompt runner model effort coverage rating reasons
                 unknowns].freeze
-    # A change in any of these makes earlier evidence describe a different assessment.
-    BINDING = %w[head base policy_ref prompt_sha256 runner].freeze
-    OPTIONAL_BINDING = %w[model effort].freeze
 
     module_function
 
@@ -43,63 +40,26 @@ module Shaka
       evidence
     end
 
-    # Compares evidence with what a current assessment would bind to and with the tolerance.
-    # expected holds head, base, policy_ref, prompt_sha256, and runner ("KIND:IDENTITY"), plus model
-    # and effort when the trusted settings pin them. Anything short of current, complete evidence
-    # inside tolerance is Ask.
-    def decide(evidence, expected:, tolerance:)
-      validate_expected!(expected)
+    # What the rating alone would decide for evidence just built by parse. Incomplete coverage, an
+    # unknown rating, or a rating above tolerance is Ask.
+    def decide(evidence, tolerance:)
       validate_tolerance!(tolerance)
-      return ask('missing', 'No risk assessment evidence') if evidence.nil?
-
-      problem = malformation(evidence)
-      return ask('malformed', problem) if problem
-
-      stale = stale_fields(evidence, expected)
-      return ask('stale', "Assessment differs from current #{stale.join(', ')}", evidence) if stale.any?
-
-      judge(evidence, tolerance)
-    end
-
-    def malformation(evidence)
       parse(evidence)
-      nil
-    rescue Error => e
-      e.message
-    end
-
-    def judge(evidence, tolerance)
-      coverage = evidence['coverage']
-      unless coverage['complete']
-        gaps = coverage['missing'].empty? ? 'coverage incomplete' : "missing #{coverage['missing'].join(', ')}"
-        return ask('incomplete', "Assessment #{gaps}", evidence)
-      end
+      return ask('incomplete', "Assessment #{gaps(evidence['coverage'])}", evidence) unless
+        evidence.dig('coverage', 'complete')
 
       rating = evidence['rating']
-      return ask('current', 'Rating is unknown', evidence) if rating == UNKNOWN
-      return ask('current', "Rating #{rating} exceeds tolerance #{tolerance}", evidence) if above?(rating, tolerance)
+      return ask('complete', 'Rating is unknown', evidence) if rating == UNKNOWN
+      return ask('complete', "Rating #{rating} exceeds tolerance #{tolerance}", evidence) if above?(rating, tolerance)
 
-      result('current', 'auto_eligible', "Rating #{rating} is within tolerance #{tolerance}", evidence)
+      result('complete', 'auto_eligible', "Rating #{rating} is within tolerance #{tolerance}", evidence)
+    end
+
+    def gaps(coverage)
+      coverage['missing'].empty? ? 'coverage incomplete' : "missing #{coverage['missing'].join(', ')}"
     end
 
     def above?(rating, tolerance) = RATINGS.index(rating) > RATINGS.index(tolerance)
-
-    def stale_fields(evidence, expected)
-      actual = binding_of(evidence)
-      (BINDING + OPTIONAL_BINDING.select { expected.key?(it) }).reject { actual[it] == expected[it] }
-    end
-
-    def binding_of(evidence)
-      runner = evidence['runner']
-      evidence.slice('head', 'base', 'policy_ref', 'model', 'effort')
-              .merge('prompt_sha256' => evidence.dig('prompt', 'sha256'),
-                     'runner' => "#{runner['kind']}:#{runner['identity']}")
-    end
-
-    def validate_expected!(expected)
-      missing = BINDING.reject { expected[it].is_a?(String) && !expected[it].empty? }
-      raise Error, "Expected binding is missing #{missing.join(', ')}" if missing.any?
-    end
 
     def validate_tolerance!(tolerance)
       return if RATINGS.include?(tolerance)
@@ -107,12 +67,12 @@ module Shaka
       raise Error, "Risk tolerance must be one of #{RATINGS.join(', ')}"
     end
 
-    def ask(state, reason, evidence = nil) = result(state, 'ask', reason, evidence)
+    def ask(state, reason, evidence) = result(state, 'ask', reason, evidence)
 
     # Shadow results say what the risk gate alone would decide; the other merge gates still apply.
     def result(state, decision, reason, evidence)
       { 'mode' => 'shadow', 'state' => state, 'decision' => decision, 'reason' => reason,
-        'rating' => evidence&.fetch('rating'), 'other_gates' => 'not evaluated' }.compact
+        'rating' => evidence.fetch('rating'), 'other_gates' => 'not evaluated' }
     end
 
     # Field-level checks, kept apart so the top-level rules above read in one place.

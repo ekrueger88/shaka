@@ -19,18 +19,11 @@ module Shaka
           'model' => 'UNKNOWN', 'effort' => 'UNKNOWN', 'inputs' => inputs }
       end
 
-      def inputs(coverage)
-        list = ['diff']
+      # Every supported reviewer may read the pinned commit's unchanged source.
+      def inputs
+        list = %w[diff source_lookup]
         list << 'description' if @options[:description_file]
-        list << 'source_lookup' if coverage&.start_with?('Read-only')
         list
-      end
-
-      # The evidence was just built from these inputs, so the decision checks completeness and tolerance.
-      def expected(evidence)
-        runner = evidence['runner']
-        { 'head' => @options[:head], 'base' => @options[:base], 'policy_ref' => @policy_ref,
-          'prompt_sha256' => evidence.dig('prompt', 'sha256'), 'runner' => "#{runner['kind']}:#{runner['identity']}" }
       end
     end
 
@@ -119,7 +112,7 @@ module Shaka
         return outcome.merge('status' => 'not_completed') unless outcome['judgment']
 
         evidence = Judgment.evidence(outcome.delete('judgment'), outcome.delete('binding'))
-        decision = RiskAssessment.decide(evidence, expected: expected(evidence), tolerance: @settings['auto_max_risk'])
+        decision = RiskAssessment.decide(evidence, tolerance: @settings['auto_max_risk'])
         outcome.merge('status' => 'completed', 'evidence' => evidence, 'decision' => decision)
       rescue Error => e
         outcome.except('judgment', 'binding').merge('status' => 'not_completed', 'reason' => e.message)
@@ -137,7 +130,7 @@ module Shaka
       # Only the model the CLI reports counts as observed; the effort is the one passed to the CLI.
       def provider_binding(runner, result)
         prompt = { 'source' => runner.instructions_source, 'sha256' => Judgment.prompt_sha256(runner.instructions) }
-        binding(result['reviewer'], prompt, inputs(result['coverage']))
+        binding(result['reviewer'], prompt, inputs)
           .merge('model' => result['model'] || 'UNKNOWN', 'effort' => @settings['effort'] || 'UNKNOWN')
       end
 

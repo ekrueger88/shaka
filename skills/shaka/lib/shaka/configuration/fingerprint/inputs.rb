@@ -38,7 +38,8 @@ module Shaka
       def prompt_paths
         guidance = RepositoryConfig::ProjectGuidanceSchema.resolve(@settings)
         paths = RepositoryConfig.prompt_files(review: @settings.fetch('review'),
-                                              opening: @settings.fetch('opening_check'), guidance:).map(&:last)
+                                              opening: @settings.fetch('opening_check'), guidance:,
+                                              risk: @settings['risk_assessment']).map(&:last)
         paths + pr_template_paths(guidance) + default_custom_instructions
       end
 
