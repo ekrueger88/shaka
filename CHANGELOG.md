@@ -70,6 +70,13 @@ qualification remain evidence requirements; the version number does not establis
 
 ### Fixed
 
+- Give more installer refusals a next command that fixes them, or say that you must decide.
+  A Shaka folder you also develop in now gets the commands that remove its clean
+  worktrees and merged branches, and names any work that exists only there, instead of
+  a `--take-over` that fails. A writable folder you own names `chmod go-w`, local commits name
+  the step that keeps them on a branch, and a mistyped `--branch` no longer prints a
+  `git switch` that fails.
+
 - Clear the temporary worktree an interrupted `install --update` leaves in the source
   checkout. `install --status` now reports it as an interrupted update and names
   `install --update`, which removes it, instead of calling it development work with no
