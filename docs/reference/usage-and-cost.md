@@ -33,6 +33,25 @@ because hosts count tokens differently. Two retained reports can overlap, so a
 sum can count the same response twice; a minimum marker does not guarantee
 that the reports are disjoint.
 
+Long-lived PRs can accumulate more accounting data than GitHub allows in a description.
+Shaka then keeps the full records in comments on the same PR. **Usage archive** links
+and SHA256 checksums identify them; the tables and pricing notes stay in the description.
+Keep those comments. A later update checks their contents before using them and stops
+if a comment is missing or changed. The checksum detects changes; it does not make a
+GitHub comment immutable.
+Updates reuse unchanged records and upload only new or changed records. Keep
+superseded archive comments as accounting history; they are not deleted when a
+record is replaced. An ordered inventory also detects missing description references.
+Older Shaka helpers refuse to replace an archived description. Update Shaka before
+refreshing one; reverting the helper does not undo an existing archive. An interrupted
+upload can leave unreferenced comments while the description keeps its earlier contents.
+
+If an archive is deleted, recover its original records from saved reports or a saved
+description. Have a maintainer verify that every record is recovered before replacing
+the damaged managed region with those records and publishing again. If the records
+cannot be recovered, report the missing accounting and stop for a maintainer decision;
+removing the references does not preserve the lost history.
+
 ## Compare host counters carefully
 
 | Host | Input accounting | Output accounting |
@@ -48,8 +67,8 @@ For example, a Codex row with 100,000 input tokens and 80,000 cached input
 tokens has 20,000 uncached input tokens. A Claude row with 20,000 input tokens
 and 80,000 cached input tokens describes the same input quantities.
 Do not add a Codex row's cached input to its input again.
-OpenCode's native total includes input, output, reasoning, and cache tokens;
-Cursor's native total is unreported.
+OpenCode's native total includes input, output, reasoning, and cache tokens,
+but OpenCode 2 does not report one; Cursor's native total is unreported.
 
 ## How estimates are priced
 
@@ -73,6 +92,16 @@ Shaka leaves unsupported models or incomplete billing categories unpriced.
 A partially priced report keeps the known estimate with a `+` marker and a
 reason for the missing amount. The PR's original pricing references apply to
 its recorded estimate; current provider prices may differ.
+
+## Keep usage when work changes hands
+
+Usage saved as comments on the PR survives a change of model or coding tool. A new owner
+reads those comments instead of the earlier machine's records, and each response counts
+once even if two agents saved it. Comments from accounts without write access are ignored.
+
+Ask the agent:
+
+> Save this task's usage on the PR before handing it over.
 
 ## Read the limitations beside the numbers
 

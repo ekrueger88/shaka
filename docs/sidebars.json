@@ -22,6 +22,7 @@
         "settings-guide",
         "coding-agents",
         "linear",
+        "pstack",
         "manual-installation",
         "fork-and-hack",
         "migration"
@@ -59,6 +60,7 @@
         "articles/review-process-study",
         "articles/checkpoint-sentence-eval",
         "articles/one-shot-pr-study",
+        "articles/ci-and-hosted-review-repairs",
         "articles/shaka-with-pstack-and-agent-skills"
       ]
     },

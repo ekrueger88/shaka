@@ -81,13 +81,19 @@ input. You can approve the approach, request revisions, or settle an open questi
 | --- | --- |
 | What changes for users? | The description, preview, and visual comparisons when applicable. |
 | What is it for, and what does it leave out? | **Intent** in the description: the problem, the **Task** it came from (a ticket such as GitHub #1234 or Linear MKT-1234, with this PR's relation to it, or the agent prompt), the scope, what was deliberately left out, and why the change is safe. A bug fix also names its **Root cause**, or says it was not found and the PR treats only the symptom. |
-| How carefully should I review it? | **Review effort** under Intent, from 1 (read the description) to 5 (review every line, reproduce it, and ask a second reviewer), based on what a mistake could reach. When a few files or lines need more care than the rest, **Closer reading** lists each with its own level and reason, linked to the code. Shaka sets a minimum from the files the PR changes and names the file that set it, unless that name contains unusual characters. Each repository chooses those minimums with [`pr_description.human_review_floors`](settings.md#pr_descriptionhuman_review_floors). |
+| What should I read myself? | **Human review** under Intent, rated from 1 (the description should be enough) to 5 (read the riskiest files closely). The rating is about where your attention matters, so it names the files that set it. Nothing checks how closely anyone read. When a few files or lines need more care than the rest, **Closer reading** lists each with its own level and reason, linked to the code. Shaka sets a minimum from the files the PR changes, and withholds any file name that contains unusual characters. Each repository chooses those minimums with [`pr_description.human_review_floors`](settings.md#pr_descriptionhuman_review_floors). |
 | Why this approach? | The walkthrough, linked code, alternatives, and maintenance-cost assessment. |
-| How was it checked? | **Verification** in the description. Its first line, written by Shaka from the recorded results, says whether repository validation passed and who reviewed the current revision; when validation passed and a local review ran through Shaka, it is folded under a one-line summary so a failure or a missing review stands out. When fewer local reviewers completed than [`review.local_review_count`](settings.md#reviewlocal_review_count) or [`review.provider_coverage`](settings.md#reviewprovider_coverage) asks for, the line stays unfolded. A **Setup gaps** line below it says how many completed, names each listed provider that did not, and links the review comment. Comments with no AI identity line from a PR author whom GitHub lists as the owner, an organization member, or a collaborator also add a Setup gaps line with their count. That is how an agent's reply looks when it was posted without `shaka reply`. They leave a passing summary folded. A Codex reviewer whose sandbox could not start, so that every command failed with a `bwrap:` error, also unfolds the line and is named there, because it read only the diff. Up to three checks follow, each showing what ran against this change's behavior, its outcome, and a link to the evidence or the command itself. **Not verified** names a claim this PR makes that went unproven and why that is acceptable; Shaka leaves the line out when the agent reports nothing unproven. |
+| How was it checked? | **Verification** in the description. Its first line, written by Shaka from the recorded results, says whether repository validation passed and who reviewed the current revision; when validation passed and a local review ran through Shaka, it is folded under a one-line summary so a failure or a missing review stands out. When fewer local reviewers completed than [`review.local_review_count`](settings.md#reviewlocal_review_count) or [`review.provider_coverage`](settings.md#reviewprovider_coverage) asks for, the line stays unfolded. A **Setup gaps** line below it says how many completed, names each listed provider that did not, and links the review comment. A Codex reviewer whose sandbox could not start, so that every command failed with a `bwrap:` error, also unfolds the line and is named there, because it read only the diff. **Not verified** follows in plain view: it names a claim this PR makes that went unproven and why that is acceptable, and Shaka leaves it out when the agent reports nothing unproven. A **Merge limitations** line below it names a gap that should hold the merge, such as a migration that needs the maintainer's approval. Up to three checks sit in the collapsed Evidence and limitations section, each showing what ran against this change's behavior, its outcome, and a link to the evidence or the command itself. |
 | Which skills contributed? | **Skills used** lists the reported skills, their contributions, and evidence labels. |
 | What did people say? | **Human comments** in the description: each comment a person wrote, its reply, and whether it is still open. |
 | What happened to concerns? | Review findings, replies, and recorded fixes or reasons for declining a suggestion. |
 | What do I need to do? | Open decisions and steps besides merging, with their timing and owner. |
+
+Expand **Task as understood** beside the task source to compare the delivered work
+with the contributor's account of the assignment and success criteria. It carries
+corrections made in chat; it does not establish your approval. Older PRs may omit it.
+The contributor checks this paraphrase for private content before publication.
+Original prompts remain excluded, and collapsed text is public.
 
 For example, a CSV export PR may use a simple download instead of a background
 job. The walkthrough should explain that choice; tests should exercise the
@@ -374,16 +380,20 @@ checkpoint with your decision under **Concerns recorded as accepted by the maint
 preparation continues. Shaka checks that a decision is recorded for each concern, not
 who made it, so read that list before you merge. Accepting a concern does not override
 **Simplify/reframe** or **Do not merge**. When the agent disagrees with a concern or a
-**Simplify/reframe** verdict, it recommends **Merge after maintainer decision** and asks you
-under **Decisions to make**, so the checkpoint, the warning, and the question agree. Shaka blocks final merge
+**Simplify/reframe** verdict, or a question comes up after the checkpoint said **Merge**, it recommends
+**Merge after maintainer decision** and asks you under **Decisions to make**, so the checkpoint,
+the warning, and the question agree. For example, if a required check can't run after the checkpoint,
+the checkpoint changes to say the PR waits on your answer. Shaka blocks final merge
 preparation without this account's published ready review or explicit opt-out for the
 current commit. A new commit needs fresh evidence. The reviewer judges value; Ruby
 checks the published result and commit, not the judgment’s quality.
 
 The checkpoint also says whether the description's **Verification** proves what its
-**Intent** claims: **Adequate**, **Adequate with accepted gaps**, **Inadequate**, or
-**Cannot judge**. It names the weakest claim and the one check that would most raise
-confidence, and the description shows the verdict under its recommendation. With Ask,
+**Intent** claims: **Adequate**, **Adequate, with gaps the reviewer judged acceptable**,
+**Inadequate**, or **Cannot judge**. The second verdict is the reviewer model's opinion;
+you have not accepted those gaps until you decide to merge. The checkpoint names the
+weakest claim and the one check that would most raise confidence. The description shows
+an **Inadequate** or **Cannot judge** verdict under its recommendation. With Ask,
 an **Inadequate** or **Cannot judge** verdict is information for your merge decision; with
 Auto, your agent stops and hands the PR back to you, and merges only after you approve that
 commit. No setting turns this stop off: Auto merging past verification that failed or could
@@ -396,9 +406,11 @@ accepted guidance. Once a direction is chosen, the agent records that guidance
 and recoverable work state as a [return point](#return-points). This is not an
 automatic Ruby snapshot or an extra human approval.
 The PR description opens with **Decisions to make** while you have questions to answer.
-Until you answer them, the links below the questions show **Decisions to make** as the
-checkpoint, and the code walkthrough waits, because your answers may change the code it
-would explain. Ask your agent for a walkthrough sooner if you want to read one first.
+Each question should explain your options, what each changes, the agent's recommendation,
+and how to answer. Published checkpoint and walkthrough links remain available.
+An unpublished checkpoint says **Not published yet**. The code walkthrough waits because
+your answers may change the code it would explain. Ask your agent for a walkthrough
+sooner if you want to read one first.
 Otherwise, below the line naming the AI that wrote it, it opens with the task owner's
 recommendation from the checkpoint published for that commit, such as
 **Recommendation: Merge**, or **No recommendation yet** before the owner has recorded one.
@@ -410,8 +422,8 @@ to show a recommendation made for an earlier commit, so the recommendation does 
 one. Beside it, links open the walkthrough, the detailed code review when one was
 published, and the full checkpoint. Your agent adds a **Next** line when merging waits on
 something the recommendation does not say, such as another PR. The **Summary** follows.
-Your agent summarizes
-consequential decisions, questions or friction, and critical changes in a few lines.
+Your agent writes it as one sentence with the outcome, then up to four bullets on
+consequential decisions, questions or friction, and critical changes.
 Supporting evidence appears below.
 The report keeps the **Reviewer verdict** within the checkpoint. A recommendation becomes a
 **Recorded decision** after the owner accepts it or acts under existing authority.

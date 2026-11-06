@@ -12,8 +12,7 @@ module Shaka
                'Task owner: resolve the linked concerns and publish a new checkpoint for the current head.'].freeze
     # An owner who would merge after the maintainer's decision is not told the PR must never merge.
     AWAITING = ["⛔ Not ready to merge — waiting for the maintainer's decision.",
-                'Maintainer: make the decision the linked checkpoint asks for. ' \
-                'Task owner: then publish a new checkpoint.'].freeze
+                'Maintainer: answer under Decisions to make. Task owner: then publish a new checkpoint.'].freeze
 
     module_function
 
@@ -36,6 +35,13 @@ module Shaka
     # Whether the warning for this head waits on the maintainer; only its generated first line counts.
     def awaiting?(body, repository, current)
       split(body).first.start_with?("#{OPEN}\n> **#{AWAITING.first}**\n") && head(body, repository) == current
+    end
+
+    # A merge of the head the warning waited on answers it; any other warning stays as the record.
+    def answered_by_merge(body, repository, pull)
+      return body unless pull['merged'] == true && awaiting?(body, repository, pull.dig('head', 'sha'))
+
+      remove(body)
     end
 
     # Whether a ready checkpoint for this head settles the warning: it names an earlier head, or it waited

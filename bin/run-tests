@@ -4,12 +4,17 @@
 # Runs Minitest files in several worker processes. Every worker loads every file,
 # then keeps every Nth test class, so each test runs exactly once. Set
 # SHAKA_TEST_WORKERS to choose the count; 1 runs the suite in one process.
+# When the shell sets no locale, workers run under C.UTF-8, the locale GitHub's runners set,
+# or under en_US.UTF-8 on macOS, whose older releases lack C.UTF-8.
 require 'etc'
 require 'tempfile'
 
 workers = Integer(ENV.fetch('SHAKA_TEST_WORKERS', [Etc.nprocessors, 4].min))
 abort 'SHAKA_TEST_WORKERS must be at least 1' if workers < 1
 files = (ARGV.empty? ? Dir.glob('test/**/*_test.rb') : ARGV).map { |path| File.expand_path(path) }
+
+utf8_locale = RUBY_PLATFORM.include?('darwin') ? 'en_US.UTF-8' : 'C.UTF-8'
+locale = %w[LC_ALL LC_CTYPE LANG].any? { !ENV.fetch(it, '').empty? } ? {} : { 'LANG' => utf8_locale }
 
 runs = Array.new(workers) do |index|
   code = <<~RUBY
@@ -20,13 +25,14 @@ runs = Array.new(workers) do |index|
     classes.replace(#{index}.zero? ? kept + anonymous : kept)
   RUBY
   log = Tempfile.new("run-tests-#{index}")
-  { log:, pid: Process.spawn(RbConfig.ruby, '-Itest', '-e', code, out: log.path, err: %i[child out]) }
+  { log:, pid: Process.spawn(locale, RbConfig.ruby, '-Itest', '-e', code, out: log.path, err: %i[child out]) }
 end
 
 totals = Hash.new(0)
 results = runs.map do |run|
   status = Process.wait2(run[:pid]).last
-  output = File.read(run[:log].path)
+  # Bytes, because the workers' encoding may differ from the runner's, or the runner may have no locale.
+  output = File.binread(run[:log].path)
   run[:log].close!
   puts output
   counts = output.scan(/(\d+) (runs|assertions|failures|errors|skips)\b/).last(5)

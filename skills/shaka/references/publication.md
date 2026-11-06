@@ -7,6 +7,21 @@
   separate rewriting skill for Shaka's publication step.
 - No style schema or prose score is needed beyond the limits below.
 
+## Write the description summary
+
+- Write `summary` as one outcome sentence, a blank line, then at most four bullets, each
+  one fact a maintainer needs to decide on merging. Omit the bullets when that sentence
+  covers the change.
+- Put a safety argument in `intent.safe_because` and issue history in `task_history`.
+- Instead of: “It stays under Human comments, and reviewer-shortfall and sandbox gaps
+  still appear under Setup gaps. `shaka resolve` still refuses to treat one as the
+  agent’s answer, so it gains no authority.”
+- Write: “Your own comments on your PR no longer appear as a setup problem in its
+  description.” Then:
+  - “Your comments stay under Human comments.”
+  - “Setup gaps still lists reviewer shortfalls and sandbox problems.”
+  - “`shaka resolve` still won’t accept a raw `gh` reply as the agent’s answer.”
+
 ## Post-implementation comments
 
 - The renderer supplies the order, labels, and the reviewer's evaluation and concerns.
@@ -31,7 +46,7 @@
   Pass a recorded `--ci-review-wait` task override to `description` too.
 
 - Verification opens with bound validation/review status and an optional linked `summary`.
-  Put material merge-affecting gaps in `merge_limitations`; accepted gaps stay in `not_verified`.
+  `not_verified` and `merge_limitations` render visibly; put a gap that limits merging in `merge_limitations`.
   Checks, tables, and PR-specific `details` share one Evidence and limitations disclosure.
   Put the initiating request and useful decision history in optional `task_history`.
 - Intent ends with `scope`, GitHub's file/line totals, and path-based file buckets.

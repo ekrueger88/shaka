@@ -235,6 +235,9 @@ would send it back, such as
 `Auto merge preview: with merge.preference: auto, the agent would hand this PR back: skills/shaka/SKILL.md sets review floor 3`.
 A PR that passes still gets the agent's own judgment of risk and compatibility under Auto.
 
+The agent's rating does not hold a PR back. Rating it above its floor, or listing a file under
+**Closer reading**, tells a reader where to look but does not stop Auto from merging it.
+
 Floors only see file paths. They cannot tell that a PR removes a command or needs you to do
 something after merge, so the agent hands those PRs back on its own judgment.
 
@@ -907,13 +910,18 @@ rendered before and after screenshots.
 ## `pr_description.opening_check`
 
 **Optional.** Check whether the first sentence of a PR description or code
-walkthrough leads with a useful outcome for its reader. This is writing advice,
+walkthrough leads with a useful outcome for its reader, and whether a description
+uses words a maintainer new to Shaka would not follow. This is writing advice,
 not a check of the whole text's accuracy.
 It flags a first sentence led by an internal tool, such as a command or helper, and
 one that gives a thing something only a person does, such as "A repository can now
 see when a reviewer could not run."
+On a description, it also reads the Intent and Verification text you see without
+opening anything. For each term it flags, it suggests plainer words: "that commit"
+for "that head", for example. The agent decides whether a term needs changing.
 A failed check does not block publication or merging. With an opening reviewer
-configured, each walkthrough with a new opening adds one call to it.
+configured, each description with new text and each walkthrough with a new opening
+adds one call to it.
 
 > $shaka Use Codex for opening checks.
 
@@ -974,7 +982,7 @@ Shaka treats the PR opening as text to assess, not as instructions to follow.
 
 If the selected reviewer cannot run, Shaka returns the reason and the prompt for
 the coding agent to apply. It preserves your model choice. A successful result
-is reused while the opening, instructions, provider, model, and effort stay the
+is reused while the checked text, instructions, provider, model, and effort stay the
 same.
 
 ## `prose_limits`
@@ -1185,10 +1193,17 @@ Shaka still stores UTC, and other commands' timestamps stay in UTC.
 
 **Optional. Default: the floors below.**
 
-Every PR description says how much human review the change needs, from 1 (read the
-description) to 5 (review every line, reproduce it, and ask a second reviewer). Shaka sets a
-minimum from the files the PR changes, so an agent can't rate a risky change as light reading.
-The description names the floor and the file that set it.
+Every PR description says where a person's attention matters, from 1 (the description should be
+enough) to 5 (read the riskiest files closely). Shaka sets a minimum from the files the PR
+changes, so an agent can't rate a risky change as light reading.
+
+The rating points at files. It does not ask for the whole PR to be studied. In a repository that
+sets its docs at 5, as this one does, a code PR with one guide in it reads:
+
+> **Human review:** 5 of 5. Read `docs/settings.md` (changes docs for Shaka's users). The rest
+> set a lower floor.
+
+Nothing checks how closely anyone read.
 
 What deserves close review depends on your project, so set these floors for each repository.
 The easiest way is to ask your agent:
@@ -1198,7 +1213,7 @@ The easiest way is to ask your agent:
 
 Your agent knows the matching rules and checks its proposal against your recent PRs. You
 decide what matters; for example, a project whose guides are read by its customers may want
-every `docs/` change reviewed at 5.
+`docs/` changes at 5.
 
 In [a study of 309 PRs in this repository](articles/one-shot-pr-study.md), people asked for
 changes on many docs and agent-instruction PRs and on no PR that changed only code and tests.
@@ -1221,7 +1236,8 @@ only. For example, the default floor 4 covers `docs/merge-guide.md` by its name 
 Markdown, so the guide falls to the next floor that covers it, or to 1. The same guide under
 `skills/` still gets 3 from the agent-instructions floor.
 
-Your list replaces the default one. This repository adds two floors ahead of the defaults:
+Your list replaces the default one. This repository adds three floors ahead of the defaults,
+so a guide gets the closest review and a page under `docs/reference/` gets a skim:
 
 ```yaml
 pr_description:
@@ -1229,6 +1245,10 @@ pr_description:
     - level: 5
       reason: changes docs for Shaka's users
       paths: [docs/**/*]
+      except: [docs/reference/**/*]
+    - level: 2
+      reason: changes a reference page
+      paths: [docs/reference/**/*]
     - level: 4
       reason: changes evidence or settings checks
       paths: [skills/shaka/lib/shaka/evidence/**/*, skills/shaka/lib/shaka/seam/**/*]

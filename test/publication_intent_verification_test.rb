@@ -15,7 +15,7 @@ class PublicationIntentVerificationTest < Minitest::Test
 
     intent = "## Intent\n\n**Why:** #{INTENT['why']}\n\n**Task:** Codex prompt\n\n" \
              "**Safe because:** #{INTENT['safe_because']}\n\n" \
-             "**Review effort:** 2 of 5, easy: skim the diff.\n\n**Leaves out:** #{INTENT['leaves_out']}\n\n" \
+             "**Human review:** 2 of 5, skim the diff.\n\n**Leaves out:** #{INTENT['leaves_out']}\n\n" \
              "**Scope:** #{INTENT['scope']}"
     verification = "## Verification\n\n#{Shaka::VerificationGates::UNKNOWN}\n\n" \
                    "<details>\n<summary>Evidence and limitations</summary>"
@@ -24,11 +24,16 @@ class PublicationIntentVerificationTest < Minitest::Test
   end
 
   # https://github.com/shakacode/shaka/issues/777: a line saying no claim went unproven told the reader nothing.
-  def test_not_verified_appears_only_for_a_claim_that_went_unproven
+  # https://github.com/shakacode/shaka/issues/999: a folded line made the reader open the fold to find a gap.
+  def test_not_verified_appears_visibly_only_for_a_claim_that_went_unproven
     refute_includes render, '**Not verified:**'
+    refute_includes render('verification' => VERIFICATION.merge('merge_limitations' => 'Nothing.')), 'Merge limitations'
 
     gap = 'The live rate limit was not triggered; the test replays its stderr.'
-    assert_includes render('verification' => VERIFICATION.merge('not_verified' => gap)), "**Not verified:** #{gap}"
+    limits = VERIFICATION.merge('not_verified' => gap, 'merge_limitations' => 'No live merge.')
+    visible, folded = render('verification' => limits).split('<summary>Evidence and limitations</summary>')
+    assert_operator visible.index("**Not verified:** #{gap}"), :<, visible.index('**Merge limitations:**')
+    assert_includes folded, VERIFICATION['checks'].first
   end
 
   def test_intent_and_verification_follow_the_links_and_precede_every_section
@@ -84,12 +89,12 @@ class PublicationIntentVerificationTest < Minitest::Test
     assert_includes error.message, 'intent root_cause'
   end
 
-  # The reviewer sees from the blast radius how hard to look, like a heart-rate zone.
-  def test_review_effort_names_its_zone
+  # The line promises only what a person would plausibly do; no rule checks how closely anyone read.
+  def test_review_effort_asks_for_attention_and_not_for_labor
     rendered = render('intent' => INTENT.merge('review_effort' => 5))
 
-    assert_includes rendered, '**Review effort:** 5 of 5, all out: review every line, reproduce it, and ' \
-                              'ask a second reviewer.'
+    assert_includes rendered, '**Human review:** 5 of 5, read the riskiest files closely; a mistake here is ' \
+                              'hard to undo.'
   end
 
   def test_review_effort_must_be_a_whole_number_from_one_to_five
@@ -105,8 +110,6 @@ class PublicationIntentVerificationTest < Minitest::Test
                       'verification' => { 'checks' => [], 'not_verified' => 'Validation has not run yet.' })
 
     assert_includes rendered, '**Not verified:** Validation has not run yet.'
-    assert_operator rendered.index('<summary>Evidence and limitations</summary>'), :<,
-                    rendered.index('**Not verified:**')
   end
 
   def test_one_to_three_checks_are_allowed

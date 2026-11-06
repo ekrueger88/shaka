@@ -18,6 +18,15 @@ version: 1
 # `rule` when that span does not read as a sentence on its own, as half of "Never A or B"
 # does not. A clause added to a sentence an entry already quotes is not detected either.
 rules:
+  - id: startup-task-readback
+    phase: intake
+    quote: >-
+      Before implementation, give a concise readback in your own words: the intended
+      outcome, scope, success criteria, and consequential assumptions.
+    enforced_by: agent
+    note: >-
+      The agent states and retains its interpretation. Ruby cannot verify understanding,
+      startup timing, human agreement, or whether a paraphrase contains private facts.
   - id: startup-review-before-implementation
     phase: plan
     quote: >-
@@ -138,9 +147,11 @@ rules:
       The owner supplies and judges the disposition. Ruby validates a supplied disposition's
       vocabulary, head, reason, and any next action, requires a next action except for Merge,
       rejects Merge against a blocking conclusion or a concern without a recorded
-      `accepted_concerns` decision, accepts Merge after maintainer decision only while Merge is
-      refused and the verdict is not Do not merge, refuses a description without decisions
-      while its waiting banner names the current head, and publishes other dispositions through the existing blocked attestation. It does not
+      `accepted_concerns` decision, accepts Merge after maintainer decision unless the verdict is
+      Do not merge, refuses a description without decisions while its waiting banner names the
+      current head, refuses open decisions while this head's checkpoint recommends Merge and the
+      reverse unless that banner answers them,
+      and publishes other dispositions through the existing blocked attestation. It does not
       infer merge authority, evaluate free-form prose, close a PR, or require the optional field.
   - id: post-implementation-merge-blocker
     phase: finish
@@ -420,13 +431,13 @@ rules:
     note: >-
       `comments` screens what it returns and marks what it excluded, so using it satisfies the
       rule. Nothing observes a read the agent makes through another route.
-  - id: aggregate-usage-only
+  - id: allowlisted-usage-metadata
     phase: explain
-    quote: publish only aggregate metadata
+    quote: publish only allowlisted usage metadata
     enforced_by: agent
     note: >-
-      `usage` renders aggregate rows and no per-response detail, so reporting through it
-      satisfies the rule. Nothing screens a body the agent writes by hand.
+      `usage` publishes numeric metadata and hashed response identities, without prompts,
+      transcripts, or raw source identifiers. Nothing screens a body the agent writes by hand.
   - id: helper-owns-the-body
     phase: explain
     quote: Do not rewrite the rendered GitHub body
