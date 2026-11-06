@@ -141,5 +141,6 @@ rest are instructions the agent follows. No test or enforcement entry covers the
    skill.
 3. Decide on the bound verification command in gap 3, the largest change here.
 
+To install pstack beside Shaka and keep it current, read [Use pstack with Shaka](../pstack.md).
 The [reference](../reference/pr-description-ideas.md) holds the wider history of these
 ideas in Shaka.
