@@ -60,6 +60,7 @@ checkpoint: # Defaults: the final "did we build the right thing?" check before m
 risk_assessment: # Defaults: an opt-in shadow risk rating that nothing reads for merging yet.
   enabled: false # true lets `shaka risk assess` call the classifier below.
   reviewer: openai/codex
+  # model: gpt-6.1-sol # Default: the reviewer CLI's own default; xai/grok requires one.
   effort: low
   auto_max_risk: low # The highest rating the shadow decision would let Auto merge.
   # Default: Shaka's short risk prompt. A file here replaces it, read at the settings commit.
