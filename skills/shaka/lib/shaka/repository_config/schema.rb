@@ -14,6 +14,7 @@ require_relative 'pr_description_schema'
 require_relative 'project_guidance_schema'
 require_relative 'wip_schema'
 require_relative 'review_schema'
+require_relative 'risk_assessment_schema'
 require_relative 'validation'
 
 module Shaka
@@ -24,7 +25,7 @@ module Shaka
 
       REQUIRED = %w[version review merge].freeze
       OPTIONAL = %w[base_branch branches wip pr_description repo_prefix prose_limits project_guidance
-                    checkpoint].freeze
+                    checkpoint risk_assessment].freeze
       OPTIONAL_REVIEW_KEYS = [ReviewSchema::CI_REVIEW_JOBS, ReviewSchema::LOCAL_REVIEW_AGENTS, ReviewSchema::PROMPT_FILE,
                               ReviewSchema::CUSTOM_INSTRUCTIONS,
                               ReviewSchema::LOCAL_REVIEW_COUNT, ReviewCoverage::KEY, ReviewLimit::KEY,
@@ -76,6 +77,7 @@ module Shaka
         WipSchema.new(@data['wip']).validate if @data.key?('wip')
         validate_description
         RepoPrefix.validate!(@data['repo_prefix']) if @data.key?('repo_prefix')
+        RiskAssessmentSchema.new(@data['risk_assessment']).validate if @data.key?('risk_assessment')
       end
 
       def validate_description

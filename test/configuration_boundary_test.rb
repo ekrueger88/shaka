@@ -7,6 +7,7 @@ require 'shaka/configuration'
 # Production files allowed to read or write files directly.
 module ConfigurationBoundaryFileIO
   OTHER_FILE_IO = %w[
+    risk_assessment/command.rb risk_assessment/judgment.rb risk_assessment/provider_runner.rb
     hosts/codex_wake.rb trial/prepare.rb trial/command.rb install/display.rb install/checkout.rb install/official.rb
     local_review/usage.rb doctor/installation_identity.rb doctor/cursor_stop_hook.rb local_review/ledger_running.rb
     enforcement_config.rb evidence/command.rb evidence/verification.rb executable_file.rb installer.rb

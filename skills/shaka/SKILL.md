@@ -27,6 +27,7 @@ For a request to install or update Shaka itself, follow
 [official installation](references/official-installation.md), or for a fork install or
 its update, the [fork procedure](references/installation.md#install-from-a-personal-fork),
 and stop after verification.
+For a request to rate a PR's risk, follow [risk assessment](references/risk-assessment.md).
 For a task, continue below.
 
 Run the trusted helper's `workflow` command now and follow the complete validated procedure it

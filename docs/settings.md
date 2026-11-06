@@ -821,6 +821,34 @@ checkpoint:
 To remove a built-in question instead, set `checkpoint.replacement_prompt_file` to replace the whole prompt;
 you then keep that copy in step with Shaka's changes.
 
+## `risk_assessment`
+
+**Optional. Default: off.** Rate each PR's risk as low, medium, or high, and see
+whether that rating alone would let Auto merge it. This is a preview: no merge,
+label, or required check reads the rating yet.
+
+The rating describes what a failure would reach and how hard recovery would be. It
+stays separate from how well the change is tested and from your
+[human review floors](#pr_descriptionhuman_review_floors). `auto_max_risk` is your
+tolerance: a demo repository can accept `high` without asking the classifier to
+call its changes low.
+
+```yaml
+risk_assessment:
+  enabled: true
+  auto_max_risk: medium
+```
+
+With that, ask your agent: `Rate this PR's risk with Shaka.` The result names the
+commits, settings commit, prompt, and classifier it used. A classifier that fails or
+returns unusable output gives no rating, and incomplete coverage means Ask.
+
+To use your own wording, set `replacement_prompt_file`. Shaka reads it from the
+settings commit, never from the PR being rated.
+
+`reviewer`, `model`, and `effort` choose the provider as the [checkpoint](#checkpoint)'s do.
+Machine reviewer lists and settings previews do not apply to risk ratings.
+
 ## `project_guidance`
 
 **Optional. Default: none.** Markdown files with your repository's own requirements,

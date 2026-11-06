@@ -16,6 +16,7 @@ require_relative 'recommendation'
 require_relative 'repos'
 require_relative 'review_prompt'
 require_relative 'reviewer'
+require_relative 'risk_assessment/command'
 require_relative 'seam'
 require_relative 'trial/command'
 require_relative 'ui_check'
@@ -54,6 +55,7 @@ module Shaka
       'review' => entry(LocalReview::ACTIONS) { |arguments| LocalReview.run(arguments) },
       'review-prompt' => entry { |arguments| ReviewPrompt.run(arguments) },
       'reviewer' => entry { |arguments| Reviewer.run(arguments) },
+      'risk' => entry(RiskAssessment::Command::ACTIONS) { |arguments| RiskAssessment::Command.run(arguments) },
       'seam' => entry(Seam::OPERATIONS) { |arguments| Seam.run(arguments) },
       'trial' => entry(Trial::Command::ACTIONS) { |arguments| Trial::Command.run(arguments) },
       'ui-check' => entry { |arguments| UiCheck.run(arguments) },

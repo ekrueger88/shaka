@@ -14,6 +14,7 @@ require_relative 'configuration/personal_settings'
 require_relative 'repository_config/duplicate_keys'
 require_relative 'repository_config/schema'
 require_relative 'repository_config/prompt_files'
+require_relative 'repository_config/risk_assessment_schema'
 
 module Shaka
   # Loads the small, typed repository contract used by the workflow.
@@ -66,6 +67,9 @@ module Shaka
     rescue Psych::Exception => e
       raise Error, "Invalid #{config_path}: #{e.message}"
     end
+
+    # The trusted risk_assessment settings with packaged defaults; an absent section stays disabled.
+    def risk_assessment = RiskAssessmentSchema.effective(@data['risk_assessment'])
 
     def command(name)
       commands.fetch(name.to_s) { raise Error, "#{name} is not configured for this repository" }

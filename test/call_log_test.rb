@@ -134,7 +134,7 @@ class CallLogNamesTest < Minitest::Test
                    'evidence' => Shaka::Evidence::Command::ACTIONS.keys, 'pr' => %w[watch],
                    'post-implementation' => Shaka::PostImplementation::ACTIONS, 'prompt' => Shaka::PromptShow::OPERATIONS,
                    'repos' => Shaka::Repos::OPERATIONS, 'review' => Shaka::LocalReview::ACTIONS,
-                   'seam' => Shaka::Seam::OPERATIONS,
+                   'risk' => Shaka::RiskAssessment::Command::ACTIONS, 'seam' => Shaka::Seam::OPERATIONS,
                    'trial' => Shaka::Trial::Command::ACTIONS,
                    'usage' => Shaka::Subcommands::TABLE['usage'].operations }, Shaka::CallLog::OPERATIONS)
   end

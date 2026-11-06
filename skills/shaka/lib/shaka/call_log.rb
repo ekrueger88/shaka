@@ -16,14 +16,14 @@ module Shaka
     # Only these names are recorded, so a mistyped call cannot put an argument in the log.
     COMMANDS = %w[attention checkpoint claim comments configure description doctor enforcement evidence guidance
                   handoff install issue-create merge post-implementation pr prefix prompt recommendation reply repos
-                  resolve review review-prompt reviewer seam squash-message start trial ui-check update-check usage
+                  resolve review review-prompt reviewer risk seam squash-message start trial ui-check update-check usage
                   walkthrough work workflow].freeze
     # Commands whose second word selects the operation; any other second word is an argument.
     # A test keeps them equal to each command's own list.
     OPERATIONS = { 'configure' => %w[settings], 'evidence' => %w[run bind verify guard],
                    'post-implementation' => %w[run publish], 'pr' => %w[watch], 'prompt' => %w[show],
                    'repos' => %w[add refresh],
-                   'review' => %w[run check record assess publish collapse],
+                   'review' => %w[run check record assess publish collapse], 'risk' => %w[assess],
                    'seam' => %w[check init pointer migrate private preview],
                    'trial' => %w[prepare report], 'usage' => %w[publish collect] }.freeze
     # The fixed commands `evidence run` accepts; any other `--command` value is not recorded.

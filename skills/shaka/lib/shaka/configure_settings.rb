@@ -53,6 +53,7 @@ module Shaka
       setting('checkpoint') do |context|
         RepositoryConfig::PostImplementationSchema.effective(context.config.review.fetch('post_implementation', {}))
       end,
+      setting('risk_assessment') { |context| context.config.risk_assessment },
       setting('project_guidance') { |context| context.config.project_guidance },
       setting('pr_description.opening_check') { |context| context.config.opening_check },
       setting('prose_limits') { |context| context.config.prose_limits },
