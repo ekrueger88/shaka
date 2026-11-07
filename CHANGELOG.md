@@ -42,6 +42,8 @@ qualification remain evidence requirements; the version number does not establis
 
 ### Changed
 
+- Clarify where to find merge choices and recovery help, and what to check in
+  the playground tutorial before approving a PR.
 - Task references in PR descriptions now require a link or a visible explanation
   that the URL is unavailable or cannot be shared. Previously unlinked task metadata
   needs a URL or omission reason before republishing; prompt tasks and numbered
