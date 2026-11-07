@@ -65,8 +65,8 @@ how each held up. For how Shaka works with those sources today, read
   Do not merge 4 times.
 - **Review effort and time to merge:** measured from the first
   `awaiting-merge-approval` label. Medians were 22 minutes at effort 2, 92 at 3, 66
-  at 4, and 142 at 5. At effort 5, 17 of 44 merged within 30 minutes. Reading a PR
-  leaves no trace, so this can't show how closely anyone read it.
+  at 4, and 142 at 5. Of the 44 effort-5 PRs that got that label, 17 merged within 30
+  minutes. Reading a PR leaves no trace, so this can't show how closely anyone read it.
 - **What sets effort 5:** 47 PRs rated 5. The docs floor set 45 and the Shaka settings
   floor set 2. Of the 45, 5 changed only docs and 40 also changed code. 25 of the 40
   changed fewer than 20 lines under `docs/`.
@@ -194,9 +194,9 @@ production line. pstack is Tan's public skill set in `cursor/plugins`.
   has the agent say what it thinks the goal and problem are before it starts.
   Osmani's Agentic Verification recommends the same habit.
 - **In Shaka:** #742 left out this plan-time restatement.
-  [#1044](https://github.com/shakacode/shaka/pull/1044) added it on 2026-11-04. Before coding, the agent reads back the
-  outcome, scope, success criteria, and assumptions, and the PR shows that readback as
-  Task as understood.
+  [#1044](https://github.com/shakacode/shaka/pull/1044) added it on 2026-11-04. Before
+  coding, the agent reads back the outcome, scope, success criteria, and assumptions,
+  and the PR description [shows that readback](../pr-verification.md#answers-for-your-next-decision).
 - **Limit:** clear tasks go ahead without waiting for an answer, so the readback
   catches a misread goal only when someone reads it in time.
   [#1017](https://github.com/shakacode/shaka/issues/1017) proposed waiting up to five
