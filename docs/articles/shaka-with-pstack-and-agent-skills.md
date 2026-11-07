@@ -29,7 +29,8 @@ is untested, and the reason is how each pack starts a skill.
   A harness that drives the real app, run outside `validate`, ends up as a sentence.
 - Both packs have the agent restate the goal before it starts. Shaka added that step on
   2026-11-04 ([#1044](https://github.com/shakacode/shaka/pull/1044)).
-- Shaka's own 11,780-word workflow is the largest thing in this comparison.
+- Shaka loads its whole 11,780-word workflow on every task. That is more than the five Addy
+  skills that match ordinary code changes put together.
 
 ## Three different shapes
 
