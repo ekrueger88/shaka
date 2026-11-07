@@ -37,6 +37,10 @@ how each held up. For how Shaka works with those sources today, read
   - a `**Validation and review:**` line;
   - `Floor N:` in the Review effort line;
   - a `**Setup gaps:**` line naming configured reviewers.
+- **Labels:** this page uses the labels from the window. Since then, Review effort
+  became **Human review** ([#1024](https://github.com/shakacode/shaka/pull/1024)), and
+  adequate with accepted gaps became **Adequate, with gaps the reviewer judged
+  acceptable** ([#1021](https://github.com/shakacode/shaka/pull/1021)).
 - **Restated checks:** "11 of 12" is #740's own count of the PRs merged after #553.
   "32 of 101" comes from the window above, where 101 descriptions list check bullets
   under Verification. A description counts when one of those bullets matches this
@@ -361,7 +365,7 @@ Ask your agent:
 ```text
 $shaka For PRs merged in this repository last week, count how many
 descriptions have an Intent block, Shaka's validation and review line, and a
-named review-effort floor. List the ones that don't.
+Human review rating (Review effort on older PRs). List the ones that don't.
 ```
 
 In Claude Code, start the prompt with `/shaka` instead of `$shaka`.
