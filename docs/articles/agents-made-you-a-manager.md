@@ -21,12 +21,13 @@ an instruction the agent follows.
 - Shaka covers ten of the twelve habits for each task. The two it skips are about
   where the analogy breaks and not needing a manager title.
 - The habits that protect the merge decision have code behind them. The merge helper
-  refuses a PR over the size limits, and the description helper refuses a review rating
-  below a file's floor.
+  refuses a PR over the size limits until the agent passes a flag recording your
+  confirmation of that commit. The description helper refuses a review rating below a
+  file's floor.
 - Most other habits are instructions only. Shaka's own audit lists 100 workflow rules: 8
   refused by a command, 2 reported by one, 1 refused by GitHub, and 89 backed by nothing
   but the agent.
-- The post argues against heavy process. Shaka's workflow is about 11,800 words, with 43
+- The post argues against heavy process. Shaka's workflow is about 11,800 words, with 42
   reference procedures the agent loads when a task needs them.
 - Three ideas in the post have no Shaka counterpart: splitting one change into many PRs
   automatically, counting reverts beside throughput, and dropping rules once newer models
@@ -39,14 +40,14 @@ reports, GitHub refuses, or only the agent follows it.
 
 | Habit in the post | What Shaka does | Backed by |
 | --- | --- | --- |
-| Give it a way to check its work | Runs the repository's checks, reviews each commit, and links the results on the PR | Command, for review covering the merged commit |
+| Give it a way to check its work | Runs the repository's checks, reviews each commit, and links the results on the PR | Command, for a review line covering the merged commit |
 | Set clear context | Restates outcome, scope, and success criteria before coding | Agent |
 | Make every correction compound | Points to retrospectives and `AGENTS.md` | Agent |
 | Enforce only what can't bend | Lists each rule and what enforces it | Command, for 8 of 100 rules |
 | Plan before it builds | Plans, then offers to agree on a design when choices are open | Agent |
 | Steer early, reset fast | Return points record guidance to go back to | Agent |
-| Delegate the task, never the judgment | Ask merge by default; large or risky PRs return under Auto | Command |
-| Design the run that doesn't need you | Trusted settings, base-branch rules, and an approval step | Command, for settings and merge |
+| Delegate the task, never the judgment | Ask merge by default; large or risky PRs return under Auto | Command, until the agent records your confirmation |
+| Design the run that doesn't need you | Trusted settings, base-branch rules, and an approval step | Command for settings and merge; agent for the base branch |
 | Scale verification, not attention | Labels PRs that wait on you; towers follow many tasks | Agent, with labels set by a command |
 | Decide what not to build | States the value before work and reconsiders the finished result | Agent |
 
@@ -57,9 +58,12 @@ reports, GitHub refuses, or only the agent follows it.
 - **In Shaka:** the Verify step runs the repository's validation, then one or more
   reviewers with no access to the implementing chat. The PR links each result and names
   what went unverified. See [PR verification](../pr-verification.md).
-- **Backed by:** the merge helper refuses when no posted review covers the commit it
-  merges. Test quality and review depth are the agent's judgment.
-- **Limit:** a merge clicked on GitHub skips that check.
+- **Backed by:** the merge helper refuses when the merging account has posted no review
+  line for the commit it merges. The line shows that someone posted it, not that a
+  reviewer ran or findings were fixed. Test quality and review depth are the agent's
+  judgment.
+- **Limit:** a merge clicked on GitHub skips that check. The agent can also pass a
+  waiver reason, which the merge result reports.
 
 ### Set clear context
 
@@ -102,7 +106,8 @@ reports, GitHub refuses, or only the agent follows it.
   [Get a plan before implementing](../working-with-shaka.md#get-a-plan-before-implementing)
   stops at the plan.
 - **Backed by:** the agent. The `checkpoint` command records the decision to start.
-- **Limit:** Shaka splits work into PRs only when you ask.
+- **Limit:** the agent splits a task into PRs while planning, by judgment. Shaka has no
+  tool that divides a change into many parallel PRs.
 
 ### Steer early, reset fast
 
@@ -122,8 +127,9 @@ reports, GitHub refuses, or only the agent follows it.
   [size limits](../settings.md#mergelimits) and PRs touching files above
   [`merge.auto_max_review_floor`](../settings.md#mergeauto_max_review_floor).
   This repository sets 999 changed lines and floor 2.
-- **Backed by:** the merge helper refuses both. The description helper refuses a review
-  rating below the floor that the changed files set.
+- **Backed by:** the merge helper refuses both, unless the agent passes a flag naming the
+  commit you confirmed. Nothing checks that you did confirm it. The description helper
+  refuses a review rating below the floor that the changed files set.
 - **Limit:** under Ask, the depth of your own review stays with you.
 
 ### Design the run that doesn't need you
@@ -135,6 +141,7 @@ reports, GitHub refuses, or only the agent follows it.
   from the default branch, and the target branch never comes from an issue or comment.
   Approval is Ask or Auto.
 - **Backed by:** commands, for settings, the comment allowlist, and merge conditions.
+  Choosing the target branch is the agent's alone.
 - **Limit:** Shaka sets no turn or spend limit. Its PRs report usage after the fact.
 
 ### Scale verification, not attention
@@ -167,8 +174,8 @@ weighs. Hooks and deny rules are requirements. It warns that over-process is the
 version of micromanagement, and suggests dropping rules newer models no longer need.
 
 - Shaka is mostly requests. 89 of its 100 audited rules rely on the agent alone.
-- Shaka limits what the agent reads instead. The workflow loads its 43 references
-  only when a task needs them. `bin/report-instruction-growth` measures added
+- Shaka limits what the agent reads instead. The workflow loads its 42 reference
+  procedures only when a task needs them. `bin/report-instruction-growth` measures added
   instruction text in each PR, and this repository's `AGENTS.md` asks reviewers to name
   the failure each new instruction prevents.
 - Nothing in Shaka retires rules. No step asks whether a newer model still needs one.
@@ -177,8 +184,8 @@ version of micromanagement, and suggests dropping rules newer models no longer n
 
 ### 1. Automatic decomposition
 
-- **Today:** Shaka takes one task to one PR. You ask for a split, and each PR repeats
-  the full workflow.
+- **Today:** Shaka defaults to one PR per task. The agent may split a task while
+  planning, and each PR repeats the full workflow.
 - **In the post:** Claude Code's `/batch` divides a large mechanical change into 5 to 30
   tasks, each in its own worktree with its own PR.
 - **Possible change:** none planned. A `/batch` run can produce the PRs, and a Shaka
