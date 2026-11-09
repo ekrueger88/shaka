@@ -15,14 +15,17 @@ Shaka runs delivery: it takes a task through validation, review, publication, an
 merge decision. pstack and agent-skills teach engineering technique, and each can also
 run delivery itself. Installing them together raises one question: who is in charge?
 
-Shaka has a written answer. It fits pstack well. Whether it holds for Addy Osmani's pack
-is untested, and the reason is how each pack starts a skill.
+Shaka has a written answer. It fits pstack well in Cursor and Claude Code. Whether it holds
+for Addy Osmani's pack, or for pstack in Codex, is untested, and the reason is how each
+pack starts a skill.
 
 ## Main results
 
 - Shaka's full rules for other skills load only when a task asks for one. That suits
-  pstack, whose skills wait to be named. Addy's skills start on their own, with only
-  Shaka's short always-loaded boundary in place.
+  pstack in Cursor and Claude Code, where its skills wait to be named. Addy's skills start
+  on their own, and so do pstack's in Codex, which ignores pstack's setting
+  ([cursor/plugins#734](https://github.com/cursor/plugins/issues/734#issuecomment-6315706351)).
+  Those skills run with only Shaka's short always-loaded boundary in place.
 - Agents reported pstack in 13 of the 297 PRs with a Skills used section, and Addy's
   pack in none. Shaka's guide says neither has been tried on a full delivery.
 - The strongest proof gets the weakest record. A test suite run is bound to the commit.
@@ -38,7 +41,7 @@ is untested, and the reason is how each pack starts a skill.
 | --- | --- | --- | --- |
 | Size | 61 skills, 41,962 words | 25 skills, 52,354 words | An 11,780-word workflow, plus references it loads when needed |
 | Median skill | 437 words | 2,060 words | n/a |
-| What starts a skill | You name it: 60 of 61 are explicit-only | The host matches its description: 0 of 25 are explicit-only | You invoke it, or the host matches its description |
+| What starts a skill | You name it: 60 of 61 are explicit-only, a setting Codex ignores | The host matches its description: 0 of 25 are explicit-only | You invoke it, or the host matches its description |
 | Runs its own delivery | Shipping, Babysit, and Autopilot playbooks | `/build auto` and `/ship` | It is the delivery |
 
 agent-skills also ships a session-start hook. Its own comments say not to wire it on
