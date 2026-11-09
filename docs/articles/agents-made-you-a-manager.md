@@ -22,7 +22,8 @@ an instruction the agent follows.
   where the analogy breaks and not needing a manager title.
 - Under Auto, the habits that protect the merge decision have code behind them. The
   merge helper refuses a PR over the size limits, and the PR comes back to you. Under
-  Ask, the default, you click merge and the helper never runs.
+  Ask, the default, you merge on GitHub, where the helper does not run, or approve and
+  the agent merges through it.
 - Most other habits are instructions only. Shaka's own audit lists 100 workflow rules: 8
   refused by a command, 2 reported by one, 1 refused by GitHub, and 89 backed by nothing
   but the agent.
@@ -132,11 +133,11 @@ reports, GitHub refuses, or only the agent follows it.
   change a [high-risk area](../settings.md#high_risk_areas). This repository keeps the
   default limits of 999 changed lines and low risk. It adds its merge and trust code as
   a high-risk area.
-- **Backed by:** under Auto, the merge helper refuses all three. It also refuses when the
-  checkpoint judged the verification inadequate. Each refusal turns the PR into an Ask
-  merge. The agent may then merge a commit you confirmed, and nothing checks that you
+- **Backed by:** under Auto, the merge helper refuses all three. Whenever the agent
+  merges, it also refuses when the checkpoint judged the verification inadequate. Each
+  refusal turns an Auto PR into an Ask merge. The agent may then merge a commit you confirmed, and nothing checks that you
   did. The risk rating itself is the checkpoint reviewer's judgment.
-- **Limit:** under Ask, you click merge and the helper never runs. The depth of your
+- **Limit:** under Ask, a merge you click on GitHub skips the helper. The depth of your
   review stays with you.
 
 ### Unattended runs
@@ -162,7 +163,7 @@ reports, GitHub refuses, or only the agent follows it.
   [PRs waiting on you](../working-with-shaka.md#find-prs-waiting-on-you).
   [Control towers](../control-towers.md) follow many tasks from one chat.
 - **Backed by:** the `attention` command sets the labels. Acting on them is yours.
-- **Limit:** see gap 2.
+- **Limit:** see [gap 2](#2-a-quality-counterweight-to-throughput).
 
 ### Saying no
 
@@ -185,8 +186,8 @@ version of micromanagement, and suggests dropping rules newer models no longer n
 
 - Shaka is mostly requests. 89 of its 100 audited rules rely on the agent alone.
 - Shaka limits what the agent reads instead. The workflow tells the agent to load its
-  41 reference procedures only when a task needs them, and nothing checks that it does. `bin/report-instruction-growth` measures added
-  instruction text in each PR, and this repository's `AGENTS.md` asks reviewers to name
+  41 reference procedures only when a task needs them, and nothing checks that it does.
+  `bin/report-instruction-growth` measures added instruction text in each PR, and this repository's `AGENTS.md` asks reviewers to name
   the failure each new instruction prevents.
 - Nothing in Shaka retires rules. No step asks whether a newer model still needs one.
 
