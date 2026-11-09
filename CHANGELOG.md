@@ -55,8 +55,6 @@ qualification remain evidence requirements; the version number does not establis
 - Pin release installations to an immutable tag commit and preserve rollback choices.
 - Check the exact source, tested gem and release notes before publication approval.
 - Check native simulated merge and release decisions without granting publication authority.
-- Read [how Shaka compares with Addy Osmani's "Your coding agents made you a manager"](docs/articles/agents-made-you-a-manager.md):
-  each habit in the post, what enforces it in Shaka, and three ideas Shaka lacks.
 
 ### Changed
 

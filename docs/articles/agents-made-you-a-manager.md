@@ -4,7 +4,7 @@
 Justin Gordon asked it to compare Addy Osmani's
 [post](https://x.com/addyosmani/status/2119332146485891501) of 2026-11-07 with Shaka.
 The agent read the post and Shaka's docs, workflow, and enforcement map at
-[`6dda80b`](https://github.com/shakacode/shaka/tree/6dda80b82188). No experiment was run.
+[`5d412a3`](https://github.com/shakacode/shaka/tree/5d412a3ed216). No experiment was run.
 Codex and a fresh Claude session reviewed it before publication.*
 
 Addy Osmani argues that an engineer working with coding agents is already managing.
@@ -46,7 +46,7 @@ reports, GitHub refuses, or only the agent follows it.
 | Hard rules only where needed | Lists each rule and what enforces it | Command, for 8 of 100 rules |
 | Planning first | Plans, then offers to agree on a design when choices are open | Agent |
 | Early correction and restarts | Return points record guidance to go back to | Agent |
-| Who decides what ships | Ask merge by default; large or risky PRs return under Auto | You, under Ask; under Auto, command for size and review floors and agent for other risk |
+| Who decides what ships | Ask merge by default; large or risky PRs return under Auto | You, under Ask; under Auto, command for size, risk rating, and high-risk paths |
 | Unattended runs | Trusted settings, base-branch rules, and an approval step | Command for merge; agent for using the settings and comment checks, and for the base branch |
 | Watching many agents | Labels PRs that wait on you; one chat can follow many tasks | Agent, with labels set by a command |
 | Saying no | States the value before work and reconsiders the finished result | Agent |
@@ -127,13 +127,14 @@ reports, GitHub refuses, or only the agent follows it.
 - **Idea:** the agent does the work, and you decide what ships. Approving a large diff
   because the tests pass ratifies code without reviewing it.
 - **In Shaka:** Ask is the default [merge policy](../working-with-shaka.md#choose-a-merge-policy).
-  Under Auto, the agent hands back PRs over the
-  [size limits](../settings.md#mergelimits) and PRs touching files above
-  [`merge.auto_max_review_floor`](../settings.md#mergeauto_max_review_floor).
-  This repository keeps the default of 999 changed lines and sets floor 2.
-- **Backed by:** under Auto, the merge helper refuses both, unless the agent passes a
-  flag naming the commit you confirmed. Nothing checks that you did confirm it. The
-  description helper refuses a review rating below the floor that the changed files set.
+  Under Auto, the agent hands back PRs over the [size limits](../settings.md#mergelimits).
+  It also hands back PRs the checkpoint rates above
+  [`merge.auto_merge_max_risk`](../settings.md#mergeauto_merge_max_risk), and PRs that
+  change a [high-risk area](../settings.md#high_risk_areas). This repository keeps the
+  defaults: 999 changed lines and low risk.
+- **Backed by:** under Auto, the merge helper refuses all three, unless the agent passes
+  a flag naming the commit you confirmed. Nothing checks that you did confirm it. The
+  risk rating itself is the checkpoint reviewer's judgment.
 - **Limit:** under Ask, you click merge and the helper never runs. The depth of your
   review stays with you.
 
@@ -222,7 +223,7 @@ version of micromanagement, and suggests dropping rules newer models no longer n
 
 - Addy Osmani, ["Your coding agents made you a manager"](https://x.com/addyosmani/status/2119332146485891501),
   2026-11-07.
-- Shaka at [`6dda80b`](https://github.com/shakacode/shaka/tree/6dda80b82188):
+- Shaka at [`5d412a3`](https://github.com/shakacode/shaka/tree/5d412a3ed216):
   [workflow and enforcement](../workflow.md), the
   [enforcement map](../../skills/shaka/config/enforcement.yml), and the output of
   `shaka enforcement`.
