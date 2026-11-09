@@ -58,8 +58,8 @@ reports, GitHub refuses, or only the agent follows it.
 - **In Shaka:** the Verify step runs the repository's validation, then one or more
   reviewers with no access to the implementing chat. The PR links each result and names
   what went unverified. See [PR verification](../pr-verification.md).
-- **Backed by:** the merge helper refuses when the merging account has posted no review
-  line for the commit it merges, or, with a local checkout, for an earlier commit that a
+- **Backed by:** unless `review.required` is `none`, the merge helper refuses when the
+  merging account has posted no review line for the commit it merges, or, with a local checkout, for an earlier commit that a
   clean update from the base produced it from. The line shows that someone posted it, not that a
   reviewer ran or findings were fixed. Test quality and review depth are the agent's
   judgment.
@@ -133,8 +133,8 @@ reports, GitHub refuses, or only the agent follows it.
   change a [high-risk area](../settings.md#high_risk_areas). This repository keeps the
   default limits of 999 changed lines and low risk. It adds its merge and trust code as
   a high-risk area.
-- **Backed by:** under Auto, the merge helper refuses all three. Whenever the agent
-  merges, it also refuses when the checkpoint judged the verification inadequate. Each
+- **Backed by:** under Auto, the merge helper refuses all three. When the agent
+  submits a merge, it also refuses when the checkpoint judged the verification inadequate. Each
   refusal turns an Auto PR into an Ask merge. The agent may then merge a commit you confirmed, and nothing checks that you
   did. The risk rating itself is the checkpoint reviewer's judgment.
 - **Limit:** under Ask, a merge you click on GitHub skips the helper. The depth of your
