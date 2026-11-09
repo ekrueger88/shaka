@@ -22,8 +22,10 @@ pack starts a skill.
 ## Main results
 
 - Shaka's full rules for other skills load only when a task asks for one. That suits
-  pstack in Cursor and Claude Code, where its skills wait to be named. Addy's skills start
-  on their own, and so do pstack's in Codex, which ignores pstack's setting
+  pstack in Cursor and Claude Code, whose documentation says an explicit-only skill waits
+  to be named ([Cursor](https://cursor.com/docs/context/skills),
+  [Claude Code](https://code.claude.com/docs/en/skills)). Addy's skills start on their own,
+  and so do pstack's in Codex CLI 0.163.0, whose parser ignores that setting
   ([cursor/plugins#734](https://github.com/cursor/plugins/issues/734#issuecomment-6315706351)).
   Those skills run with only Shaka's short always-loaded boundary in place.
 - Agents reported pstack in 13 of the 297 PRs with a Skills used section, and Addy's
@@ -41,7 +43,7 @@ pack starts a skill.
 | --- | --- | --- | --- |
 | Size | 61 skills, 41,962 words | 25 skills, 52,354 words | An 11,780-word workflow, plus references it loads when needed |
 | Median skill | 437 words | 2,060 words | n/a |
-| What starts a skill | You name it: 60 of 61 are explicit-only, a setting Codex ignores | The host matches its description: 0 of 25 are explicit-only | You invoke it, or the host matches its description |
+| What starts a skill | In Cursor and Claude Code, you name it: 60 of 61 are explicit-only. Codex ignores that setting. | The host matches its description: 0 of 25 are explicit-only | You invoke it, or the host matches its description |
 | Runs its own delivery | Shipping, Babysit, and Autopilot playbooks | `/build auto` and `/ship` | It is the delivery |
 
 agent-skills also ships a session-start hook. Its own comments say not to wire it on
