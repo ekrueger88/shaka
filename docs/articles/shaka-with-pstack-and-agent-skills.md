@@ -21,9 +21,9 @@ pack starts a skill.
 
 ## Main results
 
-- Shaka's full rules for other skills load only when a task asks for one. That suits
-  pstack in Cursor and Claude Code, whose documentation says an explicit-only skill waits
-  to be named ([Cursor](https://cursor.com/docs/context/skills),
+- Shaka's full rules for other skills load only when a task asks for one or hands over
+  its output. That suits pstack in Cursor and Claude Code, whose documentation says an
+  explicit-only skill waits to be named ([Cursor](https://cursor.com/docs/context/skills),
   [Claude Code](https://code.claude.com/docs/en/skills)). Addy's skills start on their own,
   and so do pstack's in Codex CLI 0.163.0, whose parser ignores that setting
   ([cursor/plugins#734](https://github.com/cursor/plugins/issues/734#issuecomment-6315706351)).
