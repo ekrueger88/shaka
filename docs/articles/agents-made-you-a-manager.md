@@ -20,10 +20,10 @@ an instruction the agent follows.
 
 - Shaka covers ten of the twelve habits for each task. The two it skips are about
   where the analogy breaks and not needing a manager title.
-- The habits that protect the merge decision have code behind them. The merge helper
-  refuses a PR over the size limits until the agent passes a flag recording your
-  confirmation of that commit. The description helper refuses a review rating below a
-  file's floor.
+- Under Auto, the habits that protect the merge decision have code behind them. The
+  merge helper refuses a PR over the size limits until the agent passes a flag recording
+  your confirmation of that commit. Under Ask, the default, you click merge and the
+  helper never runs.
 - Most other habits are instructions only. Shaka's own audit lists 100 workflow rules: 8
   refused by a command, 2 reported by one, 1 refused by GitHub, and 89 backed by nothing
   but the agent.
@@ -46,7 +46,7 @@ reports, GitHub refuses, or only the agent follows it.
 | Hard rules only where needed | Lists each rule and what enforces it | Command, for 8 of 100 rules |
 | Planning first | Plans, then offers to agree on a design when choices are open | Agent |
 | Early correction and restarts | Return points record guidance to go back to | Agent |
-| Who decides what ships | Ask merge by default; large or risky PRs return under Auto | Command for size and review floors, until the agent records your confirmation; agent for other risk |
+| Who decides what ships | Ask merge by default; large or risky PRs return under Auto | You, under Ask; under Auto, command for size and review floors and agent for other risk |
 | Unattended runs | Trusted settings, base-branch rules, and an approval step | Command for merge; agent for using the settings and comment checks, and for the base branch |
 | Watching many agents | Labels PRs that wait on you; one chat can follow many tasks | Agent, with labels set by a command |
 | Saying no | States the value before work and reconsiders the finished result | Agent |
@@ -130,11 +130,12 @@ reports, GitHub refuses, or only the agent follows it.
   Under Auto, the agent hands back PRs over the
   [size limits](../settings.md#mergelimits) and PRs touching files above
   [`merge.auto_max_review_floor`](../settings.md#mergeauto_max_review_floor).
-  This repository sets 999 changed lines and floor 2.
-- **Backed by:** the merge helper refuses both, unless the agent passes a flag naming the
-  commit you confirmed. Nothing checks that you did confirm it. The description helper
-  refuses a review rating below the floor that the changed files set.
-- **Limit:** under Ask, the depth of your own review stays with you.
+  This repository keeps the default of 999 changed lines and sets floor 2.
+- **Backed by:** under Auto, the merge helper refuses both, unless the agent passes a
+  flag naming the commit you confirmed. Nothing checks that you did confirm it. The
+  description helper refuses a review rating below the floor that the changed files set.
+- **Limit:** under Ask, you click merge and the helper never runs. The depth of your
+  review stays with you.
 
 ### Unattended runs
 
@@ -145,9 +146,11 @@ reports, GitHub refuses, or only the agent follows it.
   from the default branch, and the target branch never comes from an issue or comment.
   Approval is Ask or Auto.
 - **Backed by:** the merge helper, for merge conditions. `seam check --ref` reads settings
-  from the default branch, and `comments` withholds untrusted comments. Nothing forces
-  the agent to use either one. Choosing the target branch is the agent's alone.
-- **Limit:** Shaka sets no turn or spend limit. Its PRs report usage after the fact.
+  from the commit it is given, and `comments` withholds untrusted comments. The agent
+  must pass the default branch's commit and must read comments through `comments`.
+  Choosing the target branch is the agent's alone.
+- **Limit:** Shaka has no default turn or spend limit. Local review stops after five
+  rounds by default, and PRs report usage after the fact.
 
 ### Watching many agents
 
