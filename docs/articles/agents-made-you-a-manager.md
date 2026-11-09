@@ -21,14 +21,13 @@ an instruction the agent follows.
 - Shaka covers ten of the twelve habits for each task. The two it skips are about
   where the analogy breaks and not needing a manager title.
 - Under Auto, the habits that protect the merge decision have code behind them. The
-  merge helper refuses a PR over the size limits until the agent passes a flag recording
-  your confirmation of that commit. Under Ask, the default, you click merge and the
-  helper never runs.
+  merge helper refuses a PR over the size limits, and the PR comes back to you. Under
+  Ask, the default, you click merge and the helper never runs.
 - Most other habits are instructions only. Shaka's own audit lists 100 workflow rules: 8
   refused by a command, 2 reported by one, 1 refused by GitHub, and 89 backed by nothing
   but the agent.
-- The post argues against heavy process. The workflow `shaka workflow` prints is about 11,800 words, with 42
-  reference procedures the agent loads when a task needs them.
+- The post argues against heavy process. The workflow `shaka workflow` prints is about
+  11,800 words, with 41 reference procedures the agent loads when a task needs them.
 - Three ideas in the post have no Shaka counterpart: splitting one change into many PRs
   automatically, counting reverts beside throughput, and dropping rules once newer models
   no longer need them.
@@ -131,10 +130,12 @@ reports, GitHub refuses, or only the agent follows it.
   It also hands back PRs the checkpoint rates above
   [`merge.auto_merge_max_risk`](../settings.md#mergeauto_merge_max_risk), and PRs that
   change a [high-risk area](../settings.md#high_risk_areas). This repository keeps the
-  defaults: 999 changed lines and low risk.
-- **Backed by:** under Auto, the merge helper refuses all three, unless the agent passes
-  a flag naming the commit you confirmed. Nothing checks that you did confirm it. The
-  risk rating itself is the checkpoint reviewer's judgment.
+  default limits of 999 changed lines and low risk. It adds its merge and trust code as
+  a high-risk area.
+- **Backed by:** under Auto, the merge helper refuses all three. It also refuses when the
+  checkpoint judged the verification inadequate. Each refusal turns the PR into an Ask
+  merge. The agent may then merge a commit you confirmed, and nothing checks that you
+  did. The risk rating itself is the checkpoint reviewer's judgment.
 - **Limit:** under Ask, you click merge and the helper never runs. The depth of your
   review stays with you.
 
@@ -151,7 +152,7 @@ reports, GitHub refuses, or only the agent follows it.
   must pass the default branch's commit and must read comments through `comments`.
   Choosing the target branch is the agent's alone.
 - **Limit:** Shaka has no default turn or spend limit. Local review stops after five
-  rounds by default, and PRs report usage after the fact.
+  reviewed commits by default, and PRs report usage after the fact.
 
 ### Watching many agents
 
@@ -183,7 +184,7 @@ weighs. Hooks and deny rules are requirements. It warns that over-process is the
 version of micromanagement, and suggests dropping rules newer models no longer need.
 
 - Shaka is mostly requests. 89 of its 100 audited rules rely on the agent alone.
-- Shaka limits what the agent reads instead. The workflow loads its 42 reference
+- Shaka limits what the agent reads instead. The workflow loads its 41 reference
   procedures only when a task needs them. `bin/report-instruction-growth` measures added
   instruction text in each PR, and this repository's `AGENTS.md` asks reviewers to name
   the failure each new instruction prevents.
