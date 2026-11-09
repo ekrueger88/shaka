@@ -46,7 +46,7 @@ reports, GitHub refuses, or only the agent follows it.
 | Enforce only what can't bend | Lists each rule and what enforces it | Command, for 8 of 100 rules |
 | Plan before it builds | Plans, then offers to agree on a design when choices are open | Agent |
 | Steer early, reset fast | Return points record guidance to go back to | Agent |
-| Delegate the task, never the judgment | Ask merge by default; large or risky PRs return under Auto | Command, until the agent records your confirmation |
+| Delegate the task, never the judgment | Ask merge by default; large or risky PRs return under Auto | Command for size and review floors, until the agent records your confirmation; agent for other risk |
 | Design the run that doesn't need you | Trusted settings, base-branch rules, and an approval step | Command for merge; agent for using the settings and comment checks, and for the base branch |
 | Scale verification, not attention | Labels PRs that wait on you; one chat can follow many tasks | Agent, with labels set by a command |
 | Decide what not to build | States the value before work and reconsiders the finished result | Agent |
@@ -107,7 +107,8 @@ reports, GitHub refuses, or only the agent follows it.
   design choices open, the agent offers to agree on the design before coding.
   [Get a plan before implementing](../working-with-shaka.md#get-a-plan-before-implementing)
   stops at the plan.
-- **Backed by:** the agent. The `checkpoint` command records the decision to start.
+- **Backed by:** the agent. The `checkpoint` command checks the start fields the agent
+  reports.
 - **Limit:** the agent splits a task into PRs while planning, by judgment. Shaka has no
   tool that divides a change into many parallel PRs.
 
