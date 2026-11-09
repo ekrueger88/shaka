@@ -58,8 +58,8 @@ reports, GitHub refuses, or only the agent follows it.
   reviewers with no access to the implementing chat. The PR links each result and names
   what went unverified. See [PR verification](../pr-verification.md).
 - **Backed by:** the merge helper refuses when the merging account has posted no review
-  line for the commit it merges, or for an earlier commit that a clean update from the
-  base produced it from. The line shows that someone posted it, not that a
+  line for the commit it merges, or, with a local checkout, for an earlier commit that a
+  clean update from the base produced it from. The line shows that someone posted it, not that a
   reviewer ran or findings were fixed. Test quality and review depth are the agent's
   judgment.
 - **Limit:** a merge clicked on GitHub skips that check. The agent can also pass a
@@ -184,8 +184,8 @@ weighs. Hooks and deny rules are requirements. It warns that over-process is the
 version of micromanagement, and suggests dropping rules newer models no longer need.
 
 - Shaka is mostly requests. 89 of its 100 audited rules rely on the agent alone.
-- Shaka limits what the agent reads instead. The workflow loads its 41 reference
-  procedures only when a task needs them. `bin/report-instruction-growth` measures added
+- Shaka limits what the agent reads instead. The workflow tells the agent to load its
+  41 reference procedures only when a task needs them, and nothing checks that it does. `bin/report-instruction-growth` measures added
   instruction text in each PR, and this repository's `AGENTS.md` asks reviewers to name
   the failure each new instruction prevents.
 - Nothing in Shaka retires rules. No step asks whether a newer model still needs one.
@@ -194,8 +194,8 @@ version of micromanagement, and suggests dropping rules newer models no longer n
 
 ### 1. Automatic decomposition
 
-- **Today:** Shaka defaults to one PR per task. The agent may split a task while
-  planning, and each PR repeats the full workflow.
+- **Today:** Shaka defaults to one PR per task. You can ask for separate PRs, and the
+  agent may split a task while planning. Each PR repeats the full workflow.
 - **In the post:** Claude Code's `/batch` divides a large mechanical change into 5 to 30
   tasks, each in its own worktree with its own PR.
 - **Possible change:** none planned, and no issue asks for one. A `/batch` run can
