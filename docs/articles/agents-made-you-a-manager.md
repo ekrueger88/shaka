@@ -27,7 +27,7 @@ an instruction the agent follows.
 - Most other habits are instructions only. Shaka's own audit lists 100 workflow rules: 8
   refused by a command, 2 reported by one, 1 refused by GitHub, and 89 backed by nothing
   but the agent.
-- The post argues against heavy process. Shaka's workflow is about 11,800 words, with 42
+- The post argues against heavy process. The workflow `shaka workflow` prints is about 11,800 words, with 42
   reference procedures the agent loads when a task needs them.
 - Three ideas in the post have no Shaka counterpart: splitting one change into many PRs
   automatically, counting reverts beside throughput, and dropping rules once newer models
@@ -40,15 +40,15 @@ reports, GitHub refuses, or only the agent follows it.
 
 | Habit in the post | What Shaka does | Backed by |
 | --- | --- | --- |
-| Give it a way to check its work | Runs the repository's checks, reviews each commit, and links the results on the PR | Command, for a review line covering the merged commit |
+| Give it a way to check its work | Runs the repository's checks, reviews the final commit, and links the results on the PR | Command, for a review line covering the merged commit |
 | Set clear context | Restates outcome, scope, and success criteria before coding | Agent |
 | Make every correction compound | Points to retrospectives and `AGENTS.md` | Agent |
 | Enforce only what can't bend | Lists each rule and what enforces it | Command, for 8 of 100 rules |
 | Plan before it builds | Plans, then offers to agree on a design when choices are open | Agent |
 | Steer early, reset fast | Return points record guidance to go back to | Agent |
 | Delegate the task, never the judgment | Ask merge by default; large or risky PRs return under Auto | Command, until the agent records your confirmation |
-| Design the run that doesn't need you | Trusted settings, base-branch rules, and an approval step | Command for settings and merge; agent for the base branch |
-| Scale verification, not attention | Labels PRs that wait on you; towers follow many tasks | Agent, with labels set by a command |
+| Design the run that doesn't need you | Trusted settings, base-branch rules, and an approval step | Command for merge; agent for using the settings and comment checks, and for the base branch |
+| Scale verification, not attention | Labels PRs that wait on you; one chat can follow many tasks | Agent, with labels set by a command |
 | Decide what not to build | States the value before work and reconsiders the finished result | Agent |
 
 ### Give it a way to check its work
@@ -92,9 +92,11 @@ reports, GitHub refuses, or only the agent follows it.
   always or never happen. Remove enforcement that only expresses a preference.
 - **In Shaka:** [what is enforced](../workflow.md#what-is-enforced) lists the rules code
   checks. `shaka enforcement` prints every audited rule and what, if anything, backs it.
-  Code covers settings, which public comments the agent reads, and merge conditions.
+  Commands check settings, which public comments the agent reads, and merge conditions
+  when the agent runs them.
 - **Backed by:** a loader. It fails when a quoted rule leaves the workflow, or when a
-  new "never" or "must" rule has no classification.
+  "never" or "must" rule in a new passage has no classification. Review, not the
+  loader, catches a rule added inside a passage already quoted.
 - **Limit:** see [where the post argues against Shaka](#where-the-post-argues-against-shaka).
 
 ### Plan before it builds
@@ -140,8 +142,9 @@ reports, GitHub refuses, or only the agent follows it.
   step. Boundaries come from the [trust model](../workflow.md#trust-model): settings come
   from the default branch, and the target branch never comes from an issue or comment.
   Approval is Ask or Auto.
-- **Backed by:** commands, for settings, the comment allowlist, and merge conditions.
-  Choosing the target branch is the agent's alone.
+- **Backed by:** the merge helper, for merge conditions. `seam check --ref` reads settings
+  from the default branch, and `comments` withholds untrusted comments. Nothing forces
+  the agent to use either one. Choosing the target branch is the agent's alone.
 - **Limit:** Shaka sets no turn or spend limit. Its PRs report usage after the fact.
 
 ### Scale verification, not attention
@@ -188,8 +191,8 @@ version of micromanagement, and suggests dropping rules newer models no longer n
   planning, and each PR repeats the full workflow.
 - **In the post:** Claude Code's `/batch` divides a large mechanical change into 5 to 30
   tasks, each in its own worktree with its own PR.
-- **Possible change:** none planned. A `/batch` run can produce the PRs, and a Shaka
-  task can review each one.
+- **Possible change:** none planned, and no issue asks for one. A `/batch` run can
+  produce the PRs, and a Shaka task can review each one.
 
 ### 2. A quality counterweight to throughput
 
@@ -207,7 +210,8 @@ version of micromanagement, and suggests dropping rules newer models no longer n
   are added. Nothing reviews old ones.
 - **In the post:** each model release changes which instructions still help.
 - **Possible change:** a requested retrospective step that lists agent-only rules no
-  recent session needed. Whether one run finds rules worth removing is unknown.
+  recent session needed. No issue tracks this. Whether one run finds rules worth
+  removing is unknown.
 
 ## Sources
 
