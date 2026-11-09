@@ -21,9 +21,10 @@ pack starts a skill.
 
 ## Main results
 
-- Shaka's full rules for other skills load only when a task asks for one or hands over
-  its output. That suits pstack in Cursor and Claude Code, whose documentation says an
-  explicit-only skill waits to be named ([Cursor](https://cursor.com/docs/context/skills),
+- Shaka's full rules for other skills load only when a task asks for one, or hands over
+  its output or a spec with tickets. That suits pstack in Cursor and Claude Code, whose
+  documentation says an explicit-only skill waits to be named
+  ([Cursor](https://cursor.com/docs/context/skills),
   [Claude Code](https://code.claude.com/docs/en/skills)). Addy's skills start on their own,
   and so do pstack's in Codex CLI 0.163.0, whose parser ignores that setting
   ([cursor/plugins#734](https://github.com/cursor/plugins/issues/734#issuecomment-6315706351)).
@@ -70,8 +71,8 @@ rest are instructions the agent follows. No test or enforcement entry covers the
 
 ### 1. The full rules load only when someone asks
 
-- **Today:** the workflow reads the companion rules when a task hands over another skill's
-  output or asks for another skill.
+- **Today:** the workflow reads the companion rules when a task hands over a spec with
+  tickets or another skill's output, or asks for another skill.
 - **Why it matters:** Addy's descriptions match nearly everything. `git-workflow-and-versioning`
   says to use it when making any code change. `test-driven-development` says the same for
   any logic, bug, or behavior change. A host can load these with nobody asking. The agent

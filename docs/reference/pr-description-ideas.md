@@ -347,7 +347,7 @@ predates this work.
   of [shakacode/shakaperf#243](https://github.com/shakacode/shakaperf/pull/243).
   Routine passes and a Not verified line about work nobody asked for got in the way
   ([#777](https://github.com/shakacode/shaka/issues/777)). #810 folds routine passes.
-  The [verification guide](../pr-verification.md#answers-for-your-next-decision) has
+  The [PR record reference](pr-record.md#verification-results) has
   the current rules.
 
 ## Open items
