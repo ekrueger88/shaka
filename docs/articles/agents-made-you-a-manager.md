@@ -38,20 +38,20 @@ an instruction the agent follows.
 *Backed by* uses the categories from `shaka enforcement`: a command refuses, a command
 reports, GitHub refuses, or only the agent follows it.
 
-| Habit in the post | What Shaka does | Backed by |
+| Habit, in this article's words | What Shaka does | Backed by |
 | --- | --- | --- |
-| Give it a way to check its work | Runs the repository's checks, reviews the final commit, and links the results on the PR | Command, for a review line covering the merged commit |
-| Set clear context | Restates outcome, scope, and success criteria before coding | Agent |
-| Make every correction compound | Points to retrospectives and `AGENTS.md` | Agent |
-| Enforce only what can't bend | Lists each rule and what enforces it | Command, for 8 of 100 rules |
-| Plan before it builds | Plans, then offers to agree on a design when choices are open | Agent |
-| Steer early, reset fast | Return points record guidance to go back to | Agent |
-| Delegate the task, never the judgment | Ask merge by default; large or risky PRs return under Auto | Command for size and review floors, until the agent records your confirmation; agent for other risk |
-| Design the run that doesn't need you | Trusted settings, base-branch rules, and an approval step | Command for merge; agent for using the settings and comment checks, and for the base branch |
-| Scale verification, not attention | Labels PRs that wait on you; one chat can follow many tasks | Agent, with labels set by a command |
-| Decide what not to build | States the value before work and reconsiders the finished result | Agent |
+| Checks the agent can run | Runs the repository's checks, reviews the final commit, and links the results on the PR | Command, for a review line covering the merged commit |
+| Context the agent cannot find | Restates outcome, scope, and success criteria before coding | Agent |
+| Lessons that last | Points to retrospectives and `AGENTS.md` | Agent |
+| Hard rules only where needed | Lists each rule and what enforces it | Command, for 8 of 100 rules |
+| Planning first | Plans, then offers to agree on a design when choices are open | Agent |
+| Early correction and restarts | Return points record guidance to go back to | Agent |
+| Who decides what ships | Ask merge by default; large or risky PRs return under Auto | Command for size and review floors, until the agent records your confirmation; agent for other risk |
+| Unattended runs | Trusted settings, base-branch rules, and an approval step | Command for merge; agent for using the settings and comment checks, and for the base branch |
+| Watching many agents | Labels PRs that wait on you; one chat can follow many tasks | Agent, with labels set by a command |
+| Saying no | States the value before work and reconsiders the finished result | Agent |
 
-### Give it a way to check its work
+### Checks the agent can run
 
 - **Idea:** an agent stops when the work looks done. A test, build, or screenshot lets
   it find its own failure. A reviewer with fresh context catches what the author missed.
@@ -59,13 +59,14 @@ reports, GitHub refuses, or only the agent follows it.
   reviewers with no access to the implementing chat. The PR links each result and names
   what went unverified. See [PR verification](../pr-verification.md).
 - **Backed by:** the merge helper refuses when the merging account has posted no review
-  line for the commit it merges. The line shows that someone posted it, not that a
+  line for the commit it merges, or for an earlier commit that a clean update from the
+  base produced it from. The line shows that someone posted it, not that a
   reviewer ran or findings were fixed. Test quality and review depth are the agent's
   judgment.
 - **Limit:** a merge clicked on GitHub skips that check. The agent can also pass a
   waiver reason, which the merge result reports.
 
-### Set clear context
+### Context the agent cannot find
 
 - **Idea:** brief the agent on what it cannot learn from the code: why, constraints,
   what is out of scope, and what done means.
@@ -75,7 +76,7 @@ reports, GitHub refuses, or only the agent follows it.
 - **Backed by:** the agent. The audit says Ruby cannot verify understanding.
 - **Limit:** nothing checks that the restatement matches what you meant.
 
-### Make every correction compound
+### Lessons that last
 
 - **Idea:** when you correct the same thing twice, write it into the team's
   instructions or a shared skill.
@@ -86,20 +87,20 @@ reports, GitHub refuses, or only the agent follows it.
 - **Backed by:** the agent.
 - **Limit:** a retrospective runs only when someone asks.
 
-### Enforce only what can't bend
+### Hard rules only where needed
 
 - **Idea:** let the agent decide by default. Use hard enforcement only for what must
   always or never happen. Remove enforcement that only expresses a preference.
 - **In Shaka:** [what is enforced](../workflow.md#what-is-enforced) lists the rules code
   checks. `shaka enforcement` prints every audited rule and what, if anything, backs it.
-  Commands check settings, which public comments the agent reads, and merge conditions
-  when the agent runs them.
+  Commands validate the settings file and merge conditions. The agent chooses which
+  settings it trusts and which comments it reads.
 - **Backed by:** a loader. It fails when a quoted rule leaves the workflow, or when a
-  "never" or "must" rule in a new passage has no classification. Review, not the
+  rule stated with never, must, do not, or only when in a new passage has no classification. Review, not the
   loader, catches a rule added inside a passage already quoted.
 - **Limit:** see [where the post argues against Shaka](#where-the-post-argues-against-shaka).
 
-### Plan before it builds
+### Planning first
 
 - **Idea:** agree on a plan first and look for hidden assumptions. Split work into parts
   that don't overlap.
@@ -112,7 +113,7 @@ reports, GitHub refuses, or only the agent follows it.
 - **Limit:** the agent splits a task into PRs while planning, by judgment. Shaka has no
   tool that divides a change into many parallel PRs.
 
-### Steer early, reset fast
+### Early correction and restarts
 
 - **Idea:** correct the agent early. After two failed corrections, start fresh with a
   better prompt.
@@ -121,7 +122,7 @@ reports, GitHub refuses, or only the agent follows it.
 - **Backed by:** the agent. Ruby saves no snapshot and restores no files.
 - **Limit:** Shaka does not count failed corrections or suggest a fresh chat.
 
-### Delegate the task, never the judgment
+### Who decides what ships
 
 - **Idea:** the agent does the work, and you decide what ships. Approving a large diff
   because the tests pass ratifies code without reviewing it.
@@ -135,7 +136,7 @@ reports, GitHub refuses, or only the agent follows it.
   refuses a review rating below the floor that the changed files set.
 - **Limit:** under Ask, the depth of your own review stays with you.
 
-### Design the run that doesn't need you
+### Unattended runs
 
 - **Idea:** before an unattended run, answer five questions. What is done? How does it
   check itself? What are its boundaries and guardrails? Who approves the output?
@@ -148,7 +149,7 @@ reports, GitHub refuses, or only the agent follows it.
   the agent to use either one. Choosing the target branch is the agent's alone.
 - **Limit:** Shaka sets no turn or spend limit. Its PRs report usage after the fact.
 
-### Scale verification, not attention
+### Watching many agents
 
 - **Idea:** add agents only as fast as checks and fresh reviewers can watch them.
   Measure quality beside throughput.
@@ -158,7 +159,7 @@ reports, GitHub refuses, or only the agent follows it.
 - **Backed by:** the `attention` command sets the labels. Acting on them is yours.
 - **Limit:** see gap 2.
 
-### Decide what not to build
+### Saying no
 
 - **Idea:** cheap code still costs review and maintenance. Ask who needs it and how you
   will know it worked.
