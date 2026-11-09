@@ -15,6 +15,9 @@ qualification remain evidence requirements; the version number does not establis
 
 ### Added
 
+- Ask for an interactive code walkthrough with a short agenda and pauses for
+  questions. Larger PR walkthroughs use a lightweight coverage map; selective
+  notes on the diff remain unchanged.
 - Read how Shaka works with pstack and Addy Osmani's agent skills, and where it falls
   short, in a new [article](docs/articles/shaka-with-pstack-and-agent-skills.md). A new
   [reference page](docs/reference/pr-description-ideas.md) traces where the ideas in Shaka's
@@ -46,6 +49,11 @@ qualification remain evidence requirements; the version number does not establis
 
 ### Changed
 
+- Explain how to use a PR's evidence packet for the next decision and regular
+  retrospectives, with a shorter reading path and supporting reference details.
+
+- Clarify where to find merge choices and recovery help, and what to check in
+  the playground tutorial before approving a PR.
 - Task references in PR descriptions now require a link or a visible explanation
   that the URL is unavailable or cannot be shared. Previously unlinked task metadata
   needs a URL or omission reason before republishing; prompt tasks and numbered
@@ -73,6 +81,15 @@ qualification remain evidence requirements; the version number does not establis
   `wip.include_checkout_path` instead.
 
 ### Fixed
+
+- `shaka pr` works in Claude Code cloud sessions, where GitHub refuses GraphQL. It reads
+  the pull request and its required checks over REST and lists the fields REST can't
+  show, such as the review decision, as unknown. Other pull request commands still need GraphQL.
+
+- Run the installed Shaka helper from a shell that sets no locale, as some cloud containers
+  do. The helper then sets a UTF-8 `LANG`, which the Ruby, Git, and GitHub CLI commands it
+  starts inherit, so UTF-8 text no longer fails as invalid US-ASCII. The agent `shaka work`
+  starts inherits it too. A locale you set is kept.
 
 - Codex publications keep the model's `(configured)` label without repeating the
   served-model caveat. Missing or unreadable attribution still shows a warning.

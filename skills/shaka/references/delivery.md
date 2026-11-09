@@ -387,6 +387,14 @@ rollback consequences where they fit; avoid a heading for every checklist item.
 State each risk and rollback as the [review evidence rules](publication.md#review-evidence) describe.
 Cover the change completely, then stop.
 
+For larger PRs, those exceeding a trusted `merge.limits` size limit or spanning
+several distinct behaviors, keep a compact working coverage map. Map each concept
+to its changed paths and mark it pending or covered. Group supporting tests and
+docs with their behavior; label mechanical or generated changes together. Check
+the map against the whole diff, including meaningful changes within each path,
+before claiming coverage. Keep it in the existing task record, without a separate
+ledger or publication requirement.
+
 ### Connect a technical fix to its evidence
 
 For technical fixes, connect the triggering failure and observed cause (label inference)
@@ -425,7 +433,7 @@ or accept it; technical confidence does not grant merge consent. Scale detail to
   nodes, label each edge or line with the action, and let the prose carry the
   explanation. A visual explains; the validation results remain the evidence.
   The public guide shows
-  [a call tree and a change that needs none](https://github.com/shakacode/shaka/blob/main/docs/pr-verification.md#when-a-diagram-helps).
+  [a call tree and a change that needs none](https://github.com/shakacode/shaka/blob/main/docs/reference/pr-record.md#diagrams).
 - Report validation as what it proves at this head: the behavior covered, the
   command, and its result. State each count once, and leave results from
   earlier heads to the description's review history.
