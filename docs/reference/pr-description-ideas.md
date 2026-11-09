@@ -199,8 +199,10 @@ production line. pstack is Tan's public skill set in `cursor/plugins`.
   Osmani's Agentic Verification recommends the same habit.
 - **In Shaka:** #742 left out this plan-time restatement.
   [#1044](https://github.com/shakacode/shaka/pull/1044) added it on 2026-11-04. Before
-  coding, the agent reads back the outcome, scope, success criteria, and assumptions,
-  and the PR description [shows that readback](../pr-verification.md#answers-for-your-next-decision).
+  coding, the agent [reads back](../working-with-shaka.md#give-it-an-outcome) the outcome,
+  scope, success criteria, and assumptions. Since
+  [#1065](https://github.com/shakacode/shaka/pull/1065), the PR description shows that
+  readback as Goal and Done when under the Task line.
 - **Limit:** clear tasks go ahead without waiting for an answer, so the readback
   catches a misread goal only when someone reads it in time.
   [#1017](https://github.com/shakacode/shaka/issues/1017) proposed waiting up to five
@@ -325,9 +327,10 @@ predates this work.
   ([#479](https://github.com/shakacode/shaka/pull/479)). On #742 and #743, a restart
   still wiped a ledger kept in the session scratchpad.
   [#976](https://github.com/shakacode/shaka/issues/976) tracks durable usage records.
-- **The installed Shaka moved mid-task.** Recorded evidence binds to the installed
-  revision, and an update during a task supersedes it. #812 reran review and
-  validation.
+- **The installed Shaka moved mid-task.** Recorded evidence bound to the installed
+  revision, and an update during a task superseded it. #812 reran review and
+  validation. Since [#1022](https://github.com/shakacode/shaka/pull/1022), an update
+  supersedes evidence only when it changes the code that runs or checks it.
   [#960](https://github.com/shakacode/shaka/pull/960),
   [#961](https://github.com/shakacode/shaka/pull/961),
   [#973](https://github.com/shakacode/shaka/pull/973), and #922 published UNKNOWN
