@@ -90,7 +90,10 @@ module Shaka
       texts.empty? ? blocks.any? { |block| block['type'] == 'image' } : texts.any? { |text| !text.match?(HOST_MESSAGE) }
     end
 
-    def message_texts(blocks) = blocks.filter_map { |block| block['text'] if block['type'] == 'text' }.reject(&:empty?)
+    def message_texts(blocks)
+      blocks.filter_map { |block| block['text'] if block['type'] == 'text' && block['text'].is_a?(String) }
+            .reject(&:empty?)
+    end
 
     def codex?(record, at)
       payload = record['payload']

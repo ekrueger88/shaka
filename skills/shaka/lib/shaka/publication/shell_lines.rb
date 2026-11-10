@@ -7,7 +7,7 @@ module Shaka
   # Splits a shell tool call's command text into the command lines it runs and their words, leaving
   # quoted arguments and here-document bodies whole.
   module ShellLines
-    HEREDOC = /<<-?\s*['"]?(\w+)['"]?/
+    HEREDOC = /<<-?\s*(\w+)/
     # Codex runs shell lines from JavaScript, as `exec_command({cmd:"..."})`.
     SCRIPT_COMMAND = /\bcmd:\s*("(?:[^"\\]|\\.)*")/
 
@@ -38,9 +38,24 @@ module Shaka
           ending = nil if line.strip == ending
         else
           kept << line
-          ending = line[HEREDOC, 1]
+          ending = heredoc_end(line)
         end
       end
+    end
+
+    # The word that ends a here-document this line opens outside quotes, such as EOF in `<<'EOF'`.
+    def heredoc_end(line)
+      tokens = line.scan(/"(?:\\.|[^"\\])*"?|'[^']*'?|[^"']+/)
+      tokens.each_with_index do |token, at|
+        next if token.start_with?('"', "'")
+
+        word = token[HEREDOC, 1]
+        return word if word
+
+        quoted = tokens[at + 1].to_s
+        return quoted[1...-1] if token.match?(/<<-?\s*\z/) && quoted.match?(/\A(['"])\w+\1\z/)
+      end
+      nil
     end
 
     def unquote(literal)

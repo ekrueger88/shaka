@@ -58,7 +58,8 @@ class AgentTimeReaderTest < Minitest::Test
     "bash -lc 'git status; bundle exec rubocop'" => 'validation', 'bundle exec ruby bin/validate' => 'validation',
     '$(git status)' => 'shell', "git commit -F - <<'EOF'\nfix\nrubocop cleanup\nEOF" => 'git_github',
     "cat <<EOF > notes\nbin/validate passed\nEOF\nbundle exec rspec" => 'validation',
-    '${H} review run --head x' => 'review'
+    '${H} review run --head x' => 'review', "printf '%s\\n' '<<EOF'\nbundle exec rspec" => 'validation',
+    %(gh pr edit --body "use <<EOF"\nbundle exec rspec) => 'validation'
   }.freeze
 
   def test_shell_calls_are_classed_by_the_programs_they_run
@@ -179,7 +180,9 @@ class AgentTimeCarryTest < Minitest::Test
 
   def test_a_malformed_transcript_line_adds_nothing_instead_of_failing
     call = { 'type' => 'tool_use', 'id' => 't', 'name' => 'Bash', 'input' => 'x' }
-    records = [{ 'type' => 'user', 'timestamp' => at('10:00:00'), 'message' => 'x' },
+    odd = { 'type' => 'user', 'timestamp' => at('10:00:30'),
+            'message' => { 'content' => [{ 'type' => 'text', 'text' => 5 }] } }
+    records = [{ 'type' => 'user', 'timestamp' => at('10:00:00'), 'message' => 'x' }, odd,
                { 'type' => 'assistant', 'timestamp' => at('10:01:00'), 'message' => { 'content' => [call] } }]
 
     assert_equal 60_000, summarize(records)['active_ms']
