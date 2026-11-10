@@ -55,7 +55,8 @@ class AgentTimeReaderTest < Minitest::Test
     'timeout --kill-after 5 --signal 9 10 rspec' => 'validation', 'timeout --signal=KILL 10 rspec' => 'validation',
     "bash -lc 'bundle exec rspec' task-name" => 'validation',
     "bash -lc 'echo done' rubocop" => 'shell', 'go test ./...' => 'validation', 'eslint .' => 'validation',
-    "bash -lc 'git status; bundle exec rubocop'" => 'validation'
+    "bash -lc 'git status; bundle exec rubocop'" => 'validation', 'bundle exec ruby bin/validate' => 'validation',
+    '$(git status)' => 'shell', '${H} review run --head x' => 'review'
   }.freeze
 
   def test_shell_calls_are_classed_by_the_programs_they_run

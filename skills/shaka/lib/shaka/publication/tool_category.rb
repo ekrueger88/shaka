@@ -23,6 +23,8 @@ module Shaka
     TIMEOUT_VALUED = %w[-k -s --kill-after --signal].freeze
     SHELLS = %w[bash sh zsh].freeze
     ASSIGNMENT = /\A\w+=/
+    # A program named by a variable, such as `$H`, which holds the helper's path; `$(...)` is not one.
+    VARIABLE = /\A\$\{?[A-Za-z_]\w*\}?\z/
     # Codex runs shell lines from JavaScript, as `exec_command({cmd:"..."})`.
     SCRIPT_COMMAND = /\bcmd:\s*("(?:[^"\\]|\\.)*")/
 
@@ -89,7 +91,7 @@ module Shaka
     def line_category(words)
       program = File.basename(words.first.to_s)
       return 'git_github' if %w[git gh].include?(program)
-      return helper_category(words.drop(1)) if program == 'shaka' || words.first.to_s.start_with?('$')
+      return helper_category(words.drop(1)) if program == 'shaka' || words.first.to_s.match?(VARIABLE)
 
       'validation' if validation?(program, words.drop(1))
     end
@@ -137,7 +139,9 @@ module Shaka
       return true if VALIDATION.include?(program)
       return arguments.include?('test') if TEST_RUNNERS.include?(program)
 
-      program == 'ruby' && arguments.any? { |word| word.end_with?('_test.rb', 'bin/run-tests') }
+      program == 'ruby' && arguments.any? do |word|
+        word.end_with?('_test.rb') || VALIDATION.include?(File.basename(word))
+      end
     end
   end
 end
