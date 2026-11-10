@@ -32,8 +32,8 @@ or a verification harness, so the format follows real output. On 2026-11-09:
 - In a private shakacode repository, seven recent PRs mention `create-verification-skill`.
   Three of them report pstack in Skills used, and only principle skills
   (`blast-radius`, `prove-it-works`, `poteto-help`). None reports a harness run.
-- One of those PRs changed and checked a browser harness. Its results fit three
-  Verification lines and a "Before/after reproduction" `details` item.
+- One of those PRs checked a browser harness, and its results fit the existing
+  Verification lines and `details` items.
 
 **Overlap with #1071.** [Issue #1071](https://github.com/shakacode/shaka/issues/1071)
 adds a doctor check for duplicate and broken skill installs. That check reads skill
@@ -49,36 +49,45 @@ design could reuse. The two changes touch different files.
    companion-skills guidance stands, and no code changes.
 2. **A separate list, joined to Skills used by name.** Description content gains
    optional `companion_results`. Each entry describes one run with these fields:
-   - `skill`: must match the `name` of a `skills_used` record.
+   - `skill`: the `name` of a `skills_used` record.
+   - `revision`: optional; required when Skills used lists that name more than once.
    - `checked`: one line on what the run checked.
    - `result`: one line on what it found.
    - `commit`: the full SHA the run used.
-   - `artifacts`: a list of https links.
+   - `artifacts`: a list of http or https links.
 
-   The entry carries no revision. The matching Skills used row already records the
-   skill's revision, and one row per skill keeps the two from disagreeing. The helper
-   renders the list as one collapsed `Companion skill results` section, one entry per run.
+   An entry normally omits `revision`, and the helper takes it from the one matching
+   Skills used row. Skills used can list a name twice, for example at two revisions, so
+   in that case the entry names its revision to pick exactly one row. The helper renders
+   the list as one collapsed `Companion skill results` section, one entry per run. Each
+   text field goes through the same `PublicationText` escaping that Skills used cells
+   use, so text an agent copied from a skill's output cannot break the PR body.
 3. **Ruby checks the shape and the commit, not the truth.** Publication refuses an entry
    in these cases:
-   - its `skill` matches no Skills used record;
+   - its `skill`, with its `revision` when given, does not match exactly one Skills used
+     record;
    - `checked` or `result` is empty or more than one line;
    - `commit` is not a full SHA;
-   - it has neither an artifact link nor a code span in `result`, matching the rule
-     Verification checks already follow.
+   - it has no artifact link and its `result` has no link or code span. This is the
+     test `IntentVerification::EVIDENCE` applies to each Verification check.
 
    An entry whose commit is not the head renders with a visible `stale` label. Ruby does
    not refuse it. Rerunning a model check or harness can be expensive, and a reviewer can
    judge whether a later commit touched what the run checked.
-4. **A merge-relevant result still gets its own Verification line.** The agent writes
-   it, as today. The helper does not copy entries into Verification, because the
-   Verification limit of three checks is what keeps that section readable.
+4. **Each kind of evidence keeps one home.** Once the field ships, a companion run's
+   full record goes in `companion_results`, in place of the before and after `details`
+   item companion-skills prescribes today. A result that bears on the merge also gets one
+   Verification line that summarizes it and links the run's artifact. The agent writes
+   that line, as today. The helper does not copy entries into Verification, because the
+   limit of three checks is what keeps that section readable. A Mermaid diagram stays in
+   a `sections` item, and the entry links it.
 5. **No new uploader.** `artifacts` accepts links only. A screenshot or diagram goes up
    through the existing [UI evidence publication](../../skills/shaka/references/ui-verification.md#publish-ui-evidence)
-   path, and the entry links the uploaded file. A text diagram such as Mermaid can go in
-   a `sections` item, as companion-skills already says.
-6. **One instruction line.** When the code ships, the "Consume verification evidence"
+   path, and the entry links the uploaded file.
+6. **One instruction change.** When the code ships, the "Consume verification evidence"
    paragraph of companion-skills gains one sentence pointing the agent to
-   `companion_results`. `workflow.yml` is unchanged, because the paragraph loads only
+   `companion_results`. The before and after sentence in its PR-body advice then points
+   there too, so the guidance names one place. `workflow.yml` is unchanged, because the paragraph loads only
    when a task uses a companion skill.
 
 ## Alternatives considered
@@ -90,6 +99,9 @@ design could reuse. The two changes touch different files.
 - **Add results to Skills used records.** This uses one list, but a record describes a
   skill and a result describes one run. Two runs at different commits would need two rows
   for the same skill, and the Skills used table would grow columns most rows leave empty.
+- **Refuse a name Skills used lists twice.** This is simpler than an optional
+  `revision`, but it would forbid reporting the same skill at two revisions, which
+  Skills used allows today.
 - **Refuse stale entries.** This is stricter, but it forces a rerun after every
   unrelated commit, or pushes agents back to free-form `details`, where nothing is
   checked.
