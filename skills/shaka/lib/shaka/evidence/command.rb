@@ -12,6 +12,7 @@ require_relative 'machine_facts'
 require_relative 'options'
 require_relative 'result'
 require_relative 'tree_watch'
+require_relative 'trusted_command'
 require_relative 'verification'
 require_relative '../configuration/feature_guard'
 
@@ -80,24 +81,24 @@ module Shaka
         task_overrides = { 'command' => name, 'arguments' => @arguments }
         config, settings, kind, public_settings = Inputs.capture(root:, ref:, repository:, task_overrides:)
         { root:, ref:, repository:, name:, task_overrides:, settings:, kind:, public_settings:,
-          path: config.command(name) }
+          path: config.command(name), trusted_copy: TrustedCommand.needed?(root:, kind:) }
       end
 
       def execute_run(context)
         root = context.fetch(:root)
         before_tree = CandidateTree.tested(root:)
-        outcome, timing = timed_check(root, context.fetch(:path), before_tree)
+        outcome, timing = timed_check(context, before_tree)
         after_tree = CandidateTree.capture(root:)
-        _config, after_settings, after_kind = Inputs.capture(root:, ref: context.fetch(:ref),
-                                                             repository: context.fetch(:repository),
-                                                             task_overrides: context.fetch(:task_overrides))
+        _config, after_settings, after_kind = Inputs.capture(**context.slice(:root, :ref, :repository, :task_overrides))
         run_result(context, Execution.new(outcome:, before_tree:, after_tree:, after_settings:, after_kind:))
-          .merge(outcome.stop_fields, timing)
+          .merge(outcome.stop_fields, timing, TrustedCommand.source(context))
       end
 
-      def timed_check(root, path, tree)
-        command = [{ 'PATH' => @original_path }, File.join(root, path), *@arguments]
-        MachineFacts.measure { CallLog.measure { TreeWatch.new(command, root:, tree:).run } }
+      def timed_check(context, tree)
+        command = [{ 'PATH' => @original_path }, File.join(*context.values_at(:root, :path)), *@arguments]
+        TrustedCommand.around(context, tree) do |root, watched|
+          MachineFacts.measure { CallLog.measure { TreeWatch.new(command, root:, tree: watched).run } }
+        end
       end
 
       def run_result(context, execution)
