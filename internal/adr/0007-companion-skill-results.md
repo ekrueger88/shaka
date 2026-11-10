@@ -14,7 +14,7 @@ Some companion skills produce evidence a maintainer could check before merging:
 
 A Shaka PR description has two places for that evidence today, and neither checks it:
 
-- **Verification** holds one to three `checks`. Each one-line check needs a link or a code
+- **Verification** holds up to three `checks`, at least one once the PR is finished. Each one-line check needs a link or a code
   span (`IntentVerification::EVIDENCE`). Nothing compares the commit a line names with
   the head.
 - **Skills used** gives each skill a one-line `contribution` (`SkillsUsed`). It records
@@ -62,9 +62,12 @@ design could reuse. The two changes touch different files.
    and the helper takes source and revision from the matching rows. When two installs
    share a name, or one skill appears at two revisions, the entry names the field that
    tells them apart. The helper renders the list as one collapsed
-   `Companion skill results` section, one entry per run. Each text field goes through
+   `Companion skill results` section, one entry per run. Each prose field goes through
    the same `PublicationText` escaping that Skills used cells use, so text an agent
-   copied from a skill's output cannot break the PR body.
+   copied from a skill's output cannot break the PR body. `command` renders inside a
+   code span without HTML escaping, because GitHub shows entities in a code span
+   literally; the helper refuses a `command` that contains a backtick. Each artifact
+   renders as an angle-bracket link.
 3. **Ruby checks the shape and the commit, not the truth.** Publication refuses an entry
    in these cases:
    - it lacks `skill`, `command`, `checked`, `result`, `not_covered`, `commit`, or
@@ -73,7 +76,8 @@ design could reuse. The two changes touch different files.
      record, or matches records that differ in source or revision;
    - `command` is not a code span;
    - `checked`, `result`, or `not_covered` is empty or more than one line;
-   - `commit` is not a full SHA.
+   - `commit` is not a full SHA;
+   - an artifact is not an `http` or `https` URL without spaces or angle brackets.
 
    These are shape checks. A code span in `command` meets the test
    `IntentVerification::EVIDENCE` applies to each Verification check, but neither proves
@@ -102,8 +106,21 @@ design could reuse. The two changes touch different files.
    `companion_results`, with one summary line in Verification for a merge-relevant
    result. The matching paragraph in `docs/working-with-shaka.md`, which tells readers
    the PR's verification lists the harness command and its results, changes to match.
-   `workflow.yml` is unchanged, because companion-skills loads only when a task uses a
-   companion skill.
+   `workflow.yml` gains only `companion_results` in its list of description keys; the
+   guidance stays in companion-skills, which loads only when a task uses a companion
+   skill.
+
+## Open for the maintainer
+
+Decision 4 keeps the Verification summary line agent-written, so no `stale` label
+reaches the line a reader sees first. Two other options:
+
+- Drop the summary line and let the collapsed entry carry the claim and its label.
+- Have the helper write the line from the entry, with the label.
+
+The ADR recommends the agent-written line because it keeps Verification at three
+readable checks and changes no existing renderer. Approving the ADR accepts that
+recommendation unless the maintainer picks another option.
 
 ## Alternatives considered
 
