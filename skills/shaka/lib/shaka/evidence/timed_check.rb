@@ -1,18 +1,25 @@
 # frozen_string_literal: true
 
 require_relative '../call_log'
+require_relative 'machine_facts'
 require_relative 'phase_log'
+require_relative 'tree_watch'
+require_relative 'trusted_command'
 
 module Shaka
   module Evidence
-    # Gives a fixed command the environment it runs with, naming the file it may report phases into,
-    # and adds those phases to the timing the block returns beside the command's outcome.
+    # Runs a fixed command while watching the tested tree, and returns its outcome with how long it took,
+    # on what machine, and the phases the command reported into the file its environment names.
     module TimedCheck
       module_function
 
-      def run(path)
+      def run(context, tree, path:, arguments:)
         (outcome, timing), phases = PhaseLog.with_file do |log|
-          yield({ 'PATH' => path, PhaseLog::VARIABLE => log })
+          command = [{ 'PATH' => path, PhaseLog::VARIABLE => log }, File.join(*context.values_at(:root, :path)),
+                     *arguments]
+          TrustedCommand.around(context, tree) do |root, watched|
+            MachineFacts.measure { CallLog.measure { TreeWatch.new(command, root:, tree: watched).run } }
+          end
         end
         [outcome, CallLog.phases(phases) ? timing.merge('phases' => phases) : timing]
       end

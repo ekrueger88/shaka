@@ -95,15 +95,7 @@ module Shaka
           .merge(outcome.stop_fields, timing, TrustedCommand.source(context))
       end
 
-      # The command may report its own phases into the file TimedCheck names in its environment.
-      def timed_check(context, tree)
-        TimedCheck.run(@original_path) do |environment|
-          command = [environment, File.join(*context.values_at(:root, :path)), *@arguments]
-          TrustedCommand.around(context, tree) do |root, watched|
-            MachineFacts.measure { CallLog.measure { TreeWatch.new(command, root:, tree: watched).run } }
-          end
-        end
-      end
+      def timed_check(context, tree) = TimedCheck.run(context, tree, path: @original_path, arguments: @arguments)
 
       def run_result(context, execution)
         changed = inputs_changed?(context, execution)
