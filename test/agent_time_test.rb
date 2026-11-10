@@ -59,7 +59,9 @@ class AgentTimeReaderTest < Minitest::Test
     '$(git status)' => 'shell', "git commit -F - <<'EOF'\nfix\nrubocop cleanup\nEOF" => 'git_github',
     "cat <<EOF > notes\nbin/validate passed\nEOF\nbundle exec rspec" => 'validation',
     '${H} review run --head x' => 'review', "printf '%s\\n' '<<EOF'\nbundle exec rspec" => 'validation',
-    %(gh pr edit --body "use <<EOF"\nbundle exec rspec) => 'validation'
+    %(gh pr edit --body "use <<EOF"\nbundle exec rspec) => 'validation',
+    "cat <<< hello\nbundle exec rspec" => 'validation',
+    "echo $((1<<3))\nbundle exec rspec" => 'validation'
   }.freeze
 
   def test_shell_calls_are_classed_by_the_programs_they_run
