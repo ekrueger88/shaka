@@ -51,7 +51,7 @@ module Shaka
         return entry&.merge('id' => id(path, pull), 'host' => host)
       end
       nil
-    rescue SystemCallError, IOError, EncodingError, TypeError
+    rescue SystemCallError, IOError, EncodingError, TypeError, ArgumentError
       nil
     end
 

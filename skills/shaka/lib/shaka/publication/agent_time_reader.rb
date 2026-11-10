@@ -84,13 +84,13 @@ module Shaka
     # A person's message, such as text or an image, not a host wake or a tool result.
     def prompt?(content, blocks)
       return !content.match?(HOST_MESSAGE) if content.is_a?(String)
+      return false if blocks.any? { |block| block['type'] == 'tool_result' }
 
-      kinds = blocks.map { |block| block['type'] }
-      return false if kinds.include?('tool_result')
-
-      text = blocks.filter_map { |block| block['text'] if block['type'] == 'text' }.join
-      text.empty? ? kinds.include?('image') : !text.match?(HOST_MESSAGE)
+      texts = message_texts(blocks)
+      texts.empty? ? blocks.any? { |block| block['type'] == 'image' } : texts.any? { |text| !text.match?(HOST_MESSAGE) }
     end
+
+    def message_texts(blocks) = blocks.filter_map { |block| block['text'] if block['type'] == 'text' }.reject(&:empty?)
 
     def codex?(record, at)
       payload = record['payload']

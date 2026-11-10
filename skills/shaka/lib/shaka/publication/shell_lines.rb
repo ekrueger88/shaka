@@ -1,0 +1,58 @@
+# frozen_string_literal: true
+
+require 'json'
+require 'shellwords'
+
+module Shaka
+  # Splits a shell tool call's command text into the command lines it runs and their words, leaving
+  # quoted arguments and here-document bodies whole.
+  module ShellLines
+    HEREDOC = /<<-?\s*['"]?(\w+)['"]?/
+    # Codex runs shell lines from JavaScript, as `exec_command({cmd:"..."})`.
+    SCRIPT_COMMAND = /\bcmd:\s*("(?:[^"\\]|\\.)*")/
+
+    module_function
+
+    # Only Codex's JavaScript `exec` tool wraps its shell lines in `cmd:"..."`; for any other tool that
+    # text is an argument, not a command.
+    def lines(name, command)
+      scripts = name == 'exec' ? command.scan(SCRIPT_COMMAND).map { |(literal)| unquote(literal) } : []
+      (scripts.empty? ? [command] : scripts).flat_map { |text| segments(text) }
+    end
+
+    # Splits command lines at `;`, `&`, `|`, and newlines outside quotes, so a quoted commit message or
+    # PR body stays one argument.
+    def segments(text)
+      tokens = without_heredocs(text).scan(/"(?:\\.|[^"\\])*"?|'[^']*'?|[;&|\n]|[^"';&|\n]+/)
+      parts = tokens.each_with_object([+'']) do |token, lines|
+        token.match?(/\A[;&|\n]\z/) ? lines << +'' : lines.last << token
+      end
+      parts.map(&:strip).reject(&:empty?)
+    end
+
+    # Drops each here-document's body, which is input to a command, not a command line.
+    def without_heredocs(text)
+      ending = nil
+      text.each_line.with_object(+'') do |line, kept|
+        if ending
+          ending = nil if line.strip == ending
+        else
+          kept << line
+          ending = line[HEREDOC, 1]
+        end
+      end
+    end
+
+    def unquote(literal)
+      JSON.parse(literal)
+    rescue JSON::ParserError
+      literal[1...-1]
+    end
+
+    def words(line)
+      Shellwords.split(line)
+    rescue ArgumentError
+      line.split
+    end
+  end
+end

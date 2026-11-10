@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
-require 'json'
-require 'shellwords'
+require_relative 'shell_lines'
 
 module Shaka
   # Names the fixed category a tool call's time counts under in a pull request's agent time. A shell
@@ -25,8 +24,6 @@ module Shaka
     ASSIGNMENT = /\A\w+=/
     # A program named by a variable, such as `$H`, which holds the helper's path; `$(...)` is not one.
     VARIABLE = /\A\$\{?[A-Za-z_]\w*\}?\z/
-    # Codex runs shell lines from JavaScript, as `exec_command({cmd:"..."})`.
-    SCRIPT_COMMAND = /\bcmd:\s*("(?:[^"\\]|\\.)*")/
 
     module_function
 
@@ -47,36 +44,7 @@ module Shaka
     def argvs(name, command)
       return [command.map(&:to_s)] if command.is_a?(Array)
 
-      lines(name, command.to_s).map { |line| words(line) }
-    end
-
-    # Only Codex's JavaScript `exec` tool wraps its shell lines in `cmd:"..."`; for any other tool that
-    # text is an argument, not a command.
-    def lines(name, command)
-      scripts = name == 'exec' ? command.scan(SCRIPT_COMMAND).map { |(literal)| unquote(literal) } : []
-      (scripts.empty? ? [command] : scripts).flat_map { |text| segments(text) }
-    end
-
-    # Splits command lines at `;`, `&`, `|`, and newlines outside quotes, so a quoted commit message or
-    # PR body stays one argument.
-    def segments(text)
-      tokens = text.scan(/"(?:\\.|[^"\\])*"?|'[^']*'?|[;&|\n]|[^"';&|\n]+/)
-      parts = tokens.each_with_object([+'']) do |token, lines|
-        token.match?(/\A[;&|\n]\z/) ? lines << +'' : lines.last << token
-      end
-      parts.map(&:strip).reject(&:empty?)
-    end
-
-    def unquote(literal)
-      JSON.parse(literal)
-    rescue JSON::ParserError
-      literal[1...-1]
-    end
-
-    def words(line)
-      Shellwords.split(line)
-    rescue ArgumentError
-      line.split
+      ShellLines.lines(name, command.to_s).map { |line| ShellLines.words(line) }
     end
 
     # The categories one command line runs; `bash -c "..."` runs each line of its script.
@@ -84,7 +52,7 @@ module Shaka
       argv = unwrap(argv)
       return [line_category(argv)].compact unless shell_script?(argv) && depth < 3
 
-      lines('Bash', script(argv)).flat_map { |line| categories(words(line), depth + 1) }
+      ShellLines.lines('Bash', script(argv)).flat_map { |line| categories(ShellLines.words(line), depth + 1) }
     end
 
     # The category of one command line from the program it runs, or nil for any other program.

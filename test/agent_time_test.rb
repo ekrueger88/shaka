@@ -56,7 +56,9 @@ class AgentTimeReaderTest < Minitest::Test
     "bash -lc 'bundle exec rspec' task-name" => 'validation',
     "bash -lc 'echo done' rubocop" => 'shell', 'go test ./...' => 'validation', 'eslint .' => 'validation',
     "bash -lc 'git status; bundle exec rubocop'" => 'validation', 'bundle exec ruby bin/validate' => 'validation',
-    '$(git status)' => 'shell', '${H} review run --head x' => 'review'
+    '$(git status)' => 'shell', "git commit -F - <<'EOF'\nfix\nrubocop cleanup\nEOF" => 'git_github',
+    "cat <<EOF > notes\nbin/validate passed\nEOF\nbundle exec rspec" => 'validation',
+    '${H} review run --head x' => 'review'
   }.freeze
 
   def test_shell_calls_are_classed_by_the_programs_they_run
@@ -92,6 +94,15 @@ class AgentTimeReaderTest < Minitest::Test
                assistant('10:06:00', 'end_turn')]
 
     assert_equal 360_000, summarize(records)['active_ms']
+  end
+
+  def test_a_reminder_block_before_a_persons_text_is_still_their_message
+    blocks = [{ 'type' => 'text', 'text' => '<system-reminder>x</system-reminder>' },
+              { 'type' => 'text', 'text' => 'Go on' }]
+    reply = { 'type' => 'user', 'timestamp' => at('10:31:00'), 'message' => { 'content' => blocks } }
+    records = [user('10:00:00', 'First'), assistant('10:01:00', 'end_turn'), reply, assistant('10:32:00', 'end_turn')]
+
+    assert_equal 30 * 60_000, summarize(records)['between_turns_ms']
   end
 
   def test_codex_local_shell_commands_are_categorized
