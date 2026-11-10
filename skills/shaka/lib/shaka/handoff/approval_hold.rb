@@ -30,7 +30,7 @@ module Shaka
       return note(fact, "#{approve}.") unless @woken_by
 
       owe(fact, "#{approve}, or set awaiting-resume and run handoff without --woken-by: " \
-                "#{@woken_by} will not wake for it.")
+                'a monitor that waits for checks will not wake for a held one.')
     end
   end
 end
