@@ -3,8 +3,8 @@
 require_relative '../status'
 
 module Shaka
-  # Names required checks held for a deployment approval. Such a check finishes only after a person
-  # approves it, so a monitor that waits for checks never fires and cannot stand in for a label.
+  # Names required checks held for a deployment approval. Such a check does not finish while it waits for a
+  # person, so a monitor that waits for checks does not fire and cannot stand in for a label.
   module HandoffApprovalHold
     private
 
@@ -30,7 +30,7 @@ module Shaka
       return note(fact, "#{approve}.") unless @woken_by
 
       owe(fact, "#{approve}, or set awaiting-resume and run handoff without --woken-by: " \
-                'a monitor that waits for checks will not wake for a held one.')
+                'a monitor that waits for checks will not wake while it is held.')
     end
   end
 end

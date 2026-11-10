@@ -41,7 +41,8 @@ module Shaka
     end
 
     # woken_by names what will wake this session, such as a host PR monitor or a background watcher;
-    # the PR then needs no attention label, because the agent, not a person, acts next.
+    # the PR then needs no attention label, because the agent, not a person, acts next, unless a required
+    # check is held for approval.
     def call(head: nil, woken_by: nil)
       @woken_by = wake_source(woken_by)
       pr = @status.call
