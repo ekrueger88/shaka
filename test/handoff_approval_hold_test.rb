@@ -27,6 +27,13 @@ class HandoffApprovalHoldTest < Minitest::Test
     assert_includes result['status'], 'awaiting-resume'
   end
 
+  # The REST reader reports a missing link as an empty string.
+  def test_a_held_check_without_a_link_names_its_workflow_run
+    result = handoff(labels: ['awaiting-resume'], checks: [HELD.merge('link' => '')])
+
+    assert(result['notes'].any? { |note| note.end_with?('approve it at its workflow run.') })
+  end
+
   def test_a_labeled_pr_with_a_held_check_names_the_approval_without_owing_it
     result = handoff(labels: ['awaiting-resume'], checks: [HELD])
 

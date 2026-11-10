@@ -24,7 +24,9 @@ module Shaka
 
     # Under --woken-by the hold is owed, because nothing else will wake the agent; otherwise it is named.
     def record_hold(fact, check)
-      approve = "#{check['name']} waits on a manual approval; approve it at #{check['link'] || 'its workflow run'}"
+      link = check['link'].to_s.strip
+      approve = "#{check['name']} waits on a manual approval; ask a person to approve it at " \
+                "#{link.empty? ? 'its workflow run' : link}"
       return note(fact, "#{approve}.") unless @woken_by
 
       owe(fact, "#{approve}, or set awaiting-resume and run handoff without --woken-by: " \
