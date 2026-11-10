@@ -246,10 +246,28 @@ The agent lists what would have helped. It waits for you to pick what to fix.
 
 The agent may read Shaka's local timing log, `~/.local/state/shaka/calls.jsonl`.
 It records which helper commands ran, how long they took, and whether they passed,
-with IDs such as the repository, PR, and commit. It never records paths or task
-text, and Shaka doesn't upload it. Each PR's description shows that PR's own
-[timings](reference/timings.md). To stop recording, set `SHAKA_CALL_LOG=off`. To
-move the log, set it to a path.
+with IDs such as the repository, PR, commit, and the chat session that ran them. It
+never records paths or task text, and Shaka doesn't upload it. Each PR's description
+shows that PR's own [timings](reference/timings.md). To stop recording, set
+`SHAKA_CALL_LOG=off`. To move the log, set it to a path.
+
+## Find what slows delivery across many PRs
+
+```text
+$shaka retrospective of PR timings since 2026-11-01: rank what to speed up
+```
+
+The agent adds up the timings that merged PRs carry in their descriptions. It ranks
+where the time went, such as validation phases, local review, and the agent's own
+model and tool time, then shows how each week compares. You can also run the
+report yourself:
+
+```sh
+shaka timings report --repository OWNER/REPO --since 2026-11-01
+```
+
+PRs opened from forks are left out, because their authors can edit those numbers.
+The report says when the range held more PRs than it read.
 
 ## Suggest improvements to Shaka
 

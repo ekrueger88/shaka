@@ -126,6 +126,24 @@ installs development dependencies; `bin/install` installs the skill.
 Shaka's own [configuration](https://github.com/shakacode/shaka/tree/main/.agents/shaka)
 provides working examples of the required files.
 
+### Show where validation time goes
+
+A PR's [timings](reference/timings.md) can split each validation run into its
+phases, such as tests and lint, so you can see which one to speed up. When Shaka
+runs a script, `SHAKA_PHASE_LOG` names a file. Have the script append one JSON
+line per phase:
+
+```sh
+start=$(date +%s)
+bundle exec rspec
+echo "{\"phase\":\"tests\",\"duration_ms\":$(( ($(date +%s) - start) * 1000 ))}" >> "${SHAKA_PHASE_LOG:-/dev/null}"
+```
+
+Shaka keeps up to eight phases per run. A name starts with a lowercase letter,
+then lowercase letters, digits, `-`, or `_`, up to 24 characters; Shaka skips a
+line it cannot use. Shaka's own [`bin/validate`](https://github.com/shakacode/shaka/blob/main/bin/validate)
+reports its four phases this way.
+
 ### Run the scripts in a CI container
 
 The scripts Shaka writes ask Git for the repository root before they run your

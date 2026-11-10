@@ -10,6 +10,7 @@ require_relative 'candidate_tree'
 require_relative 'inputs'
 require_relative 'machine_facts'
 require_relative 'options'
+require_relative 'timed_check'
 require_relative 'result'
 require_relative 'tree_watch'
 require_relative 'trusted_command'
@@ -94,10 +95,13 @@ module Shaka
           .merge(outcome.stop_fields, timing, TrustedCommand.source(context))
       end
 
+      # The command may report its own phases into the file TimedCheck names in its environment.
       def timed_check(context, tree)
-        command = [{ 'PATH' => @original_path }, File.join(*context.values_at(:root, :path)), *@arguments]
-        TrustedCommand.around(context, tree) do |root, watched|
-          MachineFacts.measure { CallLog.measure { TreeWatch.new(command, root:, tree: watched).run } }
+        TimedCheck.run(@original_path) do |environment|
+          command = [environment, File.join(*context.values_at(:root, :path)), *@arguments]
+          TrustedCommand.around(context, tree) do |root, watched|
+            MachineFacts.measure { CallLog.measure { TreeWatch.new(command, root:, tree: watched).run } }
+          end
         end
       end
 
