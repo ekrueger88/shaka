@@ -82,9 +82,11 @@ design could reuse. The two changes touch different files.
    not refuse it. Rerunning a model check or harness can be expensive, and a reviewer can
    judge whether a later commit touched what the run checked.
 4. **The run's record has one home.** Once the field ships, a companion run's full
-   record goes in `companion_results`, in place of the Verification record and the before
-   and after `details` item companion-skills prescribes today. A result that bears on the
-   merge also gets one Verification line that summarizes it. That line stays agent-written
+   record goes in `companion_results`, in place of the Verification record
+   companion-skills prescribes today. A before-and-after comparison keeps its `details`
+   item, because its "before" run uses the base commit and would always show `stale`.
+   The entry for the "after" run links that item. A result that bears on the merge also
+   gets one Verification line that summarizes it. That line stays agent-written
    and unchecked: it carries no commit field, so no `stale` label reaches it. The entry it
    summarizes sits one click below and shows the label, which is where a reviewer checks
    currency. The helper does not copy entries into Verification, because the limit of
@@ -93,11 +95,11 @@ design could reuse. The two changes touch different files.
 5. **No new uploader.** `artifacts` accepts links only. A screenshot or diagram goes up
    through the existing [UI evidence publication](../../skills/shaka/references/ui-verification.md#publish-ui-evidence)
    path, and the entry links the uploaded file.
-6. **Two sentences rewritten, none added.** When the code ships, the "Consume verification
-   evidence" sentence in companion-skills that sends the command, commit, result,
-   artifacts, and gaps into the Verification record is rewritten to send them to
+6. **One sentence rewritten, none added.** When the code ships, the "Consume
+   verification evidence" sentence in companion-skills that sends the command, commit,
+   result, artifacts, and gaps into the Verification record is rewritten to send them to
    `companion_results`, with one summary line in Verification for a merge-relevant
-   result. The before and after sentence in its PR-body advice points there too.
+   result.
    `workflow.yml` is unchanged, because companion-skills loads only when a task uses a
    companion skill.
 
@@ -133,6 +135,9 @@ design could reuse. The two changes touch different files.
   remains the place to make pack and revision countable.
 - The commit check compares text with the head. It does not prove the run happened on
   that commit.
+- The `stale` label covers the commit only. An artifact link to a UI check that a later
+  check folds or retires shows no label on the entry; the reader sees the folded comment
+  when they open it.
 
 ## Delivery
 
