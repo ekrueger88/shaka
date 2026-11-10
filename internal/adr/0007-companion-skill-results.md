@@ -66,7 +66,8 @@ design could reuse. The two changes touch different files.
    tells them apart. The helper renders the list as one collapsed
    `Companion skill results` section, one entry per run. Each prose field goes through
    `PublicationText.summary_text`, the escaping Skills used cells get before their table
-   escaping, so text an agent copied from a skill's output cannot break the PR body.
+   escaping, so HTML an agent copied from a skill's output cannot close the collapsed
+   section. Markdown passes through, as it does in Skills used cells.
    The helper wraps `command` in a code span without HTML escaping, because GitHub shows
    entities in a code span literally. Each artifact renders as an angle-bracket link.
    For example, `command: bundle exec rake test` renders as `` `bundle exec rake test` ``.
@@ -89,20 +90,24 @@ design could reuse. The two changes touch different files.
    `IntentVerification::EVIDENCE` applies to each Verification check, but neither proves
    that the command ran.
 
-   An entry whose commit is not the head renders with a visible `stale` label. Ruby does
+   An entry whose commit is not the head renders with a visible `stale` label. The
+   helper computes it each time it publishes the description, against the head it
+   reads then; the workflow already republishes the description before every handoff. Ruby does
    not refuse it. Rerunning a model check or harness can be expensive, and a reviewer can
    judge whether a later commit touched what the run checked.
 4. **The run's record has one home.** Once the field ships, a companion run's full
    record goes in `companion_results`, in place of the Verification record
    companion-skills prescribes today. A before-and-after comparison keeps its `details`
    item, because its "before" run uses the base commit and would always show `stale`.
-   The entry for the "after" run links that item. A result that bears on the merge also
+   The entry for the "after" run names that item's summary in its `result`. A result that bears on the merge also
    gets one Verification line that summarizes it. That line stays agent-written
    and unchecked: it carries no commit field, so no `stale` label reaches it. The entry it
    summarizes sits one click below and shows the label, which is where a reviewer checks
    currency. The helper does not copy entries into Verification, because the limit of
    three checks is what keeps that section readable. A Mermaid diagram (a chart
-   GitHub draws from text) stays in a `sections` item, and the entry links it.
+   GitHub draws from text) stays in a `sections` item, and the entry's `result`
+   names its heading. Neither item has an anchor a link could target, so `artifacts`
+   stays limited to URLs.
 5. **No new uploader.** `artifacts` accepts links only. A screenshot, or a diagram
    rendered to an image, goes up through the existing [UI evidence publication](../../skills/shaka/references/ui-verification.md#publish-ui-evidence)
    path, and the entry links the uploaded file.
