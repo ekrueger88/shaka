@@ -81,7 +81,8 @@ design could reuse. The two changes touch different files.
      `artifacts`, or it has a key outside the list in decision 2;
    - its `skill`, with any `source` and `revision` it gives, matches no Skills used
      record, or still matches records that differ in source or revision;
-   - `command` is empty, more than one line, or contains a backtick;
+   - `command` is empty, more than one line, or contains a backtick or `</`, which could
+     end the collapsed section early;
    - `checked`, `result`, or `not_covered` is empty or more than one line;
    - `commit` is not a full SHA;
    - an artifact is not an `http` or `https` URL without spaces or angle brackets.
@@ -92,7 +93,8 @@ design could reuse. The two changes touch different files.
 
    An entry whose commit is not the head renders with a visible `stale` label. The
    helper computes it each time it publishes the description, against the head it
-   reads then; the workflow already republishes the description before every handoff. Ruby does
+   reads then, so it is current as of the last publish. The workflow republishes before
+   the final handoff; a commit pushed after a publish shows no label until the next one. Ruby does
    not refuse it. Rerunning a model check or harness can be expensive, and a reviewer can
    judge whether a later commit touched what the run checked.
 4. **The run's record has one home.** Once the field ships, a companion run's full
@@ -163,6 +165,9 @@ recommendation unless the maintainer picks another option.
   drops it.
 - Revision stays agent-reported. [#1027](https://github.com/shakacode/shaka/issues/1027)
   remains the place to make pack and revision countable.
+- The `stale` label departs from the companion-skills sentence that current-head
+  requirements override a companion's verdict reuse: a stale entry is labeled, not
+  refused. Decision 6 rewrites that sentence.
 - The commit check compares text with the head. It does not prove the run happened on
   that commit.
 - The `stale` label covers the commit only. An artifact link to a UI check that a later
