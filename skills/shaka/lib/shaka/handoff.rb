@@ -85,7 +85,7 @@ module Shaka
 
     # One label names the one decision the PR waits on, so a missing label hides the PR from its searches.
     def label_fact(checks)
-      return woken_fact if @woken_by
+      return woken_fact if @woken_by && !held?(checks)
       return owe('no awaiting label', 'Set the attention label for what the PR waits on.') if @labels.empty?
       return owe(@labels.join('+'), "Keep exactly one attention label; found #{list}.") if @labels.length > 1
 

@@ -78,9 +78,7 @@ Search your PR list on GitHub:
 
 A label doesn't wake a chat. See [approval details](reference/pr-record.md#merge-approval).
 
-A required check waiting for a deployment approval never finishes on its own. Shaka shows it
-as `blocked (approval hold)` with a link to the run, and the agent can't end its turn counting
-on a monitor to wake it, so the PR keeps a label until you approve the run.
+A required check waiting for a deployment approval shows as `blocked (approval hold)`, and the PR keeps its label until you approve the run.
 
 ## Resume unfinished work
 

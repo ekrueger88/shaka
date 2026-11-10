@@ -18,6 +18,15 @@ class HandoffApprovalHoldTest < Minitest::Test
     assert_includes owed, HELD['link']
   end
 
+  # The label the approval item asks for must not also be owed for removal.
+  def test_a_held_check_keeps_the_label_rule_beside_a_wake_source
+    result = handoff(labels: ['awaiting-resume'], woken_by: 'host PR monitor', checks: [HELD])
+
+    assert_equal 1, result['owed'].size
+    assert_includes result['owed'].first, 'deploy waits on a manual approval'
+    assert_includes result['status'], 'awaiting-resume'
+  end
+
   def test_a_labeled_pr_with_a_held_check_names_the_approval_without_owing_it
     result = handoff(labels: ['awaiting-resume'], checks: [HELD])
 

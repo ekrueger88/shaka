@@ -8,18 +8,27 @@ module Shaka
   module HandoffApprovalHold
     private
 
+    # A held check voids --woken-by, so the label rule applies and only one way out is owed.
+    def held?(checks) = held_checks(checks).any?
+
+    def held_checks(checks) = Array(checks).select { |check| check['blocked'] == Status::APPROVAL_HOLD }
+
     def held_fact(checks)
-      held = checks.select { |check| check['blocked'] == Status::APPROVAL_HOLD }
+      held = held_checks(checks)
       return if held.empty?
 
-      held.each do |check|
-        approve = "#{check['name']} waits on a manual approval; approve it at #{check['link'] || 'its workflow run'}"
-        next @notes << "#{approve}." unless @woken_by
+      fact = "blocked (#{Status::APPROVAL_HOLD}): #{held.map { |check| check['name'] }.join(', ')}"
+      held.each { |check| record_hold(fact, check) }
+      fact
+    end
 
-        @owed << "#{approve}, or set awaiting-resume and run handoff without --woken-by: " \
-                 "#{@woken_by} will not wake for it."
-      end
-      "blocked (#{Status::APPROVAL_HOLD}): #{held.map { |check| check['name'] }.join(', ')}"
+    # Under --woken-by the hold is owed, because nothing else will wake the agent; otherwise it is named.
+    def record_hold(fact, check)
+      approve = "#{check['name']} waits on a manual approval; approve it at #{check['link'] || 'its workflow run'}"
+      return note(fact, "#{approve}.") unless @woken_by
+
+      owe(fact, "#{approve}, or set awaiting-resume and run handoff without --woken-by: " \
+                "#{@woken_by} will not wake for it.")
     end
   end
 end
