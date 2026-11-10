@@ -20,10 +20,9 @@ an instruction the agent follows.
 
 - Shaka covers ten of the twelve habits for each task. The two it skips are about
   where the analogy breaks and not needing a manager title.
-- Under Auto, the habits that protect the merge decision have code behind them. The
-  merge helper refuses a PR over the size limits, and the PR comes back to you. Under
-  Ask, the default, you merge on GitHub, where the helper does not run, or approve and
-  the agent merges through it.
+- The habits that protect the merge decision have code behind them when the agent
+  merges. The merge helper refuses a PR over the size limits until you confirm that
+  commit. A merge you click on GitHub skips the helper.
 - Most other habits are instructions only. Shaka's own audit lists 100 workflow rules: 8
   refused by a command, 2 reported by one, 1 refused by GitHub, and 89 backed by nothing
   but the agent.
@@ -46,7 +45,7 @@ reports, GitHub refuses, or only the agent follows it.
 | Hard rules only where needed | Lists each rule and what enforces it | Command, for 8 of 100 rules |
 | Planning first | Plans, then offers to agree on a design when choices are open | Agent |
 | Early correction and restarts | Return points record guidance to go back to | Agent |
-| Who decides what ships | Ask merge by default; large or risky PRs return under Auto | You, under Ask; under Auto, command for size, risk rating, and high-risk paths |
+| Who decides what ships | Ask merge by default; large or risky PRs return under Auto | Command for size, risk rating, and high-risk paths when the agent merges; you, when you click merge |
 | Unattended runs | Trusted settings, base-branch rules, and an approval step | Command for merge; agent for using the settings and comment checks, and for the base branch |
 | Watching many agents | Labels PRs that wait on you; one chat can follow many tasks | Agent, with labels set by a command |
 | Saying no | States the value before work and reconsiders the finished result | Agent |
@@ -58,10 +57,10 @@ reports, GitHub refuses, or only the agent follows it.
 - **In Shaka:** the Verify step runs the repository's validation, then one or more
   reviewers with no access to the implementing chat. The PR links each result and names
   what went unverified. See [PR verification](../pr-verification.md).
-- **Backed by:** unless `review.required` is `none`, the merge helper refuses when the
-  merging account has posted no review line for the commit it merges, or, with a local checkout, for an earlier commit that a
-  clean update from the base produced it from. The line shows that someone posted it, not that a
-  reviewer ran or findings were fixed. Test quality and review depth are the agent's
+- **Backed by:** the merge helper refuses when no review line from the merging account
+  covers the commit it merges. [`review.required`](../settings.md#reviewrequired) says
+  which earlier reviews still count and when none is needed. The line shows that someone
+  posted it, not that a reviewer ran or findings were fixed. Test quality and review depth are the agent's
   judgment.
 - **Limit:** a merge clicked on GitHub skips that check. The agent can also pass a
   waiver reason, which the merge result reports.
@@ -133,10 +132,11 @@ reports, GitHub refuses, or only the agent follows it.
   change a [high-risk area](../settings.md#high_risk_areas). This repository keeps the
   default limits of 999 changed lines and low risk. It adds its merge and trust code as
   a high-risk area.
-- **Backed by:** under Auto, the merge helper refuses all three. When the agent
-  submits a merge, it also refuses when the checkpoint judged the verification inadequate. Each
-  refusal turns an Auto PR into an Ask merge. The agent may then merge a commit you confirmed, and nothing checks that you
-  did. The risk rating itself is the checkpoint reviewer's judgment.
+- **Backed by:** whenever the agent submits a merge, the merge helper refuses all three.
+  It also refuses when the checkpoint judged the verification inadequate. Under Auto,
+  each refusal hands the PR back to you. The agent may then merge a commit you
+  confirmed, and nothing checks that you did. The risk rating itself is the checkpoint
+  reviewer's judgment.
 - **Limit:** under Ask, a merge you click on GitHub skips the helper. The depth of your
   review stays with you.
 
