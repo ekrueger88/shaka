@@ -6,6 +6,7 @@ require_relative 'error'
 require_relative 'merge_queue_commit'
 require_relative 'merge_required_checks'
 require_relative 'status'
+require_relative 'handoff/approval_hold'
 require_relative 'handoff/conversation'
 require_relative 'handoff/hold'
 require_relative 'handoff/merge_wait'
@@ -23,6 +24,7 @@ module Shaka
     include MergeRequiredChecks
     include HandoffRendering
     include HandoffHold
+    include HandoffApprovalHold
     include HandoffMergeWait
 
     OWED_EXIT = 2
@@ -105,7 +107,7 @@ module Shaka
       return 'no required checks' if checks.empty?
 
       counts = checks.map { |check| check['bucket'] }.tally.map { |bucket, count| "#{count} #{bucket}" }
-      "required checks #{counts.join(', ')}"
+      ["required checks #{counts.join(', ')}", held_fact(checks)].compact.join(' · ')
     end
 
     # Judges each check with the merge gate's own test. An empty set passes, as Ask allows.
