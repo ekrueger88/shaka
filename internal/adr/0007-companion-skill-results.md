@@ -30,8 +30,7 @@ or a verification harness, so the format follows real output. On 2026-11-09:
 
 - No shakacode PR mentions `/statechart`.
 - In a private shakacode repository, seven recent PRs mention `create-verification-skill`.
-  Three of them report pstack skills in Skills used. None reports a harness run or
-  another skill that produces results files.
+  None of the seven reports a harness run in Skills used.
 
 **Overlap with #1071.** [Issue #1071](https://github.com/shakacode/shaka/issues/1071)
 adds a doctor check for duplicate and broken skill installs. That check reads skill
@@ -41,8 +40,8 @@ design could reuse. The two changes touch different files.
 ## Decisions
 
 1. **Wait for real output before building.** Approving this ADR settles the design, not
-   the timing. Build it after a PR in a Shaka-managed repository uses `/statechart` or a
-   verification harness, as the issue says. Until then, the existing companion-skills
+   the timing. Build it once a real PR uses `/statechart` or a verification
+   harness, as the issue says. Until then, the existing companion-skills
    guidance stands, and no code changes.
 2. **A separate list, joined to Skills used by skill.** Description content gains
    optional `companion_results`. Each entry describes one run. Its fields are the ones
@@ -68,6 +67,8 @@ design could reuse. The two changes touch different files.
    copied from a skill's output cannot break the PR body.
 3. **Ruby checks the shape and the commit, not the truth.** Publication refuses an entry
    in these cases:
+   - it lacks `skill`, `command`, `checked`, `result`, `not_covered`, `commit`, or
+     `artifacts`, or it has a key outside the list in decision 2;
    - its `skill`, with any `source` and `revision` it gives, matches no Skills used
      record, or matches records that differ in source or revision;
    - `command` is not a code span;
@@ -95,11 +96,12 @@ design could reuse. The two changes touch different files.
 5. **No new uploader.** `artifacts` accepts links only. A screenshot or diagram goes up
    through the existing [UI evidence publication](../../skills/shaka/references/ui-verification.md#publish-ui-evidence)
    path, and the entry links the uploaded file.
-6. **One sentence rewritten, none added.** When the code ships, the "Consume
+6. **Rewrite the existing guidance, add none.** When the code ships, the "Consume
    verification evidence" sentence in companion-skills that sends the command, commit,
    result, artifacts, and gaps into the Verification record is rewritten to send them to
    `companion_results`, with one summary line in Verification for a merge-relevant
-   result.
+   result. The matching paragraph in `docs/working-with-shaka.md`, which tells readers
+   the PR's verification lists the harness command and its results, changes to match.
    `workflow.yml` is unchanged, because companion-skills loads only when a task uses a
    companion skill.
 
