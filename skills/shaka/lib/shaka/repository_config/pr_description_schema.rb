@@ -10,7 +10,8 @@ module Shaka
     class PrDescriptionSchema
       include Validation
 
-      KEYS = %w[show_shaka_credit show_human_comments max_human_comments time_zone opening_check].freeze
+      KEYS = %w[show_shaka_credit show_human_comments max_human_comments ignored_human_comments time_zone
+                opening_check].freeze
 
       def initialize(description)
         @description = description
@@ -48,9 +49,14 @@ module Shaka
         shown = @description.fetch('show_human_comments', true)
         enum!(shown, [true, false], 'pr_description.show_human_comments must be true or false')
         rows = @description.fetch('max_human_comments', 1)
-        return if rows.is_a?(Integer) && rows.positive?
+        unless rows.is_a?(Integer) && rows.positive?
+          raise Error, 'pr_description.max_human_comments must be a positive integer'
+        end
 
-        raise Error, 'pr_description.max_human_comments must be a positive integer'
+        ignored = @description.fetch('ignored_human_comments', [])
+        return if ignored.is_a?(Array) && ignored.all? { |text| text.is_a?(String) && !text.strip.empty? }
+
+        raise Error, 'pr_description.ignored_human_comments must be a list of non-empty strings'
       end
 
       def validate_time_zone
