@@ -9,7 +9,8 @@ module Shaka
   module ShellLines
     # Exactly `<<`, not a here-string's `<<<`, then a word; a delimiter starts with a letter or underscore.
     HEREDOC = /(?<!<)<<(?!<)-?\s*([A-Za-z_]\w*)/
-    ARITHMETIC = '$(('
+    # `$((1 << 3))` shifts bits; it opens no here-document, so it is removed before the search.
+    ARITHMETIC = /\$\(\((?:[^()]|\([^()]*\))*\)\)/
     # Codex runs shell lines from JavaScript, as `exec_command({cmd:"..."})`.
     SCRIPT_COMMAND = /\bcmd:\s*("(?:[^"\\]|\\.)*")/
 
@@ -47,9 +48,7 @@ module Shaka
 
     # The word that ends a here-document this line opens outside quotes, such as EOF in `<<'EOF'`.
     def heredoc_end(line)
-      return if line.include?(ARITHMETIC)
-
-      tokens = line.scan(/"(?:\\.|[^"\\])*"?|'[^']*'?|[^"']+/)
+      tokens = line.gsub(ARITHMETIC, '').scan(/"(?:\\.|[^"\\])*"?|'[^']*'?|[^"']+/)
       tokens.each_with_index do |token, at|
         next if token.start_with?('"', "'")
 

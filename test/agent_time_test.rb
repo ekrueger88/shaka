@@ -61,7 +61,8 @@ class AgentTimeReaderTest < Minitest::Test
     '${H} review run --head x' => 'review', "printf '%s\\n' '<<EOF'\nbundle exec rspec" => 'validation',
     %(gh pr edit --body "use <<EOF"\nbundle exec rspec) => 'validation',
     "cat <<< hello\nbundle exec rspec" => 'validation',
-    "echo $((1<<3))\nbundle exec rspec" => 'validation'
+    "echo $((1<<3))\nbundle exec rspec" => 'validation',
+    "cat <<'EOF' > \"note-$((1+1)).txt\"\nbundle exec rubocop\nEOF" => 'shell'
   }.freeze
 
   def test_shell_calls_are_classed_by_the_programs_they_run
