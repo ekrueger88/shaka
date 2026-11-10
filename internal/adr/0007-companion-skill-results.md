@@ -13,7 +13,7 @@ Some companion skills produce evidence a maintainer could check before merging:
 - A harness from `create-verification-skill` captures screenshots and logs.
 - pstack's `interrogate` keeps findings that a run proves, each with the command that reproduces it.
 
-A Shaka PR description has two places for that evidence today, and neither checks it:
+A Shaka PR description has two places for that evidence today, and neither checks that the evidence is current:
 
 - **Verification** holds up to three `checks`, at least one once the PR is finished. Each one-line check needs a link or a code
   span (`IntentVerification::EVIDENCE`). Nothing compares the commit a line names with
@@ -60,12 +60,13 @@ design could reuse. The two changes touch different files.
 
    An entry joins a skill, meaning one name from one source at one revision, not a single
    Skills used row. Skills used keeps separate rows for the same skill in different
-   phases, and all of them name the same skill. An entry normally gives only `skill`,
-   and the helper takes source and revision from the matching rows. When two installs
+   phases, and all of them name the same skill. An entry normally omits `source` and
+   `revision`, and the helper takes them from the matching rows. When two installs
    share a name, or one skill appears at two revisions, the entry names the field that
    tells them apart. The helper renders the list as one collapsed
-   `Companion skill results` section, one entry per run. Each prose field goes through
-   `PublicationText.summary_text`, the escaping Skills used cells get before their table
+   `Companion skill results` section, one entry per run. Every field except `command`
+   and `artifacts` goes through `PublicationText.summary_text`, including `skill`,
+   `source`, and `revision`. That is the escaping Skills used cells get before their table
    escaping, so HTML an agent copied from a skill's output cannot close the collapsed
    section. Markdown passes through, as it does in Skills used cells.
    The helper wraps `command` in a code span without HTML escaping, because GitHub shows
