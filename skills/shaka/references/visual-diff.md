@@ -1,8 +1,8 @@
 # Explain UI changes with annotations
 
 When reviewers need to compare before and after, lead with one annotated image
-that shows both captures side by side. Otherwise, lead with an annotated after
-capture. Keep the original captures available.
+that shows both captures side by side. Use it to show what moved, what disappeared,
+or how spacing changed. Otherwise, lead with an annotated after capture.
 
 ## Inspect the comparison
 
@@ -26,7 +26,6 @@ capture. Keep the original captures available.
   Use color with numbers or text so the meaning does not depend on color alone.
 - Give each callout a specific explanation: “1: Added expected-experience guide”
   or “2: Unexpected footer shift.” Label unresolved differences as unresolved.
-  Inspecting the full view remains necessary beyond the selected callouts.
 - Use arrows for movement or spacing changes.
 - Choose regions from the inspected comparison, rather than boxing every cluster
   of changed pixels. Keep captions and markers clear of important UI content.
