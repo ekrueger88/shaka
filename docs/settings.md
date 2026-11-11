@@ -940,13 +940,30 @@ project_guidance:
   a large table and how to roll it back. The guide adds to Shaka's own walkthrough
   rules, such as opening with the behavior that changed; it does not replace them.
 
-When `pr_evidence` is set and your repository has a pull request template, the agent
-also reads that template and fills any of its sections Shaka's description does not
-already cover. The template gives the description its shape; the guide says what to
-run or check before writing it. Shaka looks for `pull_request_template.md` in `.github/`,
-the repository root, then `docs/`. With several templates, name the one to use as
-`pr_evidence`. For example, a template's Changelog section can
-[replace edits to `CHANGELOG.md`](changelog-in-pr-descriptions.md).
+Set `pr_evidence` to have Shaka show the agent your pull request template alongside
+a separate evidence guide. You can also use the template as the guide, for example by
+setting `pr_evidence` to `.github/pull_request_template.md`. Use the template for
+sections you want in the PR description. Use the evidence guide for what to run or
+report, and `AGENTS.md` for standing instructions such as when to update the changelog.
+
+Put instructions for a specific section in an HTML comment directly below its
+heading. GitHub hides the comment in the rendered description. For example, a
+Changelog comment can ask for a short note about what users can now do and say to
+write `None` for internal work. Keep the release-only rule for editing
+`CHANGELOG.md` in `AGENTS.md`.
+
+Shaka's built-in headings keep their usual behavior. For example, **Decisions to
+make** appears only if there's a decision to make. Extra template sections appear
+unless an HTML comment says to omit them for the current diff. A **Settings
+changes** comment can ask Shaka to omit its heading and body when the diff leaves
+repository settings alone. Required verification still appears. Extra sections
+follow metrics and any WIP Details. See
+[Keep changelog notes in PR descriptions](changelog-in-pr-descriptions.md) for setup.
+
+With a separate evidence guide, Shaka looks for `pull_request_template.md` or
+`PULL_REQUEST_TEMPLATE.md` in `.github/`, the repository root, then `docs/`. It
+selects the first file it can resolve. If that template fails the read checks, the
+agent sees the evidence guide and a skip message.
 
 Put anything a command can check in your [validate script](#standard-command-scripts)
 or CI, where a failure stops the PR. Keep the guides for judgment calls, such as

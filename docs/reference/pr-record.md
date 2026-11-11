@@ -28,7 +28,8 @@ investigating. Detailed findings remain available for later agent analysis.
 ## Risk and review
 
 The lead line shows the checkpoint's **Risk** for the current commit beside its
-**Recommendation**. Shaka reads the level from the checkpoint published for that
+**Recommendation**, with a colored mark: 🟢 low, 🟡 medium, 🔴 high, and ⚪ when no
+level shows. The section repeats the mark. Shaka reads the level from the checkpoint published for that
 commit and applies the repository's high-risk areas to its changed files, as merge
 does. A blocked checkpoint's level still shows, though merge waits for a ready one.
 Low is meant for auto-merge with a later audit, medium for a person to merge after
@@ -37,7 +38,7 @@ one of the repository's [`high_risk_areas`](../settings.md#high_risk_areas) alwa
 counts as high. Under Auto, [`merge.auto_merge_max_risk`](../settings.md#mergeauto_merge_max_risk)
 sets the highest rating the agent merges without you; the default is low.
 
-The **Risk and review** section follows the summary. It says what the level asks
+The **Risk and review** section follows Intent and precedes Verification. It says what the level asks
 of you, then lists:
 
 - **Flagged by the implementer**: code needing particular attention, each with its reason.

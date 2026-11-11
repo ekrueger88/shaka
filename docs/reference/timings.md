@@ -133,7 +133,7 @@ Below the stretches, the section adds up each kind of step, for example
 `Measured steps: Validation 13m (1 run) · Local review 58s (1 run)`. With the bars,
 a second line names the models and machines that ran them. The machine reads
 `UNKNOWN` when `SHAKA_MACHINE_ALIAS` is not set; setting it is described in
-[Getting started](../getting-started.md).
+[Name your machines](../coding-agents.md#name-your-machines).
 
 When a validation script reports its phases, a line adds them up across runs, for
 example `Validation phases: tests 8m 20s · rubocop 1m 40s (2 of 3 validation runs
@@ -212,3 +212,11 @@ To compare these numbers across many PRs, see
 [find what slows delivery across many PRs](../working-with-shaka.md#find-what-slows-delivery-across-many-prs).
 
 [Usage and cost](usage-and-cost.md) explains the section beside it.
+
+## Local timing log
+
+The agent can inspect Shaka's local timing log at `~/.local/state/shaka/calls.jsonl`
+for a retrospective. It records helper commands, durations, outcomes, and repository,
+PR, commit, and chat session identifiers. It does not record paths or task text. Shaka does not
+upload the log itself. Set `SHAKA_CALL_LOG=off` to stop recording, or set it to a
+file path to move the log.
