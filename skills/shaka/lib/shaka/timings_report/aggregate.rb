@@ -17,8 +17,11 @@ module Shaka
       end
 
       # Buckets ranked by their total across all pull requests: the order to look for savings in.
+      # Agent working is the sum of the agent rows, so it would always rank first; it stays in the weeks.
+      TOTALS_ONLY = ['Agent working'].freeze
+
       def ranked(rows)
-        names = rows.flat_map { |row| row['buckets'].keys }.uniq
+        names = rows.flat_map { |row| row['buckets'].keys }.uniq - TOTALS_ONLY
         names.map { |name| bucket(name, rows.filter_map { |row| row['buckets'][name] }) }
              .sort_by { |bucket| -bucket['total_ms'] }
       end

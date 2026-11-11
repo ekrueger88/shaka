@@ -16,6 +16,16 @@ class TimingsReportTest < Minitest::Test
                  report['weeks'].map { |week| week.values_at('week', 'failed_validations') })
   end
 
+  # Agent working sums the agent rows, so it is left out of the ranking and kept in the weekly trend.
+  def test_agent_working_stays_out_of_the_ranking
+    pulls = [pull_with_agent_time]
+
+    report = JSON.parse(run_report(pulls, '--format', 'json'))
+
+    assert_equal(['Agent: model', 'Agent: validation', 'Validation'], report['buckets'].map { |bucket| bucket['name'] })
+    assert_equal 900_000, report['weeks'].first['median_agent_working_ms']
+  end
+
   def test_a_pull_request_that_dropped_steps_is_named_partial
     pulls = [pull(1, '2026-11-03T12:00:00Z', [step(1000)])]
     pulls.first['body'] = pulls.first['body'].sub('"dropped":0', '"dropped":3')
@@ -69,6 +79,14 @@ class TimingsReportTest < Minitest::Test
   end
 
   private
+
+  def pull_with_agent_time
+    session = { 'id' => 'a' * 16, 'host' => 'Codex', 'active_ms' => 900_000, 'model_ms' => 600_000, 'waiting_ms' => 0,
+                'between_turns_ms' => 0, 'tools' => { 'validation' => 300_000 } }
+    pull(1, '2026-11-03T12:00:00Z', [step(1000)]).tap do |made|
+      made['body'] = made['body'].sub('<!-- shaka:end -->', "#{Shaka::AgentTime.hidden([session])}\n<!-- shaka:end -->")
+    end
+  end
 
   # Two with timings, one from a fork, and one without timings.
   def mixed_pulls
