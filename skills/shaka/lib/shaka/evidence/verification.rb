@@ -55,8 +55,8 @@ module Shaka
         binding['reasons'] << 'repository validation used command arguments'
         binding['guidance'] = 'Run repository validation without arguments. For a narrower run that should ' \
                               "count, such as changed files only, put it in #{VALIDATE_LOCAL}; a passing " \
-                              'validate_local run without arguments counts when the trusted settings have that ' \
-                              'script. When validation needs inputs such as spec mappings, ' \
+                              'validate_local run without arguments counts when the settings that apply to this ' \
+                              'task have that script. When validation needs inputs such as spec mappings, ' \
                               'see references/repository-setup.md#required-validation-inputs in the ' \
                               'installed Shaka skill.'
       end
