@@ -102,15 +102,18 @@ high-risk areas, or a prompt file, or when a value is invalid.
 Keep proposed settings in an open PR and try them before making them your team's
 defaults. Teammates can select the same PR for their tasks:
 
+Examples use `/shaka`. In Codex, use `$shaka`. See [Coding agents](coding-agents.md)
+for other tools.
+
 ```text
-$shaka <task or issue link>
+/shaka <task or issue link>
 Use settings from PR #123.
 ```
 
 To switch an existing task:
 
 ```text
-$shaka Switch this task to settings from PR #123.
+/shaka Switch this task to settings from PR #123.
 ```
 
 The selected PR supplies the complete configuration, including reviewer choices
@@ -175,6 +178,10 @@ before it reports a PR ready and labels it `awaiting-merge-approval`. In Auto mo
 does not stop anyone from clicking merge. Nothing ties a name to a specific
 workflow either, so a PR could add a job with a listed name. For protection that
 GitHub enforces, use a ruleset or branch protection.
+
+If neither GitHub nor Shaka requires any checks, **Ask** can still hand you the PR.
+Merge it on GitHub, or approve the exact commit for the agent to merge after it
+explains that no required checks gate it. **Auto** needs at least one required check.
 
 ## `merge.limits`
 
@@ -358,9 +365,39 @@ review:
   ci_review_wait: one
 ```
 
-The [hosted Claude review](configure-repository.md#add-hosted-claude-review) workflow
+The [hosted Claude review](#hosted-claude-review) workflow
 Shaka ships produces `claude-review`. The agent reads reports according to
 `ci_review_wait`; a green job alone does not prove review completed. GitHub's required merge checks are configured separately.
+
+## Hosted Claude review
+
+Shaka ships a [Claude review workflow](https://github.com/shakacode/shaka/blob/main/skills/shaka/config/claude-code-review.yml)
+that reviews PRs opened from branches in your repository, and fits teams where only
+some people use Shaka. It skips drafts, Dependabot, and PRs from forks; review those
+another way. It reviews pushes from Cursor cloud agents. A push from another GitHub
+App fails the review job until you add that app to the workflow's `allowed_bots` line.
+When a PR's author already published a Shaka local review of the pushed commit
+with Claude among its reviewers, Claude makes a short pass for serious bugs the
+local reviewers missed. Every other PR gets a full review, including one only
+Codex reviewed locally. Both report only issues Claude can tie to a concrete failure,
+so routine pushes stay quiet.
+
+The agent can offer this during [team setup](configure-repository.md#set-up). For a repository that already uses
+Shaka, ask:
+
+```text
+/shaka Add the hosted Claude review workflow from
+https://github.com/shakacode/shaka/blob/main/skills/shaka/config/claude-code-review.yml
+and list claude-review as a CI review job.
+```
+
+In Codex, use `$shaka` instead of `/shaka`.
+
+The agent adds the workflow and lists the `CLAUDE_CODE_OAUTH_TOKEN` repository
+secret you need to create. The workflow waits up to two minutes for the local
+review before choosing the full review; edit `LOCAL_REVIEW_WAIT_SECONDS` in it to
+change that. Only the PR author's own comment selects the short pass, so another
+person's comment cannot weaken review of someone else's PR.
 
 ## `review.ci_review_wait`
 
@@ -421,7 +458,7 @@ needs its CLI installed and signed in, or its API credentials on the machine doi
 
 Ask your agent:
 
-> $shaka Prefer Claude for code review.
+> /shaka Prefer Claude for code review.
 
 ```yaml
 review:
@@ -535,7 +572,7 @@ Most warnings allow the review to run. An unsupported Claude effort stops it;
 choose one of Claude’s listed effort values to continue.
 
 Put project-specific review criteria in `AGENTS.md`. To check that your AI accounts
-can run the chosen reviewers, ask `$shaka Probe this project's configured reviewers.`
+can run the chosen reviewers, ask `/shaka Probe this project's configured reviewers.`
 To choose how many hosted review reports to wait for, use
 [`review.ci_review_wait`](#reviewci_review_wait).
 
@@ -643,7 +680,7 @@ the other.
 
 Ask your agent:
 
-> $shaka Have Claude and Codex review every commit.
+> /shaka Have Claude and Codex review every commit.
 
 ```yaml
 review:
@@ -666,7 +703,7 @@ unavailable. The PR description's [Verification](reference/pr-record.md#verifica
 Writing the change does not count as reviewing it.
 
 To pay for one local review instead, leave this unset and set `local_review_count: 1`. With
-the [hosted Claude review](configure-repository.md#add-hosted-claude-review), a PR that only
+the [hosted Claude review](#hosted-claude-review), a PR that only
 Codex reviewed locally still gets a full Claude review on GitHub.
 
 ## `review.custom_instructions_file`
@@ -890,7 +927,7 @@ its head, as with `checkpoint.enabled: false`.
 [`merge.auto_merge_max_risk`](#mergeauto_merge_max_risk) sets which ratings the agent may
 merge, and [`merge.limits`](#mergelimits) sends larger PRs to a person. To see the rubric
 and your file in the order the reviewer reads them, ask
-`$shaka Show what my checkpoint reviewer receives.` To ask for a way to lower ratings,
+`/shaka Show what my checkpoint reviewer receives.` To ask for a way to lower ratings,
 [open a feature request](https://github.com/shakacode/shaka/issues/new/choose).
 
 ## `medium_risk_areas`
@@ -940,13 +977,30 @@ project_guidance:
   a large table and how to roll it back. The guide adds to Shaka's own walkthrough
   rules, such as opening with the behavior that changed; it does not replace them.
 
-When `pr_evidence` is set and your repository has a pull request template, the agent
-also reads that template and fills any of its sections Shaka's description does not
-already cover. The template gives the description its shape; the guide says what to
-run or check before writing it. Shaka looks for `pull_request_template.md` in `.github/`,
-the repository root, then `docs/`. With several templates, name the one to use as
-`pr_evidence`. For example, a template's Changelog section can
-[replace edits to `CHANGELOG.md`](changelog-in-pr-descriptions.md).
+Set `pr_evidence` to have Shaka show the agent your pull request template alongside
+a separate evidence guide. You can also use the template as the guide, for example by
+setting `pr_evidence` to `.github/pull_request_template.md`. Use the template for
+sections you want in the PR description. Use the evidence guide for what to run or
+report, and `AGENTS.md` for standing instructions such as when to update the changelog.
+
+Put instructions for a specific section in an HTML comment directly below its
+heading. GitHub hides the comment in the rendered description. For example, a
+Changelog comment can ask for a short note about what users can now do and say to
+write `None` for internal work. Keep the release-only rule for editing
+`CHANGELOG.md` in `AGENTS.md`.
+
+Shaka's built-in headings keep their usual behavior. For example, **Decisions to
+make** appears only if there's a decision to make. Extra template sections appear
+unless an HTML comment says to omit them for the current diff. A **Settings
+changes** comment can ask Shaka to omit its heading and body when the diff leaves
+repository settings alone. Required verification still appears. Extra sections
+follow metrics and any WIP Details. See
+[Keep changelog notes in PR descriptions](changelog-in-pr-descriptions.md) for setup.
+
+With a separate evidence guide, Shaka looks for `pull_request_template.md` or
+`PULL_REQUEST_TEMPLATE.md` in `.github/`, the repository root, then `docs/`. It
+selects the first file it can resolve. If that template fails the read checks, the
+agent sees the evidence guide and a skip message.
 
 Put anything a command can check in your [validate script](#standard-command-scripts)
 or CI, where a failure stops the PR. Keep the guides for judgment calls, such as
@@ -994,7 +1048,7 @@ checkpoint later. A rule that must act before the description belongs in `AGENTS
 To write a guide for your repository, start from a miss you have already seen:
 
 ```text
-$shaka Add PR evidence guidance: when a change alters email templates, attach
+/shaka Add PR evidence guidance: when a change alters email templates, attach
 rendered before and after screenshots.
 ```
 
@@ -1016,7 +1070,7 @@ A failed check does not block publication or merging. With an opening reviewer
 configured, each description with new text and each walkthrough with a new opening
 adds one call to it.
 
-> $shaka Use Codex for opening checks.
+> /shaka Use Codex for opening checks.
 
 ```yaml
 pr_description:
@@ -1182,6 +1236,33 @@ arguments can skip checks your settings never approved.
 
 The evidence check accepts either script's result; it does not require a full
 `validate` run.
+
+### Run the scripts in a CI container
+
+
+The scripts Shaka writes ask Git for the repository root before they run your
+command. When a CI job runs inside a container, Git may refuse the checkout because
+another user owns it, and the script exits with status 128. Before any Shaka script
+or command runs, mark the checkout safe by its top-level path. In a GitHub Actions
+container job that checks out into the workspace, add this step:
+
+```yaml
+- run: git config --global --add safe.directory "$GITHUB_WORKSPACE"
+```
+
+If the job checks out into a subdirectory, such as `actions/checkout` with
+`path: app`, mark that directory instead. Other CI systems need the same
+`git config` command with their checkout path. Jobs that run directly on a
+GitHub-hosted runner need no change.
+
+### Setup records
+
+The setup PR can include `.agents/shaka.md`, which points to the settings and
+records the Shaka version used for setup. Later setup runs leave it alone.
+Ask your agent to refresh the configuration if you need the pointer updated.
+
+The optional `.agents/shaka/trusted-github-actors.yml` lists additional trusted
+comment authors for public repositories. See the [trust model](workflow.md#trust-model).
 
 ## `base_branch`
 
