@@ -1149,22 +1149,6 @@ exec bundle exec rake test "$@"
 `exec` preserves the command's exit status and signals. A symlink to a tracked
 executable also works if its directory, environment, and arguments already match.
 
-### Count a faster check as validation
-
-Add `validate-local` when your full `validate` is slow and a narrower check is
-enough between review repairs. A passing `validate-local` run counts as
-validation evidence for the exact commit it ran on. Your agent runs it before each
-local review and runs the full `validate` once, after the review repairs are done.
-For example, if `validate` runs `bin/ci-local` and that script accepts `--changed`:
-
-```sh
-exec bin/ci-local --changed "$@"
-```
-
-Put the narrowing flag in the script. A run that passes extra arguments to
-`validate` or `validate-local` does not count as evidence, because those
-arguments can skip checks your settings never approved.
-
 Scripts must be executable and resolve within the repository. `.agents` and the
 directories holding the configuration and scripts must be real directories.
 Removing an optional check already on the default branch requires an explicit,
@@ -1176,6 +1160,28 @@ directory, Shaka runs the default branch's copy of the script against that
 branch's files and removes the copy afterward. The script still runs the branch's
 own tools, so `exec bin/ci-local` runs that branch's `bin/ci-local`. The result
 records the trusted copy as its command source.
+
+### Count a faster check as validation
+
+Add `validate-local` when your full `validate` is slow and a narrower check is
+enough between review repairs. A passing `validate-local` run counts as
+validation evidence for the exact commit it ran on. For example, if `validate`
+runs `bin/ci-local` and that script accepts `--changed`:
+
+```sh
+exec bin/ci-local --changed "$@"
+```
+
+Add the script in its own settings PR. It counts once it is on the default
+branch, because Shaka reads the accepted commands from there.
+
+Put the narrowing flag in the script. A run that passes extra arguments to
+`validate` or `validate-local` does not count as evidence, because those
+arguments can skip checks your settings never approved.
+
+The evidence check accepts either script's result; it does not require a full
+`validate` run. Your agent still runs `validate-local` before each local review
+and the full `validate` once, after the review repairs are done.
 
 ## `base_branch`
 
