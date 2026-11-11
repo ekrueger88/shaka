@@ -13,9 +13,11 @@ module Shaka
 
     def elapsed(started)
       wall, awake_start = started
-      record = { 'duration_ms' => milliseconds(clock - wall) }
+      duration = milliseconds(clock - wall)
       awake_now = awake
-      record['awake_ms'] = milliseconds(awake_now - awake_start) if awake_now && awake_start
+      record = { 'duration_ms' => duration }
+      # The two clocks are read a moment apart, so awake time can round a millisecond past wall time.
+      record['awake_ms'] = [milliseconds(awake_now - awake_start), duration].min if awake_now && awake_start
       record
     end
 
