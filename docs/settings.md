@@ -1227,8 +1227,10 @@ runs `bin/ci-local` and that script accepts `--changed`, end
 exec bin/ci-local --changed
 ```
 
-Add the script in its own settings PR. It counts once it is on the default
-branch, because Shaka reads the accepted commands from there.
+Add the script in its own settings PR. It counts once it is in the settings
+Shaka trusts: for team settings, the default branch. After that PR merges, a
+branch that already has `.agents/shaka/bin` but not the new script cannot run
+validation until it merges the default branch.
 
 Put the narrowing flag in the script. A run that passes extra arguments to
 `validate` or `validate-local` does not count as evidence, because those
