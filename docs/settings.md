@@ -1180,8 +1180,7 @@ Put the narrowing flag in the script. A run that passes extra arguments to
 arguments can skip checks your settings never approved.
 
 The evidence check accepts either script's result; it does not require a full
-`validate` run. Your agent still runs `validate-local` before each local review
-and the full `validate` once, after the review repairs are done.
+`validate` run.
 
 ## `base_branch`
 

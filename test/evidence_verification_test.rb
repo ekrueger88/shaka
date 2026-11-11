@@ -71,6 +71,18 @@ class EvidenceVerificationTest < Minitest::Test
     end
   end
 
+  def test_validate_local_counts_only_once_the_trusted_ref_has_it
+    with_checkout do |root, base|
+      add_validate_local(root)
+      _output, error = capture_io do
+        assert_equal 1, Shaka::Evidence::Command.run(
+          ['run', '--root', root, '--ref', base, '--repository', 'shakacode/shaka', '--command', 'validate_local']
+        )
+      end
+      assert_includes error, 'validate_local is not configured for this repository'
+    end
+  end
+
   def test_validate_local_with_arguments_cannot_satisfy_repository_validation
     with_checkout do |root, _ref|
       ref = add_validate_local(root)
