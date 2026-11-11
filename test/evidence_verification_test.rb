@@ -61,7 +61,38 @@ class EvidenceVerificationTest < Minitest::Test
     end
   end
 
+  def test_validate_local_without_arguments_satisfies_repository_validation
+    with_checkout do |root, _ref|
+      ref = add_validate_local(root)
+      validation = run_check(root, ref, command: 'validate_local')
+      with_results(validation:, review: review_check(root, ref)) do |paths|
+        assert_equal 'ready', verify(root, ref, **paths).fetch('status')
+      end
+    end
+  end
+
+  def test_validate_local_with_arguments_cannot_satisfy_repository_validation
+    with_checkout do |root, _ref|
+      ref = add_validate_local(root)
+      validation = run_check(root, ref, command: 'validate_local', arguments: ['--', '--changed'])
+      with_results(validation:, review: review_check(root, ref)) do |paths|
+        entry = validation_entry(verify(root, ref, **paths))
+        assert_equal 'superseded', entry.fetch('status')
+        assert_includes entry.fetch('reasons'), 'repository validation used command arguments'
+      end
+    end
+  end
+
   private
+
+  def add_validate_local(root)
+    path = File.join(root, '.agents/shaka/bin/validate-local')
+    File.write(path, "#!/bin/sh\nexit 0\n")
+    File.chmod(0o755, path)
+    git(root, 'add', '-A')
+    commit(root)
+    git(root, 'rev-parse', 'HEAD')
+  end
 
   def validation_entry(verdict) = verdict.fetch('checks').fetch('validation').first
 

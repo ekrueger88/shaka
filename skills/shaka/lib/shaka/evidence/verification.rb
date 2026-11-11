@@ -50,9 +50,11 @@ module Shaka
         return if original.dig('task_overrides', 'arguments') == []
 
         binding['reasons'] << 'repository validation used command arguments'
-        binding['guidance'] = 'Run repository validation without arguments. When it needs inputs such as ' \
-                              'spec mappings, see references/repository-setup.md#required-validation-inputs ' \
-                              'in the installed Shaka skill.'
+        binding['guidance'] = 'Run repository validation without arguments. For a narrower run that should ' \
+                              'count, such as changed files only, put it in .agents/shaka/bin/validate-local; ' \
+                              'a passing validate_local run without arguments is accepted. When validation ' \
+                              'needs inputs such as spec mappings, see ' \
+                              'references/repository-setup.md#required-validation-inputs in the installed Shaka skill.'
       end
 
       def check_kind(kind, original, binding)

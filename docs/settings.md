@@ -1149,6 +1149,22 @@ exec bundle exec rake test "$@"
 `exec` preserves the command's exit status and signals. A symlink to a tracked
 executable also works if its directory, environment, and arguments already match.
 
+### Count a faster check as validation
+
+Add `validate-local` when your full `validate` is slow and a narrower check is
+enough between review repairs. A passing `validate-local` run counts as
+validation evidence for the exact commit it ran on. Your agent runs it before each
+local review and runs the full `validate` once, after the review repairs are done.
+For example, if `validate` runs `bin/ci-local` and that script accepts `--changed`:
+
+```sh
+exec bin/ci-local --changed "$@"
+```
+
+Put the narrowing flag in the script. A run that passes extra arguments to
+`validate` or `validate-local` does not count as evidence, because those
+arguments can skip checks your settings never approved.
+
 Scripts must be executable and resolve within the repository. `.agents` and the
 directories holding the configuration and scripts must be real directories.
 Removing an optional check already on the default branch requires an explicit,
