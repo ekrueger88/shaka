@@ -72,9 +72,13 @@ line per phase:
 
 ```sh
 start=$(date +%s)
-bundle exec rspec
+status=0
+bundle exec rspec || status=$?
 echo "{\"phase\":\"tests\",\"duration_ms\":$(( ($(date +%s) - start) * 1000 ))}" >> "${SHAKA_PHASE_LOG:-/dev/null}"
+[ "$status" -eq 0 ] || exit "$status"
 ```
+
+The script records the phase even when the tests fail, then exits with their status.
 
 Shaka keeps up to eight phases per run. A name starts with a lowercase letter,
 then lowercase letters, digits, `-`, or `_`, up to 24 characters; Shaka skips a
