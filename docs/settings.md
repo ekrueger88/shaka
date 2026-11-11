@@ -1189,7 +1189,7 @@ Connect your existing tools at these fixed paths:
 | `.agents/shaka/bin/setup` | Yes | Install dependencies |
 | `.agents/shaka/bin/test` | Yes | Run tests; accept focused arguments |
 | `.agents/shaka/bin/validate` | Yes | Complete checks before publishing |
-| `.agents/shaka/bin/validate-local` | No | Faster checks before local review |
+| `.agents/shaka/bin/validate-local` | No | Faster checks before local review; a pass [counts as evidence](#count-a-faster-check-as-validation) |
 | `.agents/shaka/bin/trigger-hosted-ci` | No | Start deferred CI after local fixes; requires `validate-local` |
 
 A wrapper can call an existing command. `seam init` generates each required wrapper;
@@ -1227,10 +1227,14 @@ runs `bin/ci-local` and that script accepts `--changed`, end
 exec bin/ci-local --changed
 ```
 
-Add the script in its own settings PR. It counts once it is in the settings
-Shaka trusts: for team settings, the default branch. After that PR merges, a
-branch that already has `.agents/shaka/bin` but not the new script cannot run
-validation until it merges the default branch.
+The script counts once it is in the settings that apply to the task, as
+[Which settings apply?](#which-settings-apply) describes. With team settings, add
+it in its own settings PR; it counts after that PR merges. With individual setup,
+it counts once it is in your local `.agents/shaka/bin`.
+
+After a team settings PR adds the script, a branch that already has
+`.agents/shaka/bin` but not the new script cannot run any validation until it
+merges the default branch.
 
 Put the narrowing flag in the script. A run that passes extra arguments to
 `validate` or `validate-local` does not count as evidence, because those
