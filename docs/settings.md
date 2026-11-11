@@ -1166,10 +1166,11 @@ records the trusted copy as its command source.
 Add `validate-local` when your full `validate` is slow and a narrower check is
 enough between review repairs. A passing `validate-local` run counts as
 validation evidence for the exact commit it ran on. For example, if `validate`
-runs `bin/ci-local` and that script accepts `--changed`:
+runs `bin/ci-local` and that script accepts `--changed`, end
+`.agents/shaka/bin/validate-local` with:
 
 ```sh
-exec bin/ci-local --changed "$@"
+exec bin/ci-local --changed
 ```
 
 Add the script in its own settings PR. It counts once it is on the default

@@ -16,7 +16,7 @@ class EvidenceValidateLocalTest < Minitest::Test
     end
   end
 
-  def test_validate_local_counts_only_once_the_trusted_ref_has_it
+  def test_validate_local_run_is_refused_until_the_trusted_ref_has_it
     with_checkout do |root, base|
       add_validate_local(root)
       _output, error = capture_io do
