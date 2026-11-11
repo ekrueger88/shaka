@@ -209,7 +209,8 @@ class LefthookBranchCheckTest < Minitest::Test
     skip 'The stub command is a shell script' if Gem.win_platform?
 
     git_repository
-    write('lib/a.rb', "# frozen_string_literal: true\n\nputs 'clean'\n")
+    # Larger than a pipe buffer, so writing the archive always reaches tar after it has exited.
+    write('lib/a.rb', "# frozen_string_literal: true\n\n#{"# padding\n" * 20_000}puts 'clean'\n")
     git('add', '.')
     git('commit', '-qm', 'clean')
     output, status = script('ruby-check', 'branch', env: { 'PATH' => stub_command('tar', 'exit 1') })
