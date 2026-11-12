@@ -215,8 +215,11 @@ To compare these numbers across many PRs, see
 
 ## Local timing log
 
-The agent can inspect Shaka's local timing log at `~/.local/state/shaka/calls.jsonl`
-for a retrospective. It records helper commands, durations, outcomes, and repository,
-PR, commit, and chat session identifiers. It does not record paths or task text. Shaka does not
-upload the log itself. Set `SHAKA_CALL_LOG=off` to stop recording, or set it to a
-file path to move the log.
+For a retrospective, ask your agent to read Shaka's local timing log at
+`~/.local/state/shaka/calls.jsonl`. It records helper commands, durations,
+outcomes, repository and commit identifiers, and issue or PR numbers. When
+available, it also records the reviewer model, the Git tree hash for
+validation, the validation phases, the time the machine was awake, and the chat
+session that ran the command. It does not record paths or task text. The log
+stays on your machine. Set `SHAKA_CALL_LOG=off` to stop recording, or set it to
+a file path to move the log.
