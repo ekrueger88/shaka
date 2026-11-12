@@ -19,8 +19,8 @@ or how spacing changed. Otherwise, lead with an annotated after capture.
 
 ## Annotate the captures
 
-- Give each viewport its own labeled Before and After pair in the image. Use
-  matching crops when a full view would make the details hard to read.
+- In a side-by-side image, give each viewport its own labeled Before and After
+  pair. Use matching crops when a full view would make the details hard to read.
 - Keep the captures' normal colors and text readable. Draw thin outlines or
   restrained highlights, with numbered markers and short captions.
   Use color with numbers or text so the meaning does not depend on color alone.
