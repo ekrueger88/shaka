@@ -20,6 +20,8 @@ Max was asking Linus to bring changes from Max’s copy into Linux. Bringing cha
 
 ![Max requests. Linus decides whether to pull the changes into Linux.](../img/pull-requests-in-the-age-of-agents/why-pull-request.webp)
 
+*Illustration based on the mailing list post.*
+
 ## Why Linus built Git
 
 Linux maintainers used BitKeeper to work in separate copies of the code and send changes to one another. When the arrangement with BitKeeper broke down in 2005, Torvalds needed a tool that would preserve that way of working and stay fast on a project the size of Linux. He decided to write one. [Torvalds on why he built Git](https://www.linuxfoundation.org/blog/blog/10-years-of-git-an-interview-with-git-creator-linus-torvalds)
@@ -28,7 +30,7 @@ On April 7, 2005, he used Git to record its own first commit. The commit message
 
 ![Linus Torvalds works on Git between an email about leaving BitKeeper and a record of the first commit.](../img/pull-requests-in-the-age-of-agents/why-linus-built-git.webp)
 
-*Illustrated scenes based on the mailing list post and Torvalds’s account.*
+*Illustration based on Torvalds’s account.*
 
 ## What’s in a Git commit?
 
@@ -120,7 +122,7 @@ The maintainer can ask for that test, accept the gap, or request a change to the
 
 ### When should an agent merge?
 
-In Shaka’s default **Ask** mode, a ready PR goes back to a person to merge or approve. **Auto** lets the agent merge when a PR meets the repository’s merge requirements. A hold label blocks a merge. Changes that exceed the team’s size or risk limits go back to a person. A PR that changes who can see someone’s tasks can be risky even if it changes only a few lines. The PR keeps the evidence and the decision either way. [Shaka’s merge policy guide](../working-with-shaka.md#choose-a-merge-policy)
+In Shaka’s default **Ask** mode, a ready PR goes back to a person to merge or approve. **Auto** lets the agent merge a PR that meets the repository’s merge requirements. The diagram shows two reasons Auto can hand a PR back to a person. The change may be too large or too risky. A PR that changes who can see someone’s tasks can be risky even if it changes only a few lines. The PR keeps the evidence and the decision either way. [Shaka’s merge policy guide](../working-with-shaka.md#choose-a-merge-policy)
 
 ![Shaka’s merge policy diagram. Ask returns a ready PR to a person. Auto lets the agent merge eligible PRs and sends changes that are too large or risky back to a person.](../img/merge-policy.svg)
 
