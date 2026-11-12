@@ -40,7 +40,7 @@ You can compare any two commits. Git calls the difference a **diff**. It’s lik
 
 ## When GitHub gave code review a home
 
-GitHub, a site where people share Git projects, introduced pull requests in 2008. The turning point came in 2010, when GitHub put the diff, commits, and conversation on one page. A reviewer could ask about a specific line and come back to the same place after the developer revised it. In 2011 GitHub added a Merge button, so the team could accept the change right where they had reviewed it. [GitHub introduces pull requests in 2008](https://github.blog/news-insights/oh-yeah-there-s-pull-requests-now/) · [GitHub brings the diff and discussion together in 2010](https://github.blog/news-insights/pull-requests-2-0/) · [GitHub adds the Merge button in 2011](https://github.blog/news-insights/the-merge-button/)
+GitHub, a site where people share Git projects, introduced pull requests in 2008. The turning point came in 2010, when GitHub put the diff, commits, and conversation on one page. A reviewer could ask about a change and return to the same discussion after the developer revised it. In 2011 GitHub added a Merge button, so the team could accept the change right where they had reviewed it. [GitHub introduces pull requests in 2008](https://github.blog/news-insights/oh-yeah-there-s-pull-requests-now/) · [GitHub brings the diff and discussion together in 2010](https://github.blog/news-insights/pull-requests-2-0/) · [GitHub adds the Merge button in 2011](https://github.blog/news-insights/the-merge-button/)
 
 Pre-AI, a human developer would open a pull request (often called a **PR**) to make a code change. Let's suppose the change is to add the “Hide completed” switch. The PR reviewer would read the diff and check whether the design fits the app, whether the code will be easy to maintain, and whether automated tests cover the new behavior and its edge cases.
 
@@ -118,9 +118,9 @@ The maintainer can ask for that test, accept the gap, or request a change to the
 
 ### When should an agent merge?
 
-In Shaka’s default **Ask** mode, a ready PR goes back to a person to merge or approve. With **Auto**, the agent can merge when checks and review pass and the change is within the team’s size and risk limits. A change that exceeds those limits goes back to a person even in **Auto** mode. A PR that changes who can see someone’s tasks can be risky even if it changes only a few lines. The PR keeps the evidence and the decision either way. [Shaka’s merge policy guide](../working-with-shaka.md#choose-a-merge-policy)
+In Shaka’s default **Ask** mode, a ready PR goes back to a person to merge or approve. **Auto** lets the agent merge eligible PRs. Changes that exceed the team’s size or risk limits still go back to a person. A PR that changes who can see someone’s tasks can be risky even if it changes only a few lines. The PR keeps the evidence and the decision either way. [Shaka’s merge policy guide](../working-with-shaka.md#choose-a-merge-policy)
 
-![Shaka’s merge policy diagram. Once checks and review pass, Ask returns the PR to a person. Auto lets the agent merge unless the change is too large or risky.](../img/merge-policy.svg)
+![Shaka’s merge policy diagram. Ask returns a ready PR to a person. Auto lets the agent merge eligible PRs and sends changes that are too large or risky back to a person.](../img/merge-policy.svg)
 
 ## Publish changes to your users
 
