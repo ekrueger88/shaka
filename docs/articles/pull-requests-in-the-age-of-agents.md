@@ -28,6 +28,8 @@ On April 7, 2005, he used Git to record its own first commit. The commit message
 
 ![Linus Torvalds works on Git between an email about leaving BitKeeper and a record of the first commit.](../img/pull-requests-in-the-age-of-agents/why-linus-built-git.webp)
 
+*Illustrated scenes based on the mailing list post and Torvalds’s account.*
+
 ## What’s in a Git commit?
 
 Git is a version control system. It keeps the history of a project’s files. A **commit** records a set of edits at one point in that history. Git saves the resulting version along with the author’s message.
@@ -118,7 +120,7 @@ The maintainer can ask for that test, accept the gap, or request a change to the
 
 ### When should an agent merge?
 
-In Shaka’s default **Ask** mode, a ready PR goes back to a person to merge or approve. **Auto** lets the agent merge eligible PRs. Changes that exceed the team’s size or risk limits still go back to a person. A PR that changes who can see someone’s tasks can be risky even if it changes only a few lines. The PR keeps the evidence and the decision either way. [Shaka’s merge policy guide](../working-with-shaka.md#choose-a-merge-policy)
+In Shaka’s default **Ask** mode, a ready PR goes back to a person to merge or approve. **Auto** lets the agent merge when a PR meets the repository’s merge requirements. A hold label blocks a merge. Changes that exceed the team’s size or risk limits go back to a person. A PR that changes who can see someone’s tasks can be risky even if it changes only a few lines. The PR keeps the evidence and the decision either way. [Shaka’s merge policy guide](../working-with-shaka.md#choose-a-merge-policy)
 
 ![Shaka’s merge policy diagram. Ask returns a ready PR to a person. Auto lets the agent merge eligible PRs and sends changes that are too large or risky back to a person.](../img/merge-policy.svg)
 
